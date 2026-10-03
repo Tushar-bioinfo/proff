@@ -52,7 +52,7 @@ code,.mono{font-family:var(--f-mono);font-size:.88em;background:var(--surf2);bor
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:64px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:56px}
 .icon{width:68px;height:68px;border:3px solid var(--line);background:var(--c);color:#0a0a0b;display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-weight:700;font-size:30px;margin-bottom:24px}
-.vs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-6deg);width:92px;height:92px;background:var(--p2);color:#0a0a0b;border:4px solid var(--line);font-family:var(--f-disp);font-weight:900;font-size:30px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;box-shadow:6px 6px 0 var(--line);z-index:3}
+.vs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-6deg);width:auto;min-width:92px;max-width:280px;height:auto;min-height:92px;padding:12px 18px;white-space:normal;overflow-wrap:anywhere;text-align:center;line-height:1.05;background:var(--p2);color:#0a0a0b;border:4px solid var(--line);font-family:var(--f-disp);font-weight:900;font-size:30px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;box-shadow:6px 6px 0 var(--line);z-index:3}
 .canvas{background:var(--bg2);padding:36px;border:4px solid var(--line);box-shadow:10px 10px 0 var(--p3)}
 .polaroid{background:var(--bg2);padding:18px;border:4px solid var(--line);box-shadow:12px 12px 0 var(--p2);position:relative}
 .polaroid img{display:block;width:100%;height:auto;max-height:740px;object-fit:contain}
@@ -116,7 +116,7 @@ code,.mono{font-family:var(--f-mono);font-size:.88em;background:var(--surf2);bor
 .stepnav button{font:inherit;font-size:30px;line-height:1;width:52px;height:46px;border:3px solid var(--line);background:var(--surf);color:var(--ink);cursor:pointer;box-shadow:4px 4px 0 var(--line-dim)}
 .calc{display:flex;flex-direction:column;gap:10px;max-width:1680px}
 .given{font-family:var(--f-mono);font-size:30px;color:var(--muted);margin-bottom:10px}
-.given span{display:inline-block;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0a0a0b;background:var(--p2);padding:4px 12px;margin-right:18px}
+.given>span:first-child{display:inline-block;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0a0a0b;background:var(--p2);padding:4px 12px;margin-right:18px}
 .crow{display:grid;grid-template-columns:1.15fr 1fr;gap:48px;align-items:center;padding:10px 28px;border-left:6px solid var(--line-dim)}
 .crow .expr{font-family:var(--f-mono);font-size:42px;font-weight:500;color:var(--ink)}
 .crow .why{font-family:var(--f-mono);font-size:28px;color:var(--muted)}.crow .why::before{content:"// ";color:var(--p1)}
@@ -146,7 +146,7 @@ body.page .note.solid{box-shadow:7px 7px 0 var(--line)}
 body.page .note.sm p,body.page .note.sm li{font-size:17.5px}
 body.page .pin::before{width:20px;height:20px;top:-11px;right:20px;border-width:2px}
 body.page .icon{width:42px;height:42px;font-size:18px;margin-bottom:14px;border-width:2px}
-body.page .vs{width:56px;height:56px;font-size:18px;border-width:3px;box-shadow:4px 4px 0 var(--line)}
+body.page .vs{width:auto;min-width:92px;max-width:280px;height:auto;min-height:92px;white-space:normal;font-size:18px;border-width:3px;box-shadow:4px 4px 0 var(--line)}
 body.page .opt{font-size:19px;padding:14px 20px;border-width:2px;box-shadow:4px 4px 0 var(--line-dim)}
 body.page .flip,body.page .flip .inner{min-height:210px}body.page .flip .face{padding:22px 24px;border-width:3px;box-shadow:5px 5px 0 var(--c)}body.page .flip .hint{font-size:13px}
 body.page .ctl label{font-size:15px}body.page .btn{font-size:14px;padding:10px 18px;border-width:2px;box-shadow:3px 3px 0 var(--line)}
@@ -170,3 +170,32 @@ body.page .given{font-size:16px}body.page .flip.short,body.page .flip.short .inn
  body.page h1{font-size:40px}body.page h2{font-size:30px}body.page .hero{max-width:100%;padding:30px 24px}body.page h1,body.page h2{overflow-wrap:anywhere}
 }
 @media print{html,body{overflow:visible;background:#000}#stage{position:static;transform:none!important}.slide{position:relative;opacity:1;visibility:visible;page-break-after:always;width:1920px;height:1080px}.nav{display:none}}
+
+/* Math fallback and notation. */
+.vs.wide{font-size:24px}body.page .vs.wide{font-size:18px}
+.vsrow{grid-template-columns:1fr auto 1fr;gap:28px;align-items:center}.vsrow .vs{position:static;transform:rotate(-6deg);max-width:220px}
+.tex{font-family:var(--f-mono);background:var(--surf2);text-transform:none;overflow-wrap:anywhere}.tex.d{display:block;text-align:center;margin:12px 0}
+.tex:has(.katex){background:none}.katex{font-size:1.05em;text-transform:none}.crow .expr .katex{font-size:1em}
+body:not(.page) .has-sym:not(.sym-popup){padding-right:540px}
+.sym{position:absolute;right:56px;top:120px;width:400px;padding:24px;background:var(--surf);border:3px solid var(--line);box-shadow:7px 7px 0 var(--p5);transform:rotate(.6deg);z-index:10}
+.sym h4{font-family:var(--f-mono);font-size:24px;margin-bottom:14px}.sym dl{display:grid;grid-template-columns:auto 1fr;gap:12px 16px;align-items:start}
+.sym dt{font-size:30px}.sym dd,.sym dd p,.sym dd li{font-size:24px;line-height:1.35;color:var(--muted)}
+.sym-toggle{position:absolute;right:56px;top:72px;padding:8px 16px;border:2px solid var(--line);background:var(--surf);color:var(--ink);font-family:var(--f-mono);font-size:22px;cursor:pointer;z-index:11}
+body:not(.page) .sym-popup:not(.sym-open) .sym{display:none}
+body.page .sym{position:static;width:100%;transform:none;margin-top:12px}body.page .sym-toggle{display:none}
+body.page .sym dt{font-size:20px}body.page .sym dd,body.page .sym dd p,body.page .sym dd li{font-size:17px}
+/* mermaid (trial): nodes look like the deck's cards; :::hi = the key step, :::a1..a6 = colour by role */
+.mmd{padding:12px 8px 20px;text-align:center}
+.mmd pre{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--f-mono);font-size:22px;text-align:left;background:var(--bg2);border:3px solid var(--line-dim);padding:24px}.mmd.loaded pre{text-align:center;background:none;border:0;padding:0}
+.mmd svg{max-width:100%;max-height:660px;height:auto;overflow:visible}.mmd:not(.loaded)::after{content:"diagram needs internet";display:block;margin-top:16px;font-size:22px;color:var(--muted)}
+.mmd .node .label-container:not(.mshadow),.mmd .node .label-container:not(.mshadow) *{fill:var(--surf)!important;stroke:var(--line)!important;stroke-width:3px!important}
+.mmd .mshadow,.mmd .mshadow *{fill:var(--c,var(--p3))!important;stroke:none!important}
+.mmd foreignObject{overflow:visible}.mmd .nodeLabel,.mmd .nodeLabel p{color:var(--ink)!important;font-weight:600!important}
+.mmd .node.a1{--c:var(--p1)}.mmd .node.a2{--c:var(--p2)}.mmd .node.a3{--c:var(--p3)}.mmd .node.a4{--c:var(--p4)}.mmd .node.a5{--c:var(--p5)}.mmd .node.a6{--c:var(--p6)}
+.mmd .node.hi .label-container:not(.mshadow),.mmd .node.hi .label-container:not(.mshadow) *{fill:var(--p2)!important}
+.mmd .node.hi .mshadow,.mmd .node.hi .mshadow *{fill:var(--line)!important}.mmd .node.hi .nodeLabel,.mmd .node.hi .nodeLabel p{color:#0a0a0b!important;font-weight:750!important}
+.mmd .flowchart-link{stroke:var(--muted)!important;stroke-width:3px!important}
+.mmd marker path,.mmd .marker{fill:var(--muted)!important;stroke:var(--muted)!important}
+.mmd .edgeLabel rect{fill:var(--bg)!important;opacity:1!important}.mmd .edgeLabel,.mmd .edgeLabel p,.mmd .edgeLabel span{color:var(--muted)!important;background:var(--bg)!important;font-weight:450!important}
+.scene.under{grid-template-columns:1fr;gap:36px}.scene.under .caps{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:28px}.scene.under .stepnav{grid-column:1/-1;margin-top:0}
+.scene .mmd{cursor:pointer}

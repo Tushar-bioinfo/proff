@@ -1,43 +1,45 @@
-# Proff v3
+# Proff v3.2
 
 A first-principles tutor for Claude, Codex, Cursor, Gemini, Muse, claude.ai and ChatGPT.
 
-- **L1** (default): ~150 words — the answer, one example, the caveat that matters.
-- **L2**: a predict-first question, 1–3 diagrams, the key concepts, one exam angle.
-- **L3**: a detailed write-up (prerequisites, mechanism, worked example, where it breaks, exam angles, what to read next) plus an interactive 16:9 HTML deck (dark Block Frame theme, aurora palette): step-by-step SVG diagrams, step-by-step calculations, a live simulation, exam-angle and quiz flip cards.
-- **Images**: a generated "mental model" image, only when you ask.
-- **Modes**: `quiz me` (3–5 graded questions, one at a time) and `guide me` / `socratic` / `thinker` (one question at a time, hint ladder).
-- **Writing**: STE-80 (short active sentences; terms, numbers and hedges kept). Say `plain` for normal prose.
+- **L1**: short answer, example, caveat.
+- **L2**: predict first, diagrams, concepts, exam angle.
+- **L3**: full write-up plus an interactive HTML deck: stepped SVG scenes, calculations, simulations, and recall cards.
+- **L3 deck** or **deck only**: build and check the deck; reply with one line, its path.
+- **Team**, on request: orchestrator storyboards; the named implementer writes the spec; one fix round. No nested delegation.
+- Math uses LaTeX: KaTeX online, readable raw source offline. Each math slide defines symbols in a notation card. Diagram cards open with a click or `n`.
+- Mermaid flows are a trial: overview then zoom-ins. Linear `flow` and pictorial SVG remain available.
+- Images only on request. Modes: `quiz me`, `guide me`, `socratic`, `thinker`. STE-80 writing; say `plain` for normal prose.
 
-The model writes only a small JSON spec; `scripts/render.py` turns it into the deck, so the model never reads CSS or JS.
+The model writes JSON; the renderer supplies the theme. Optional math/flow libraries load from cdnjs.
 
 ## Install
-
-Claude Code
 ```
 claude plugin marketplace add Tushar-bioinfo/proff
 claude plugin install proff@proff
 ```
+Other agents: link or copy `skills/proff` into their skills folder.
+claude.ai: upload `dist/proff-claude.zip`. ChatGPT: upload `dist/proff-chatgpt.zip`, or use `dist/proff-instructions.md` for text-only lessons/outlines.
+Build packages with `tools/build.sh`.
 
-Codex / Cursor / Gemini / other agents: link or copy `skills/proff` into the tool's skills folder.
-
-claude.ai: upload `dist/proff-claude.zip`. ChatGPT: upload `dist/proff-chatgpt.zip` as a skill, or paste `dist/proff-instructions.md` into a custom GPT / project. Build them with `tools/build.sh`.
-
-## Try the example
+## Example
 ```
-python3 skills/proff/scripts/render.py skills/proff/examples/bootstrap.json -o deck.html --embed
-python3 skills/proff/scripts/snap.py deck.html   # screenshots, layout check, sheet.png + svg.png (needs playwright)
+python3 skills/proff/scripts/render.py skills/proff/examples/bootstrap.json -o /tmp/bootstrap.html --embed
+python3 skills/proff/scripts/snap.py /tmp/bootstrap.html
+python3 skills/proff/scripts/snap.py /tmp/bootstrap.html --offline --out /tmp/bootstrap-offline
 ```
+Snap needs Playwright and Chromium/Chrome. It flags overflow, clipping, notation overlap, invalid math, and small flow text.
+Arrow keys/space walk builds; Down/Up jump slides. Render with `--layout page` for scrolling.
 
-## Layout
-```
-skills/proff/SKILL.md      router: writing rules, sources, level + mode table
-skills/proff/levels/       L2.md, L3.md (spec schema)
-skills/proff/modes/        quiz.md, guide.md
-skills/proff/ref/svg.md    SVG diagram kit (classes, step builds, patterns)
-skills/proff/ref/image.md  image prompt template, per-environment calls (on request only)
-skills/proff/scripts/      render.py, snap.py, image.py, log.py
-skills/proff/assets/       blockframe-dark.css, deck.js
-```
+## Skill files
+- `SKILL.md`: routing, writing, sources.
+- `levels/`: L2.md, L3.md, deck.md (spec and checks).
+- `ref/`: svg.md mechanics, ideas/{stats,bio,ml}.md menus, team.md workflow, image.md.
+- `modes/`: quiz.md, guide.md.
+- `scripts/`: render.py, snap.py, image.py, log.py.
+- `assets/`: theme CSS and deck JS.
 
-Theme adapted from the Block Frame template in [frontend-slides](https://github.com/zarazhangrui/frontend-slides) (MIT, © 2025 Zara Zhang); see `skills/proff/assets/NOTICE`.
+<!-- Drop Mermaid trial: remove render.py mermaid() and data-need entry; deck.js mermaid block;
+CSS .mmd rules; snap.py mermaid check; deck.md type/rules; L3.md mention; bootstrap Mermaid slide. -->
+
+Theme adapted from [frontend-slides](https://github.com/zarazhangrui/frontend-slides) (MIT, © 2025 Zara Zhang); see `skills/proff/assets/NOTICE`.

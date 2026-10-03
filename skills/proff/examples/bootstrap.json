@@ -72,34 +72,72 @@
    ]
   },
   {
+   "type": "mermaid",
+   "title": "The bootstrap loop",
+   "code": "flowchart LR\n A[Sample] -->|resamples| B[Resample]:::hi\n B -->|computes| C[Statistic]\n C -->|stores| D[Distribution]\n D -->|repeats| B\n D -->|estimates| E[Interval]",
+   "steps": [
+    "Start from the one sample you have.",
+    "Draw a same-size resample, with replacement.",
+    "Compute the statistic on that resample.",
+    "Store it; repeat many times to build a distribution.",
+    "Read the interval off that distribution."
+   ]
+  },
+  {
    "type": "calc",
    "title": "Check it by hand",
-   "given": "40 cells · mean area 52 µm² · SD 10 µm²",
+   "given": "$n=40$, $\\bar{x}=52\\,\\mu\\mathrm{m}^2$, $s=10\\,\\mu\\mathrm{m}^2$",
    "lines": [
     {
-     "expr": "SE = SD / √n",
+     "expr": "$SE=\\frac{s}{\\sqrt{n}}$",
      "note": "standard error of a mean"
     },
     {
-     "expr": "SE = 10 / √40 = 10 / 6.32",
+     "expr": "$SE=\\frac{10}{\\sqrt{40}}=\\frac{10}{6.32}$",
      "note": "plug in"
     },
     {
-     "expr": "SE = 1.58 µm²",
+     "expr": "$SE=1.58\\,\\mu\\mathrm{m}^2$",
      "note": "uncertainty of the mean"
     },
     {
-     "expr": "95% CI = 52 ± 1.96 × 1.58",
+     "expr": "$CI=52\\pm1.96\\times1.58$",
      "note": "normal approximation"
     },
     {
-     "expr": "95% CI = 48.9 to 55.1 µm²",
+     "expr": "$CI=[48.9,55.1]\\,\\mu\\mathrm{m}^2$",
      "note": "a bootstrap should give a similar interval here",
      "result": true
     },
     {
-     "expr": "n = 160 → SE = 10 / 12.65 = 0.79",
+     "expr": "$n=160:\\ SE=\\frac{10}{12.65}=0.79$",
      "note": "4× cells, half the SE (your prediction)"
+    }
+   ],
+   "symbols": [
+    {
+     "sym": "SE",
+     "means": "Standard error of the mean (µm²)."
+    },
+    {
+     "sym": "s",
+     "means": "Sample standard deviation (µm²)."
+    },
+    {
+     "sym": "n",
+     "means": "Number of cells sampled."
+    },
+    {
+     "sym": "\\bar{x}",
+     "means": "Sample mean area (µm²)."
+    },
+    {
+     "sym": "CI",
+     "means": "95% confidence interval for mean area (µm²)."
+    },
+    {
+     "sym": "\\mu\\mathrm{m}^2",
+     "means": "Square micrometres, the area unit."
     }
    ]
   },
@@ -140,7 +178,8 @@
     "h": "Fails",
     "t": "- Extremes (max, min)\n- Very small n (under ~15)\n- Cells from the same patient treated as independent"
    },
-   "hand": "spatial omics trap: resample patients, not cells"
+   "hand": "spatial omics trap: resample patients, not cells",
+   "vs": "trust?"
   },
   {
    "type": "angles",

@@ -5,6 +5,7 @@ Usage: render.py spec.json [-o out.html] [--layout deck|page] [--palette NAME] [
 --embed puts images inside the HTML (one file to share); default copies them to img/ next to it.
 The author writes content only; colours, rotations, pins, backgrounds and all CSS/JS are chosen here.
 Text fields accept a tiny markdown: **bold**, *italic*, `code`, blank line = new paragraph, "- " lines = list.
+Math: $inline$ or $$display$$; add symbols: [{sym, means}] on math slides. Mermaid flows are a trial.
 """
 import argparse, base64, html, json, mimetypes, re, shutil, sys
 from itertools import cycle
@@ -47,22 +48,75 @@ DEFS = ('<svg width="0" height="0" style="position:absolute" aria-hidden="true">
         '</marker></defs></svg>')
 
 
+MATH = re.compile(r"(?<!\\)\$\$[\s\S]+?(?<!\\)\$\$|(?<![\\$\w])\$(?=\S)(.+?)(?<=\S)(?<!\\)\$(?![\w$])")
+
+
+NCMD = re.compile(r"\\n(?:u|e|eq|eg|abla|ot|i|mid|leq|geq|sim|subseteq|parallel)(?![A-Za-z])")
+
+
+def load_spec(raw):
+    """Repair single LaTeX backslashes before JSON consumes valid control escapes."""
+    count = 0
+    def string(m):
+        nonlocal count
+        text = m.group()[1:-1]
+        sym = bool(re.search(r'"sym"\s*:\s*$', raw[:m.start()]))
+        spans = [(x.start(), x.end()) for x in MATH.finditer(text)]
+        out, i = [], 0
+        while i < len(text):
+            if text[i] != "\\":
+                out.append(text[i]); i += 1; continue
+            pair = text[i:i+2]
+            if pair in ('\\\\', '\\"'):
+                out.append(pair); i += 2; continue
+            # \n is a newline, unless it starts a LaTeX command (\nu, \neq, \nabla...) that MATH missed
+            math = sym or any(a <= i < b for a, b in spans) or bool(NCMD.match(text, i))
+            valid = pair in ('\\/', '\\n') or bool(re.match(r'\\u[0-9a-fA-F]{4}', text[i:]))
+            if math or not valid:
+                out.append("\\"); count += 1
+            out.append(pair); i += len(pair)
+        return '"' + ''.join(out) + '"'
+    fixed = re.sub(r'"(?:\\.|[^"\\])*"', string, raw)
+    if count:
+        print(f"NOTE fixed {count} LaTeX backslashes; write double backslashes in JSON", file=sys.stderr)
+    return json.loads(fixed)
+
+
+def protect_math(s):
+    saved = []
+    def save(m):
+        raw = m.group()
+        saved.append(f'<span class="tex{" d" if raw.startswith("$$") else ""}">{esc(raw)}</span>')
+        return f"\ue000{len(saved)-1}\ue001"
+    return MATH.sub(save, str(s)), saved
+
+
+def restore_math(s, saved):
+    return re.sub(r'\ue000(\d+)\ue001', lambda m: saved[int(m[1])], s)
+
+
 def md(s):
     """Tiny markdown -> HTML. Escapes first, so author text can't inject tags."""
     if s is None:
         return ""
+    s, saved = protect_math(s)
     out = []
-    for block in re.split(r"\n\s*\n", str(s).strip()):
+    for block in re.split(r"\n\s*\n", s.strip()):
         lines = block.split("\n")
         if all(l.lstrip().startswith("- ") for l in lines):
-            out.append("<ul>" + "".join(f"<li>{inline(l.lstrip()[2:])}</li>" for l in lines) + "</ul>")
+            out.append("<ul>" + "".join(f"<li>{plain_inline(l.lstrip()[2:])}</li>" for l in lines) + "</ul>")
         else:
-            out.append("<p>" + "<br>".join(inline(l) for l in lines) + "</p>")
-    return "".join(out)
+            out.append("<p>" + "<br>".join(plain_inline(l) for l in lines) + "</p>")
+    return restore_math("".join(out), saved)
 
 
 def inline(s):
-    s = html.escape(s)
+    s, saved = protect_math(s)
+    return restore_math(plain_inline(s), saved)
+
+
+def plain_inline(s):
+    s = html.escape(s).replace(r"\$", "$")
     s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
     s = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
     return re.sub(r"(?<!\*)\*(?!\s)(.+?)\*", r"<i>\1</i>", s)
@@ -136,8 +190,23 @@ class R:
 
     def compare(self, s):
         a, b = self.note(s["a"], color="a3"), self.note(s["b"], color="a1")
+        vs = s.get("vs", "vs")
+        if len(vs) > 3:  # a word gets its own middle column so it never covers card text
+            return self.head(s) + f'<div class="grid2 vsrow">{a}<div class="vs wide">{esc(vs)}</div>{b}</div>' + self.foot(s)
         return (self.head(s) + f'<div class="grid2" style="position:relative">{a}{b}'
-                f'<div class="vs">{esc(s.get("vs","vs"))}</div></div>' + self.foot(s))
+                f'<div class="vs">{esc(vs)}</div></div>' + self.foot(s))
+
+    # mermaid (trial): one removable slide renderer.
+    def mermaid(self, s):
+        """Flowchart in the deck look. With `steps`, one new node per step in the order first written."""
+        box = f'<div class="mmd"><pre class="mermaid">{esc(s["code"])}</pre></div>'
+        if not s.get("steps"):
+            return self.figure(box, s)
+        caps = "".join(f'<div class="cap" data-cap="{k+1}"><b>{k+1}</b><div>{md(t)}</div></div>' for k, t in enumerate(s["steps"]))
+        # a left-to-right flow keeps the full width; its captions sit in a row underneath
+        under = re.match(r'\s*(flowchart|graph)\s+(LR|RL)\b', s["code"])
+        cls = f' under" style="--n:{len(s["steps"])}' if under else ""
+        return self.head(s) + f'<div class="scene{cls}">{box}<div class="caps">{caps}{STEPNAV}</div></div>' + self.foot(s)
 
     def figure(self, inner, s):
         side = "".join(self.note(n, "sm") for n in s.get("notes", []))
@@ -179,7 +248,7 @@ class R:
     def predict(self, s):
         opts = "".join(f'<button class="opt">{inline(o)}</button>' for o in s["options"])
         why = self.note({"h": s.get("why_h", "Why"), "t": s["why"]}, "sm reveal", color="a4")
-        return (f'<div><div class="eyebrow">predict first</div><h2>{esc(s["q"])}</h2></div>'
+        return (f'<div><div class="eyebrow">predict first</div><h2>{inline(s["q"])}</h2></div>'
                 f'<div class="grid2" style="align-items:start"><div class="opts" data-predict="{int(s["answer"])}">{opts}</div>{why}</div>')
 
     def quiz(self, s, short=False):
@@ -236,13 +305,34 @@ def render(spec, layout="deck", theme="blockframe-dark", palette="aurora", spec_
         bg = s.get("bg") or (th["hero_bg"] if s.get("type") in ("title", "statement") else th["bgs"][k % 3])
         dood = th["deco"][(k // 2) % len(th["deco"])] if k % 2 == 0 else ""
         lvl = f'<div class="lvl">{esc(spec.get("level",""))} · {k+1}</div>' if k else ""
-        body.append(f'<section class="slide {bg}">{lvl}{fn(dict(s))}{dood}</section>')
+        content = fn(dict(s))
+        symbols = s.get("symbols", [])
+        card, cls = "", ""
+        if symbols:
+            if len(symbols) > 8:
+                print(f"WARN slide {k+1}: more than 8 symbols; split the slide", file=sys.stderr)
+            popup = s.get("type") in ("svg", "scene", "mermaid", "sim")
+            cls = " has-sym" + (" sym-popup" if popup else "")
+            pill = '<button class="sym-toggle" aria-expanded="false">notation (' + str(len(symbols)) + ')</button>' if popup else ""
+            terms = ''.join(f'<dt>{inline("$"+x["sym"]+"$")}</dt><dd>{md(x["means"])}</dd>' for x in symbols)
+            card = f'{pill}<aside class="sym"><h4>notation</h4><dl>{terms}</dl></aside>'
+        elif 'class="tex' in content:
+            print(f'WARN slide {k+1}: math but no symbols (add "symbols")', file=sys.stderr)
+        if s.get("type") == "compare" and len(s.get("vs", "vs")) > 12:
+            print(f'WARN slide {k+1}: "vs" over 12 characters; put the contrast in the title', file=sys.stderr)
+        body.append(f'<section class="slide {bg}{cls}">{lvl}{content}{dood}{card}</section>')
+    need = []
+    if any('class="tex' in b for b in body):
+        need.append("katex")
+    if any(s.get("type") == "mermaid" for s in spec["slides"]):  # mermaid (trial)
+        need.append("mermaid")
+    libs = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.18.9/katex.min.css">' if "katex" in need else ""
     css = (ASSETS / th["css"]).read_text() + pal_css
     js = (ASSETS / "deck.js").read_text()
     sims = f"window.T={json.dumps(th['T'])};window.SIMS={{}};" + "".join(r.sims)
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(spec["title"])}</title>'
-            f'{th["fonts"]}<style>{css}</style></head><body class="{layout}">{DEFS}<div id="stage">{"".join(body)}</div><div class="grain"></div>'
+            f'{th["fonts"]}{libs}<style>{css}</style></head><body class="{layout}" data-need="{" ".join(need)}">{DEFS}<div id="stage">{"".join(body)}</div><div class="grain"></div>'
             f'<div class="nav"><button onclick="deckGo(-1)">&larr;</button><span id="ctr"></span><button onclick="deckGo(1)">&rarr;</button></div>'
             f'<script>{sims}</script><script>{js}</script></body></html>')
 
@@ -256,7 +346,7 @@ if __name__ == "__main__":
     ap.add_argument("--palette", choices=list(PALETTES), help="default: spec 'palette' or aurora")
     ap.add_argument("--embed", action="store_true", help="put images inside the HTML (one portable file)")
     a = ap.parse_args()
-    spec = json.loads(Path(a.spec).read_text())
+    spec = load_spec(Path(a.spec).read_text())
     out = Path(a.out or Path(a.spec).with_suffix(".html"))
     out.parent.mkdir(parents=True, exist_ok=True)
     layout = a.layout or spec.get("layout", "deck")
