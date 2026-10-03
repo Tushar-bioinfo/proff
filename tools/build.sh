@@ -9,6 +9,13 @@ rm -rf dist && mkdir -p dist
 X="-x *.DS_Store -x */__pycache__/* -x */snaps/* -x *.html"
 zip -qr dist/proff-claude.zip .claude-plugin/plugin.json skills/proff $X
 (cd skills && zip -qr ../dist/proff-chatgpt.zip proff $X)
+# proff-v3-claude-separate.zip: renamed to proff-v3 so it installs next to an existing v2 "proff"
+T=$(mktemp -d); mkdir -p "$T/.claude-plugin" "$T/skills"
+sed 's/"name": "proff"/"name": "proff-v3"/' .claude-plugin/plugin.json > "$T/.claude-plugin/plugin.json"
+cp -R skills/proff "$T/skills/proff-v3"
+sed -i.bak '1,4s/^name: proff$/name: proff-v3/' "$T/skills/proff-v3/SKILL.md" && rm "$T/skills/proff-v3/SKILL.md.bak"
+(cd "$T" && zip -qr "$OLDPWD/dist/proff-v3-claude-separate.zip" .claude-plugin skills $X)
+rm -rf "$T"
 S=skills/proff
 {
   awk 'n>=2; /^---$/{n++}' $S/SKILL.md | sed '/^## Where you are running/,$d'
