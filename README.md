@@ -26,7 +26,7 @@ claude.ai: upload `dist/proff-claude.zip`. ChatGPT: upload `dist/proff-chatgpt.z
 ## Try the example
 ```
 python3 skills/proff/scripts/render.py skills/proff/examples/bootstrap.json -o deck.html --embed
-python3 skills/proff/scripts/snap.py deck.html   # screenshots + overflow check (needs playwright)
+python3 skills/proff/scripts/snap.py deck.html   # screenshots, layout check, sheet.png + svg.png (needs playwright)
 ```
 
 ## Layout

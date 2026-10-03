@@ -56,4 +56,4 @@ Bars: `<rect class="f1" x=".." y=".." width="34" height=".."/>`, baseline `ln` o
 A study interval: a `ln s2` line with short end ticks and a `c2` dot at the estimate.
 
 ## Check
-`snap.py` warns when SVG text spills outside its diagram. Fix the coordinates and re-render. Look at the slide once.
+`snap.py` warns when SVG text spills outside its diagram. Fix the coordinates and re-render. `snaps/svg.png` shows every diagram at its last step; look at it once.
