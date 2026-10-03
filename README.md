@@ -3,8 +3,9 @@
 A first-principles tutor for Claude, Codex, Cursor, Gemini, Muse, claude.ai and ChatGPT.
 
 - **L1** (default): ~150 words — the answer, one example, the caveat that matters.
-- **L2**: a predict-first question, one diagram, the key concepts.
-- **L3**: an interactive 16:9 HTML deck (dark Block Frame theme, aurora palette) with a live simulation, flip-card quiz, and one generated "mental model" image.
+- **L2**: a predict-first question, 1–3 diagrams, the key concepts, one exam angle.
+- **L3**: a detailed write-up (prerequisites, mechanism, worked example, where it breaks, exam angles, what to read next) plus an interactive 16:9 HTML deck (dark Block Frame theme, aurora palette): step-by-step SVG diagrams, step-by-step calculations, a live simulation, exam-angle and quiz flip cards.
+- **Images**: a generated "mental model" image, only when you ask.
 - **Modes**: `quiz me` (3–5 graded questions, one at a time) and `guide me` / `socratic` / `thinker` (one question at a time, hint ladder).
 - **Writing**: STE-80 (short active sentences; terms, numbers and hedges kept). Say `plain` for normal prose.
 
@@ -33,7 +34,8 @@ python3 skills/proff/scripts/snap.py deck.html   # screenshots + overflow check 
 skills/proff/SKILL.md      router: writing rules, sources, level + mode table
 skills/proff/levels/       L2.md, L3.md (spec schema)
 skills/proff/modes/        quiz.md, guide.md
-skills/proff/ref/image.md  image prompt template, per-environment calls
+skills/proff/ref/svg.md    SVG diagram kit (classes, step builds, patterns)
+skills/proff/ref/image.md  image prompt template, per-environment calls (on request only)
 skills/proff/scripts/      render.py, snap.py, image.py, log.py
 skills/proff/assets/       blockframe-dark.css, deck.js
 ```

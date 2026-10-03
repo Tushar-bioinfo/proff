@@ -20,14 +20,20 @@ S=skills/proff
 {
   awk 'n>=2; /^---$/{n++}' $S/SKILL.md | sed '/^## Where you are running/,$d'
   echo "## Where you are running"
-  echo "- This is the text-only version. L3 = L2 plus a slide-by-slide outline. If you can generate images, make one with the template below."
+  echo "- This is the text-only version. L3 = the full write-up below plus a slide-by-slide outline (one line per slide, saying what each diagram shows step by step)."
+  echo "- Images only when the user asks. If you can generate images, use the template below."
   echo
   sed -n '/^# L2/,$p' $S/levels/L2.md | sed 's/^# /## /'
   echo
-  sed -n '/^## Prompt template/,/^```$/p' $S/ref/image.md | sed '1s/.*/## Image prompt template (L3, if you can make images)/'
+  echo "## L3 — the detailed write-up"
+  sed -n '/^L3 is the deep version/p' $S/levels/L3.md
+  echo
+  sed -n '/^## 1. Plan the visuals/,/^## 3. The deck/p' $S/levels/L3.md | sed '$d' | sed 's/^## /### /'
+  echo
+  sed -n '/^## Prompt template/,/^```$/p' $S/ref/image.md | sed '1s/.*/## Image prompt template (only when the user asks)/'
   sed -n '/^```$/,/^```$/p' $S/ref/image.md | sed -n '2,/^```$/p'
   echo
   sed '/^## Log/,$d' $S/modes/quiz.md | sed 's/^# /## /; s/^## Flow/### Flow/; s/^## Rules/### Rules/'
   sed 's/^# /## /; s/^## Flow/### Flow/; s/^## Thinker/### Thinker/; s/^## Rules/### Rules/' $S/modes/guide.md
-} | sed 's#(open `[^`]*`)##; s#`levels/L2.md`#the L2 section#; s#`levels/L3.md`#the L3 note#; s#`modes/quiz.md`#the Quiz section#; s#`modes/guide.md`#the Guide section#; s#`ref/image.md`#the image template#' > dist/proff-instructions.md
+} | sed 's#(open `[^`]*`)##; s#`levels/L2.md`#the L2 section#; s#`levels/L3.md`#the L3 section#; s#Then the deck path and the offer line.#Then the slide outline and the offer line.#; s#(see `SKILL.md`)#(see Sources)#; s#`modes/quiz.md`#the Quiz section#; s#`modes/guide.md`#the Guide section#; s#`ref/image.md`#the image template#' > dist/proff-instructions.md
 ls -la dist

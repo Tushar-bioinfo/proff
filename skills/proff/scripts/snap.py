@@ -22,6 +22,11 @@ CHECK = """() => {
       if (e.scrollHeight > e.clientHeight + 4 && getComputedStyle(e).overflow !== 'visible')
         out.push(`slide ${k+1}: <${e.tagName.toLowerCase()}> text is clipped`);
     });
+    s.querySelectorAll('svg text').forEach(t => {
+      const v = t.ownerSVGElement.getBoundingClientRect(), b = t.getBoundingClientRect(), pad = 4 * sc;
+      if (b.width && (b.right > v.right + pad || b.left < v.left - pad || b.bottom > v.bottom + pad || b.top < v.top - pad))
+        out.push(`slide ${k+1}: svg text "${t.textContent.slice(0, 30)}" spills outside its diagram`);
+    });
     s.style.cssText = prev;
   });
   return out;
@@ -51,7 +56,7 @@ def main():
             print("WARN", msg)
         shots = []
         for k in range(n):
-            pg.evaluate(f"deckTo({k})")
+            pg.evaluate(f"deckTo({k},-1)")
             pg.wait_for_timeout(450)
             f = out / f"slide{k+1:02d}.png"
             pg.screenshot(path=str(f))

@@ -38,6 +38,15 @@ THEMES = {
 }
 
 
+STEPNAV = ('<div class="stepnav"><button data-sb="-1" aria-label="previous step">&lsaquo;</button>'
+           '<span class="stepctr"></span><button data-sb="1" aria-label="next step">&rsaquo;</button></div>')
+# Arrowhead shared by every diagram: class="ln arr" on a line/path.
+DEFS = ('<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>'
+        '<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">'
+        '<path d="M1.5 1.5L8.5 5L1.5 8.5" fill="none" stroke="#ececee" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>'
+        '</marker></defs></svg>')
+
+
 def md(s):
     """Tiny markdown -> HTML. Escapes first, so author text can't inject tags."""
     if s is None:
@@ -143,7 +152,29 @@ class R:
         return self.figure(f'<div class="polaroid r1">{img}{cap}</div>', s)
 
     def svg(self, s):
-        return self.figure(f'<div class="canvas r2">{s["svg"]}</div>', s)
+        """Diagram in the SVG kit. `steps` = captions; elements with data-step / data-only build up per step."""
+        canvas = f'<div class="canvas r2">{s["svg"]}</div>'
+        if not s.get("steps"):
+            return self.figure(canvas, s)
+        caps = "".join(f'<div class="cap" data-cap="{k+1}"><b>{k+1}</b><div>{md(t)}</div></div>' for k, t in enumerate(s["steps"]))
+        return (self.head(s) + f'<div class="scene">{canvas}<div class="caps">{caps}{STEPNAV}</div></div>' + self.foot(s))
+
+    scene = svg
+
+    def calc(self, s):
+        """Step-by-step calculation: one line appears per step. lines[] of {expr, note}; optional given."""
+        rows = "".join(
+            f'<div class="crow{" res" if l.get("result") else ""}" data-step="{k+1}"><div class="expr">{inline(l["expr"])}</div>'
+            f'<div class="why">{inline(l.get("note",""))}</div></div>' for k, l in enumerate(s["lines"]))
+        given = f'<div class="given"><span>given</span>{inline(s["given"])}</div>' if s.get("given") else ""
+        s.setdefault("eyebrow", "work it through")
+        return self.head(s) + f'<div class="calc">{given}{rows}{STEPNAV}</div>' + self.foot(s)
+
+    def angles(self, s):
+        """Exam angles: flip cards, each tagged with how the question is twisted."""
+        s.setdefault("eyebrow", "how it gets asked")
+        s.setdefault("title", "Angles you might not expect")
+        return self.quiz(s, short=True)
 
     def predict(self, s):
         opts = "".join(f'<button class="opt">{inline(o)}</button>' for o in s["options"])
@@ -151,12 +182,13 @@ class R:
         return (f'<div><div class="eyebrow">predict first</div><h2>{esc(s["q"])}</h2></div>'
                 f'<div class="grid2" style="align-items:start"><div class="opts" data-predict="{int(s["answer"])}">{opts}</div>{why}</div>')
 
-    def quiz(self, s):
+    def quiz(self, s, short=False):
         cards = []
         for k, c in enumerate(s["cards"]):
             col = COLORS[k % len(COLORS)]
-            cards.append(f'<div class="flip {ROT[k % 4]}"><div class="inner">'
-                         f'<div class="face front {col}"><p><b>{inline(c["q"])}</b></p><div class="hint">say it out loud, then tap</div></div>'
+            tag = f'<div class="tag">{esc(c["tag"])}</div>' if c.get("tag") else ""
+            cards.append(f'<div class="flip {ROT[k % 4]}{" short" if short else ""}"><div class="inner">'
+                         f'<div class="face front {col}">{tag}<p><b>{inline(c["q"])}</b></p><div class="hint">say it out loud, then tap</div></div>'
                          f'<div class="face back white">{md(c["a"])}</div></div></div>')
         grid = "grid3" if len(cards) == 3 else "grid2"
         s.setdefault("eyebrow", "retrieve it")
@@ -210,7 +242,7 @@ def render(spec, layout="deck", theme="blockframe-dark", palette="aurora", spec_
     sims = f"window.T={json.dumps(th['T'])};window.SIMS={{}};" + "".join(r.sims)
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(spec["title"])}</title>'
-            f'{th["fonts"]}<style>{css}</style></head><body class="{layout}"><div id="stage">{"".join(body)}</div><div class="grain"></div>'
+            f'{th["fonts"]}<style>{css}</style></head><body class="{layout}">{DEFS}<div id="stage">{"".join(body)}</div><div class="grain"></div>'
             f'<div class="nav"><button onclick="deckGo(-1)">&larr;</button><span id="ctr"></span><button onclick="deckGo(1)">&rarr;</button></div>'
             f'<script>{sims}</script><script>{js}</script></body></html>')
 

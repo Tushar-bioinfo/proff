@@ -1,6 +1,7 @@
 {
  "title": "The Bootstrap",
  "level": "L3",
+ "palette": "aurora",
  "slides": [
   {
    "type": "title",
@@ -21,6 +22,25 @@
    "why": "The spread of a mean falls with the **square root** of n. 4x more cells gives sqrt(4) = 2x less spread. Keep this number. The simulation later shows it."
   },
   {
+   "type": "notes",
+   "eyebrow": "before you start",
+   "title": "Three words you need",
+   "notes": [
+    {
+     "h": "Sample vs population",
+     "t": "The **population** is every cell you could measure. Your **sample** is the 40 you did measure."
+    },
+    {
+     "h": "Standard deviation (SD)",
+     "t": "How much single cells differ from each other. More cells do not make it smaller."
+    },
+    {
+     "h": "Standard error (SE)",
+     "t": "How much the **mean** would change if you repeated the study. More cells make it smaller."
+    }
+   ]
+  },
+  {
    "type": "text",
    "eyebrow": "the problem",
    "title": "One sample, no second chance",
@@ -28,41 +48,58 @@
    "hand": "so we need a different method"
   },
   {
-   "type": "flow",
-   "eyebrow": "the method",
-   "title": "Four steps",
+   "type": "svg",
+   "eyebrow": "the idea",
+   "title": "What uncertainty means",
+   "svg": "<svg viewBox=\"0 0 1200 650\">\n<text x=\"160\" y=\"50\">where sample means fall, over many studies</text>\n<path class=\"f1\" d=\"M277 470 L277 417.3 L280 415.1 L288 409.8 L296 404.1 L304 398.0 L312 391.5 L320 384.7 L328 377.5 L336 369.9 L344 362.0 L352 353.7 L360 345.0 L368 336.0 L376 326.7 L384 317.2 L392 307.4 L400 297.3 L408 287.1 L416 276.7 L424 266.2 L432 255.6 L440 245.0 L448 234.5 L456 224.0 L464 213.7 L472 203.5 L480 193.7 L488 184.1 L496 174.9 L504 166.1 L512 157.7 L520 149.9 L528 142.7 L536 136.1 L544 130.1 L552 124.9 L560 120.4 L568 116.7 L576 113.8 L584 111.7 L592 110.4 L600 110.0 L608 110.4 L616 111.7 L624 113.8 L632 116.7 L640 120.4 L648 124.9 L656 130.1 L664 136.1 L672 142.7 L680 149.9 L688 157.7 L696 166.1 L704 174.9 L712 184.1 L720 193.7 L728 203.5 L736 213.7 L744 224.0 L752 234.5 L760 245.0 L768 255.6 L776 266.2 L784 276.7 L792 287.1 L800 297.3 L808 307.4 L816 317.2 L824 326.7 L832 336.0 L840 345.0 L848 353.7 L856 362.0 L864 369.9 L872 377.5 L880 384.7 L888 391.5 L896 398.0 L904 404.1 L912 409.8 L920 415.1 L923 417.3 L923 470 Z\" data-step=\"2\"/>\n<path class=\"ln\" d=\"M120 464.8 L128 464.0 L136 463.1 L144 462.1 L152 461.0 L160 459.7 L168 458.3 L176 456.7 L184 455.0 L192 453.1 L200 450.9 L208 448.6 L216 446.0 L224 443.2 L232 440.1 L240 436.7 L248 433.0 L256 429.0 L264 424.7 L272 420.1 L280 415.1 L288 409.8 L296 404.1 L304 398.0 L312 391.5 L320 384.7 L328 377.5 L336 369.9 L344 362.0 L352 353.7 L360 345.0 L368 336.0 L376 326.7 L384 317.2 L392 307.4 L400 297.3 L408 287.1 L416 276.7 L424 266.2 L432 255.6 L440 245.0 L448 234.5 L456 224.0 L464 213.7 L472 203.5 L480 193.7 L488 184.1 L496 174.9 L504 166.1 L512 157.7 L520 149.9 L528 142.7 L536 136.1 L544 130.1 L552 124.9 L560 120.4 L568 116.7 L576 113.8 L584 111.7 L592 110.4 L600 110.0 L608 110.4 L616 111.7 L624 113.8 L632 116.7 L640 120.4 L648 124.9 L656 130.1 L664 136.1 L672 142.7 L680 149.9 L688 157.7 L696 166.1 L704 174.9 L712 184.1 L720 193.7 L728 203.5 L736 213.7 L744 224.0 L752 234.5 L760 245.0 L768 255.6 L776 266.2 L784 276.7 L792 287.1 L800 297.3 L808 307.4 L816 317.2 L824 326.7 L832 336.0 L840 345.0 L848 353.7 L856 362.0 L864 369.9 L872 377.5 L880 384.7 L888 391.5 L896 398.0 L904 404.1 L912 409.8 L920 415.1 L928 420.1 L936 424.7 L944 429.0 L952 433.0 L960 436.7 L968 440.1 L976 443.2 L984 446.0 L992 448.6 L1000 450.9 L1008 453.1 L1016 455.0 L1024 456.7 L1032 458.3 L1040 459.7 L1048 461.0 L1056 462.1 L1064 463.1 L1072 464.0 L1080 464.8\"/>\n<line class=\"ln\" x1=\"110\" y1=\"470\" x2=\"1090\" y2=\"470\"/>\n<line class=\"ln thin dash\" x1=\"600\" y1=\"114\" x2=\"600\" y2=\"290\"/><line class=\"ln thin dash\" x1=\"600\" y1=\"420\" x2=\"600\" y2=\"470\"/>\n<text class=\"mid\" x=\"600\" y=\"530\">true mean</text>\n<g data-step=\"2\"><line class=\"ln thin\" x1=\"277\" y1=\"417\" x2=\"277\" y2=\"486\"/><line class=\"ln thin\" x1=\"923\" y1=\"417\" x2=\"923\" y2=\"486\"/>\n<text class=\"mid\" x=\"277\" y=\"530\">-1.96 SE</text><text class=\"mid\" x=\"923\" y=\"530\">+1.96 SE</text></g>\n<g data-step=\"3\"><text class=\"mid big\" x=\"600\" y=\"370\">95%</text><text class=\"mid\" x=\"600\" y=\"410\">of sample means</text>\n<text class=\"mid\" x=\"180\" y=\"420\">2.5%</text><text class=\"mid\" x=\"1020\" y=\"420\">2.5%</text></g>\n<g data-step=\"4\"><circle class=\"c2\" cx=\"690\" cy=\"580\" r=\"13\"/><line class=\"ln s2\" x1=\"367\" y1=\"580\" x2=\"1013\" y2=\"580\"/>\n<line class=\"ln s2\" x1=\"367\" y1=\"564\" x2=\"367\" y2=\"596\"/><line class=\"ln s2\" x1=\"1013\" y1=\"564\" x2=\"1013\" y2=\"596\"/>\n<text class=\"small mid\" x=\"690\" y=\"635\">your one study: its mean ± 1.96 SE</text></g>\n</svg>",
    "steps": [
-    {
-     "h": "Start",
-     "t": "Use your one sample of **n** values."
-    },
-    {
-     "h": "Resample",
-     "t": "Pick n values from it **with replacement**. Some repeat. Some go."
-    },
-    {
-     "h": "Calculate",
-     "t": "Calculate the statistic on this new sample."
-    },
-    {
-     "h": "Repeat",
-     "t": "Do it **B** times (for example 2000). Look at the spread."
-    }
-   ],
-   "hand": "the spread of the B results estimates the standard error"
+    "Imagine the same study done many times. Each gives a slightly different mean.",
+    "Those means pile up in a bell shape. Its width is the **standard error**.",
+    "95% of the means land within **1.96 SE** of the true mean.",
+    "So your one mean ± 1.96 SE catches the true mean in 95% of studies."
+   ]
   },
   {
-   "type": "image",
-   "src": "img/bootstrap.jpg",
-   "caption": "the sample stands in for the population",
-   "notes": [
+   "type": "svg",
+   "eyebrow": "the method",
+   "title": "Resampling, step by step",
+   "svg": "<svg viewBox=\"0 0 1200 640\">\n<rect class=\"ln\" x=\"40\" y=\"240\" width=\"290\" height=\"170\"/>\n<circle class=\"f3\" cx=\"98\" cy=\"296\" r=\"25\"/><circle class=\"ln thin\" cx=\"98\" cy=\"296\" r=\"25\"/><text class=\"mid\" x=\"98\" y=\"305\" style=\"font-size:24px\">4</text><circle class=\"f3\" cx=\"156\" cy=\"296\" r=\"25\"/><circle class=\"ln thin\" cx=\"156\" cy=\"296\" r=\"25\"/><text class=\"mid\" x=\"156\" y=\"305\" style=\"font-size:24px\">7</text><circle class=\"f3\" cx=\"214\" cy=\"296\" r=\"25\"/><circle class=\"ln thin\" cx=\"214\" cy=\"296\" r=\"25\"/><text class=\"mid\" x=\"214\" y=\"305\" style=\"font-size:24px\">9</text><circle class=\"f3\" cx=\"272\" cy=\"296\" r=\"25\"/><circle class=\"ln thin\" cx=\"272\" cy=\"296\" r=\"25\"/><text class=\"mid\" x=\"272\" y=\"305\" style=\"font-size:24px\">10</text><circle class=\"f3\" cx=\"98\" cy=\"354\" r=\"25\"/><circle class=\"ln thin\" cx=\"98\" cy=\"354\" r=\"25\"/><text class=\"mid\" x=\"98\" y=\"363\" style=\"font-size:24px\">12</text><circle class=\"f3\" cx=\"156\" cy=\"354\" r=\"25\"/><circle class=\"ln thin\" cx=\"156\" cy=\"354\" r=\"25\"/><text class=\"mid\" x=\"156\" y=\"363\" style=\"font-size:24px\">13</text><circle class=\"f3\" cx=\"214\" cy=\"354\" r=\"25\"/><circle class=\"ln thin\" cx=\"214\" cy=\"354\" r=\"25\"/><text class=\"mid\" x=\"214\" y=\"363\" style=\"font-size:24px\">15</text><circle class=\"f3\" cx=\"272\" cy=\"354\" r=\"25\"/><circle class=\"ln thin\" cx=\"272\" cy=\"354\" r=\"25\"/><text class=\"mid\" x=\"272\" y=\"363\" style=\"font-size:24px\">18</text>\n<text x=\"40\" y=\"215\">your sample, n = 8</text>\n<text class=\"small\" x=\"40\" y=\"455\">mean = 11.0</text>\n<g data-step=\"2\"><line class=\"ln thin arr\" x1=\"340\" y1=\"325\" x2=\"450\" y2=\"125\"/><rect class=\"ln thin\" x=\"460\" y=\"50\" width=\"290\" height=\"150\"/><circle class=\"f2 s2\" cx=\"518\" cy=\"96\" r=\"25\"/><circle class=\"ln thin s2\" cx=\"518\" cy=\"96\" r=\"25\"/><text class=\"mid\" x=\"518\" y=\"105\" style=\"font-size:24px\">7</text><circle class=\"f2 s2\" cx=\"576\" cy=\"96\" r=\"25\"/><circle class=\"ln thin s2\" cx=\"576\" cy=\"96\" r=\"25\"/><text class=\"mid\" x=\"576\" y=\"105\" style=\"font-size:24px\">7</text><circle class=\"f3\" cx=\"634\" cy=\"96\" r=\"25\"/><circle class=\"ln thin\" cx=\"634\" cy=\"96\" r=\"25\"/><text class=\"mid\" x=\"634\" y=\"105\" style=\"font-size:24px\">10</text><circle class=\"f3\" cx=\"692\" cy=\"96\" r=\"25\"/><circle class=\"ln thin\" cx=\"692\" cy=\"96\" r=\"25\"/><text class=\"mid\" x=\"692\" y=\"105\" style=\"font-size:24px\">12</text><circle class=\"f3\" cx=\"518\" cy=\"154\" r=\"25\"/><circle class=\"ln thin\" cx=\"518\" cy=\"154\" r=\"25\"/><text class=\"mid\" x=\"518\" y=\"163\" style=\"font-size:24px\">13</text><circle class=\"f2 s2\" cx=\"576\" cy=\"154\" r=\"25\"/><circle class=\"ln thin s2\" cx=\"576\" cy=\"154\" r=\"25\"/><text class=\"mid\" x=\"576\" y=\"163\" style=\"font-size:24px\">15</text><circle class=\"f2 s2\" cx=\"634\" cy=\"154\" r=\"25\"/><circle class=\"ln thin s2\" cx=\"634\" cy=\"154\" r=\"25\"/><text class=\"mid\" x=\"634\" y=\"163\" style=\"font-size:24px\">15</text><circle class=\"f3\" cx=\"692\" cy=\"154\" r=\"25\"/><circle class=\"ln thin\" cx=\"692\" cy=\"154\" r=\"25\"/><text class=\"mid\" x=\"692\" y=\"163\" style=\"font-size:24px\">18</text></g>\n<g data-step=\"3\"><line class=\"ln thin arr\" x1=\"760\" y1=\"125\" x2=\"800\" y2=\"125\"/><text x=\"815\" y=\"137\">12.1</text></g>\n<g data-step=\"2\"><line class=\"ln thin arr\" x1=\"340\" y1=\"325\" x2=\"450\" y2=\"325\"/><rect class=\"ln thin\" x=\"460\" y=\"250\" width=\"290\" height=\"150\"/><circle class=\"f2 s2\" cx=\"518\" cy=\"296\" r=\"25\"/><circle class=\"ln thin s2\" cx=\"518\" cy=\"296\" r=\"25\"/><text class=\"mid\" x=\"518\" y=\"305\" style=\"font-size:24px\">4</text><circle class=\"f2 s2\" cx=\"576\" cy=\"296\" r=\"25\"/><circle class=\"ln thin s2\" cx=\"576\" cy=\"296\" r=\"25\"/><text class=\"mid\" x=\"576\" y=\"305\" style=\"font-size:24px\">4</text><circle class=\"f3\" cx=\"634\" cy=\"296\" r=\"25\"/><circle class=\"ln thin\" cx=\"634\" cy=\"296\" r=\"25\"/><text class=\"mid\" x=\"634\" y=\"305\" style=\"font-size:24px\">9</text><circle class=\"f2 s2\" cx=\"692\" cy=\"296\" r=\"25\"/><circle class=\"ln thin s2\" cx=\"692\" cy=\"296\" r=\"25\"/><text class=\"mid\" x=\"692\" y=\"305\" style=\"font-size:24px\">10</text><circle class=\"f2 s2\" cx=\"518\" cy=\"354\" r=\"25\"/><circle class=\"ln thin s2\" cx=\"518\" cy=\"354\" r=\"25\"/><text class=\"mid\" x=\"518\" y=\"363\" style=\"font-size:24px\">10</text><circle class=\"f3\" cx=\"576\" cy=\"354\" r=\"25\"/><circle class=\"ln thin\" cx=\"576\" cy=\"354\" r=\"25\"/><text class=\"mid\" x=\"576\" y=\"363\" style=\"font-size:24px\">12</text><circle class=\"f3\" cx=\"634\" cy=\"354\" r=\"25\"/><circle class=\"ln thin\" cx=\"634\" cy=\"354\" r=\"25\"/><text class=\"mid\" x=\"634\" y=\"363\" style=\"font-size:24px\">13</text><circle class=\"f3\" cx=\"692\" cy=\"354\" r=\"25\"/><circle class=\"ln thin\" cx=\"692\" cy=\"354\" r=\"25\"/><text class=\"mid\" x=\"692\" y=\"363\" style=\"font-size:24px\">18</text></g>\n<g data-step=\"3\"><line class=\"ln thin arr\" x1=\"760\" y1=\"325\" x2=\"800\" y2=\"325\"/><text x=\"815\" y=\"337\">10.0</text></g>\n<g data-step=\"2\"><line class=\"ln thin arr\" x1=\"340\" y1=\"325\" x2=\"450\" y2=\"525\"/><rect class=\"ln thin\" x=\"460\" y=\"450\" width=\"290\" height=\"150\"/><circle class=\"f3\" cx=\"518\" cy=\"496\" r=\"25\"/><circle class=\"ln thin\" cx=\"518\" cy=\"496\" r=\"25\"/><text class=\"mid\" x=\"518\" y=\"505\" style=\"font-size:24px\">4</text><circle class=\"f3\" cx=\"576\" cy=\"496\" r=\"25\"/><circle class=\"ln thin\" cx=\"576\" cy=\"496\" r=\"25\"/><text class=\"mid\" x=\"576\" y=\"505\" style=\"font-size:24px\">7</text><circle class=\"f2 s2\" cx=\"634\" cy=\"496\" r=\"25\"/><circle class=\"ln thin s2\" cx=\"634\" cy=\"496\" r=\"25\"/><text class=\"mid\" x=\"634\" y=\"505\" style=\"font-size:24px\">9</text><circle class=\"f2 s2\" cx=\"692\" cy=\"496\" r=\"25\"/><circle class=\"ln thin s2\" cx=\"692\" cy=\"496\" r=\"25\"/><text class=\"mid\" x=\"692\" y=\"505\" style=\"font-size:24px\">9</text><circle class=\"f2 s2\" cx=\"518\" cy=\"554\" r=\"25\"/><circle class=\"ln thin s2\" cx=\"518\" cy=\"554\" r=\"25\"/><text class=\"mid\" x=\"518\" y=\"563\" style=\"font-size:24px\">13</text><circle class=\"f2 s2\" cx=\"576\" cy=\"554\" r=\"25\"/><circle class=\"ln thin s2\" cx=\"576\" cy=\"554\" r=\"25\"/><text class=\"mid\" x=\"576\" y=\"563\" style=\"font-size:24px\">13</text><circle class=\"f2 s2\" cx=\"634\" cy=\"554\" r=\"25\"/><circle class=\"ln thin s2\" cx=\"634\" cy=\"554\" r=\"25\"/><text class=\"mid\" x=\"634\" y=\"563\" style=\"font-size:24px\">13</text><circle class=\"f3\" cx=\"692\" cy=\"554\" r=\"25\"/><circle class=\"ln thin\" cx=\"692\" cy=\"554\" r=\"25\"/><text class=\"mid\" x=\"692\" y=\"563\" style=\"font-size:24px\">15</text></g>\n<g data-step=\"3\"><line class=\"ln thin arr\" x1=\"760\" y1=\"525\" x2=\"800\" y2=\"525\"/><text x=\"815\" y=\"537\">10.4</text></g>\n<g data-step=\"4\"><text x=\"930\" y=\"300\" style=\"font-size:28px\">means of B</text><text x=\"930\" y=\"334\" style=\"font-size:28px\">resamples</text><rect class=\"f1\" x=\"930\" y=\"546\" width=\"24\" height=\"14\"/><rect class=\"f1\" x=\"958\" y=\"518\" width=\"24\" height=\"42\"/><rect class=\"f1\" x=\"986\" y=\"462\" width=\"24\" height=\"98\"/><rect class=\"f1\" x=\"1014\" y=\"392\" width=\"24\" height=\"168\"/><rect class=\"f1\" x=\"1042\" y=\"350\" width=\"24\" height=\"210\"/><rect class=\"f1\" x=\"1070\" y=\"392\" width=\"24\" height=\"168\"/><rect class=\"f1\" x=\"1098\" y=\"462\" width=\"24\" height=\"98\"/><rect class=\"f1\" x=\"1126\" y=\"518\" width=\"24\" height=\"42\"/><rect class=\"f1\" x=\"1154\" y=\"546\" width=\"24\" height=\"14\"/><line class=\"ln\" x1=\"920\" y1=\"562\" x2=\"1190\" y2=\"562\"/><text class=\"small\" x=\"930\" y=\"610\">spread = SE</text></g>\n<text class=\"small\" x=\"460\" y=\"635\" data-step=\"2\">green ring = drawn twice or more</text>\n</svg>",
+   "steps": [
+    "You have one sample of n values. You cannot repeat the study.",
+    "Draw n values **with replacement**. Some repeat (green ring). Some are left out.",
+    "Calculate the mean of each resample.",
+    "Do it B times. The spread of those means estimates the **SE**."
+   ]
+  },
+  {
+   "type": "calc",
+   "title": "Check it by hand",
+   "given": "40 cells · mean area 52 µm² · SD 10 µm²",
+   "lines": [
     {
-     "h": "Mental model",
-     "t": "Your sample is a small copy of the population. Resampling from it imitates new experiments."
+     "expr": "SE = SD / √n",
+     "note": "standard error of a mean"
     },
     {
-     "h": "Key assumption",
-     "t": "The sample must **represent** the population. If it does not, the bootstrap copies the error."
+     "expr": "SE = 10 / √40 = 10 / 6.32",
+     "note": "plug in"
+    },
+    {
+     "expr": "SE = 1.58 µm²",
+     "note": "uncertainty of the mean"
+    },
+    {
+     "expr": "95% CI = 52 ± 1.96 × 1.58",
+     "note": "normal approximation"
+    },
+    {
+     "expr": "95% CI = 48.9 to 55.1 µm²",
+     "note": "a bootstrap should give a similar interval here",
+     "result": true
+    },
+    {
+     "expr": "n = 160 → SE = 10 / 12.65 = 0.79",
+     "note": "4× cells, half the SE (your prediction)"
     }
    ]
   },
@@ -106,6 +143,31 @@
    "hand": "spatial omics trap: resample patients, not cells"
   },
   {
+   "type": "angles",
+   "cards": [
+    {
+     "tag": "reversed",
+     "q": "The 95% CI is 48.9 to 55.1. Is there a 95% chance the true mean is inside it?",
+     "a": "Not in the usual (frequentist) reading. The **method** catches the true mean in 95% of studies. This one interval either contains it or not."
+    },
+    {
+     "tag": "edge case",
+     "q": "You bootstrap the **largest** cell area. What goes wrong?",
+     "a": "A resample can never beat the sample's maximum. The interval is too narrow and sits too low."
+    },
+    {
+     "tag": "design",
+     "q": "3 patients, 10,000 cells each. What is n for the bootstrap?",
+     "a": "n = 3. Resample **patients**, not cells. Cells from one patient are not independent (**pseudoreplication**)."
+    },
+    {
+     "tag": "confusable",
+     "q": "SD or SE: which one shrinks when you measure more cells?",
+     "a": "SE. SD is the spread of cells and stays about the same. SE = SD / √n is the uncertainty of the mean."
+    }
+   ]
+  },
+  {
    "type": "quiz",
    "title": "Check yourself",
    "cards": [
@@ -114,12 +176,12 @@
      "a": "Without replacement, each resample is the same set of values. The statistic never changes, so you see no spread."
     },
     {
-     "q": "You have 3 patients and 30,000 cells. What do you resample?",
-     "a": "Patients. The cells in one patient are not independent. Resampling cells makes the interval too narrow (**pseudoreplication**)."
-    },
-    {
      "q": "More resamples (B) makes the interval narrower. True?",
      "a": "No. B only makes the estimate of the interval more stable. Only more data (n) makes it narrower."
+    },
+    {
+     "q": "Why must each resample have the same size n as your sample?",
+     "a": "The SE depends on n. Smaller resamples spread more and would overstate the uncertainty."
     }
    ]
   },
@@ -133,7 +195,7 @@
     "It cannot fix a sample that does not represent the population."
    ],
    "caveat": "Resample at the level of independent units (patient, slide, mouse), not at the level of cells or spots.",
-   "next": "Percentile vs. BCa intervals. Block bootstrap for spatial data."
+   "next": "Search terms: *percentile vs BCa bootstrap interval*, *cluster bootstrap*, *block bootstrap spatial data*."
   }
  ]
 }
