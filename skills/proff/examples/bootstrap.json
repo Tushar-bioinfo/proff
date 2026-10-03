@@ -1,0 +1,139 @@
+{
+ "title": "The Bootstrap",
+ "level": "L3",
+ "slides": [
+  {
+   "type": "title",
+   "title": "The Bootstrap",
+   "subtitle": "How sure can I be about a number from one sample?",
+   "hook": "you have 40 cells. you want the uncertainty of their mean."
+  },
+  {
+   "type": "predict",
+   "q": "You resample your 40 cells with replacement, many times. What happens to the spread of the means if you had 160 cells instead?",
+   "options": [
+    "It stays the same",
+    "It gets about 2x smaller",
+    "It gets about 4x smaller",
+    "It gets larger"
+   ],
+   "answer": 1,
+   "why": "The spread of a mean falls with the **square root** of n. 4x more cells gives sqrt(4) = 2x less spread. Keep this number. The simulation later shows it."
+  },
+  {
+   "type": "text",
+   "eyebrow": "the problem",
+   "title": "One sample, no second chance",
+   "t": "You measure one sample. You calculate one mean.\n\nYou want to know: if you repeat the experiment, how much does this mean change? That change is the **standard error**.\n\nOften you cannot repeat the experiment. A formula for the standard error exists only for simple statistics. For a median, a ratio, or a model output, no simple formula exists.",
+   "hand": "so we need a different method"
+  },
+  {
+   "type": "flow",
+   "eyebrow": "the method",
+   "title": "Four steps",
+   "steps": [
+    {
+     "h": "Start",
+     "t": "Use your one sample of **n** values."
+    },
+    {
+     "h": "Resample",
+     "t": "Pick n values from it **with replacement**. Some repeat. Some go."
+    },
+    {
+     "h": "Calculate",
+     "t": "Calculate the statistic on this new sample."
+    },
+    {
+     "h": "Repeat",
+     "t": "Do it **B** times (for example 2000). Look at the spread."
+    }
+   ],
+   "hand": "the spread of the B results estimates the standard error"
+  },
+  {
+   "type": "image",
+   "src": "img/bootstrap.jpg",
+   "caption": "the sample stands in for the population",
+   "notes": [
+    {
+     "h": "Mental model",
+     "t": "Your sample is a small copy of the population. Resampling from it imitates new experiments."
+    },
+    {
+     "h": "Key assumption",
+     "t": "The sample must **represent** the population. If it does not, the bootstrap copies the error."
+    }
+   ]
+  },
+  {
+   "type": "sim",
+   "title": "See the spread change",
+   "controls": [
+    {
+     "name": "n",
+     "label": "cells in sample (n)",
+     "min": 5,
+     "max": 200,
+     "step": 5,
+     "value": 40
+    },
+    {
+     "name": "B",
+     "label": "resamples (B)",
+     "min": 50,
+     "max": 3000,
+     "step": 50,
+     "value": 1000
+    }
+   ],
+   "text": "Move **n**. The histogram gets narrower when n increases. Move **B**. The width stays almost the same; only the shape gets smoother.",
+   "hand": "B controls precision of the estimate. n controls the uncertainty itself.",
+   "js": "const n=p.n,B=p.B; const pop=()=>-Math.log(1-rng())*10; const x=Array.from({length:n},pop); const means=[]; for(let b=0;b<B;b++){let s=0;for(let i=0;i<n;i++)s+=x[Math.floor(rng()*n)];means.push(s/n);} means.sort((a,c)=>a-c); const lo=means[Math.floor(.025*B)],hi=means[Math.floor(.975*B)]; const xmin=0,xmax=25,bins=50,h=new Array(bins).fill(0); means.forEach(m=>{const k=Math.floor((m-xmin)/(xmax-xmin)*bins); if(k>=0&&k<bins)h[k]++;}); const mx=Math.max(...h),L=60,R=W-30,T0=70,Bt=H-70,bw=(R-L)/bins, X=v=>L+(v-xmin)/(xmax-xmin)*(R-L); h.forEach((v,k)=>{const bh=v/mx*(Bt-T0); const xm=xmin+(k+.5)*(xmax-xmin)/bins; ctx.fillStyle=(xm>=lo&&xm<=hi)?T.c[0]:T.c[2]; ctx.fillRect(L+k*bw+1,Bt-bh,bw-2,bh);}); ctx.strokeStyle=T.ink; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(L,Bt); ctx.lineTo(R,Bt); ctx.stroke(); ctx.fillStyle=T.muted; for(let t=0;t<=25;t+=5){ctx.fillText(t,X(t)-8,Bt+36);} ctx.fillStyle=T.ink; ctx.fillText('95% interval: '+lo.toFixed(1)+' to '+hi.toFixed(1),L,40); ctx.fillStyle=T.c[1]; ctx.fillText('true mean = 10',R-200,40); ctx.strokeStyle=T.c[1]; ctx.setLineDash([10,8]); ctx.beginPath(); ctx.moveTo(X(10),T0); ctx.lineTo(X(10),Bt); ctx.stroke(); ctx.setLineDash([]);"
+  },
+  {
+   "type": "compare",
+   "eyebrow": "when to trust it",
+   "title": "Works vs. fails",
+   "a": {
+    "h": "Works well",
+    "t": "- Means, medians, regression slopes\n- n is moderate or large\n- Values are **independent**"
+   },
+   "b": {
+    "h": "Fails",
+    "t": "- Extremes (max, min)\n- Very small n (under ~15)\n- Cells from the same patient treated as independent"
+   },
+   "hand": "spatial omics trap: resample patients, not cells"
+  },
+  {
+   "type": "quiz",
+   "title": "Check yourself",
+   "cards": [
+    {
+     "q": "Why do we resample *with* replacement?",
+     "a": "Without replacement, each resample is the same set of values. The statistic never changes, so you see no spread."
+    },
+    {
+     "q": "You have 3 patients and 30,000 cells. What do you resample?",
+     "a": "Patients. The cells in one patient are not independent. Resampling cells makes the interval too narrow (**pseudoreplication**)."
+    },
+    {
+     "q": "More resamples (B) makes the interval narrower. True?",
+     "a": "No. B only makes the estimate of the interval more stable. Only more data (n) makes it narrower."
+    }
+   ]
+  },
+  {
+   "type": "takeaway",
+   "title": "Take it with you",
+   "points": [
+    "The bootstrap estimates uncertainty from **one** sample.",
+    "Resample with replacement, recalculate, repeat B times.",
+    "The spread of results is the standard error.",
+    "It cannot fix a sample that does not represent the population."
+   ],
+   "caveat": "Resample at the level of independent units (patient, slide, mouse), not at the level of cells or spots.",
+   "next": "Percentile vs. BCa intervals. Block bootstrap for spatial data."
+  }
+ ]
+}

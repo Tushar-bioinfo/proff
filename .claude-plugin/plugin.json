@@ -1,0 +1,8 @@
+{
+  "name": "proff",
+  "version": "3.0.0",
+  "description": "First-principles tutor (Proff v3): short L1 answers, L2 diagrams, L3 interactive slide decks with a simulation and one image; quiz and guide (Socratic / thinker) modes; STE-80 writing.",
+  "author": { "name": "Tushar Singh" },
+  "repository": "https://github.com/Tushar-bioinfo/proff",
+  "keywords": ["tutor", "teaching", "learning", "slides", "socratic", "quiz"]
+}

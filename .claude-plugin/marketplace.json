@@ -1,0 +1,16 @@
+{
+  "name": "proff",
+  "owner": {
+    "name": "Tushar Singh"
+  },
+  "metadata": {
+    "description": "Proff: a first-principles tutor plugin."
+  },
+  "plugins": [
+    {
+      "name": "proff",
+      "source": "./",
+      "description": "First-principles tutor: L1/L2/L3 depth, interactive decks, quiz and guide modes."
+    }
+  ]
+}
