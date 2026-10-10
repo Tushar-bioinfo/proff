@@ -1,16 +1,16 @@
 {
-  "name": "proff",
+  "name": "proff-viz",
   "owner": {
     "name": "Tushar Singh"
   },
   "metadata": {
-    "description": "Proff: a first-principles tutor plugin."
+    "description": "Proff-viz: a first-principles tutor that builds checked visual pages."
   },
   "plugins": [
     {
-      "name": "proff",
+      "name": "proff-viz",
       "source": "./",
-      "description": "First-principles tutor: L1/L2/L3 depth, interactive decks, quiz and guide modes."
+      "description": "Tutor with L3 text lessons and L4 visuals: five checked page types (study, explore, story, calc, walk) plus a card deck."
     }
   ]
 }

@@ -1,0 +1,138 @@
+{
+ "title": "The Bootstrap",
+ "level": "L4",
+ "palette": "blockframe",
+ "slides": [
+  {
+   "type": "title",
+   "title": "The Bootstrap",
+   "subtitle": "How sure can I be about a number from one sample?",
+   "hook": "you have 40 cells. you want the uncertainty of their mean."
+  },
+  {
+   "type": "predict",
+   "q": "You resample your 40 cells with replacement, many times. What happens to the spread of the means if you had 160 cells instead?",
+   "options": [
+    "It stays the same",
+    "It gets about 2x smaller",
+    "It gets about 4x smaller",
+    "It gets larger"
+   ],
+   "answer": 1,
+   "why": "The spread of a mean falls with the **square root** of n. 4x more cells gives sqrt(4) = 2x less spread. Keep this number. The simulation later shows it."
+  },
+  {
+   "type": "notes",
+   "eyebrow": "facts",
+   "title": "Three facts first",
+   "notes": [
+    {
+     "h": "Sample vs population",
+     "t": "The **population** is every cell you could measure. Your **sample** is the 40 you did measure."
+    },
+    {
+     "h": "Standard deviation (SD)",
+     "t": "How much single cells differ from each other. More cells do not make it smaller."
+    },
+    {
+     "h": "Standard error (SE)",
+     "t": "How much the **mean** would change if you repeated the study. More cells make it smaller."
+    }
+   ]
+  },
+  {
+   "type": "compare",
+   "eyebrow": "when to trust it",
+   "title": "Works vs. fails",
+   "a": {
+    "h": "Works well",
+    "t": "- Means, medians, regression slopes\n- n is moderate or large\n- Values are **independent**"
+   },
+   "b": {
+    "h": "Fails",
+    "t": "- Extremes (max, min)\n- Very small n (under ~15)\n- Cells from the same patient treated as independent"
+   },
+   "hand": "spatial omics trap: resample patients, not cells",
+   "vs": "trust?"
+  },
+  {
+   "type": "angles",
+   "cards": [
+    {
+     "tag": "reversed",
+     "q": "The 95% CI is 48.9 to 55.1. Is there a 95% chance the true mean is inside it?",
+     "a": "Not in the usual (frequentist) reading. The **method** catches the true mean in 95% of studies. This one interval either contains it or not."
+    },
+    {
+     "tag": "edge case",
+     "q": "You bootstrap the **largest** cell area. What goes wrong?",
+     "a": "A resample can never beat the sample's maximum. The interval is too narrow and sits too low."
+    },
+    {
+     "tag": "design",
+     "q": "3 patients, 10,000 cells each. What is n for the bootstrap?",
+     "a": "n = 3. Resample **patients**, not cells. Cells from one patient are not independent (**pseudoreplication**)."
+    },
+    {
+     "tag": "confusable",
+     "q": "SD or SE: which one shrinks when you measure more cells?",
+     "a": "SE. SD is the spread of cells and stays about the same. SE = SD / √n is the uncertainty of the mean."
+    }
+   ],
+   "eyebrow": "different angles",
+   "title": "Angles you might not expect"
+  },
+  {
+   "type": "angles",
+   "eyebrow": "transfer",
+   "title": "Same idea, new setting",
+   "cards": [
+    {
+     "tag": "spatial omics",
+     "q": "You have 12 tissue sections from 4 mice. What do you resample?",
+     "a": "The **4 mice**. Sections from one mouse share biology, so they are not independent."
+    },
+    {
+     "tag": "single cell",
+     "q": "Your marker gene is detected in 30% of cells. How do you get an interval for that 30%?",
+     "a": "Resample **samples or donors** with replacement, recompute the share each time, and read the spread."
+    },
+    {
+     "tag": "machine learning",
+     "q": "A classifier scores 0.91 AUC on one test set. How unsure is that number?",
+     "a": "Resample the **test set** with replacement, recompute AUC each time. The spread is its uncertainty."
+    }
+   ]
+  },
+  {
+   "type": "quiz",
+   "title": "Check yourself",
+   "cards": [
+    {
+     "q": "Why do we resample *with* replacement?",
+     "a": "Without replacement, each resample is the same set of values. The statistic never changes, so you see no spread."
+    },
+    {
+     "q": "More resamples (B) makes the interval narrower. True?",
+     "a": "No. B only makes the estimate of the interval more stable. Only more data (n) makes it narrower."
+    },
+    {
+     "q": "Why must each resample have the same size n as your sample?",
+     "a": "The SE depends on n. Smaller resamples spread more and would overstate the uncertainty."
+    }
+   ]
+  },
+  {
+   "type": "takeaway",
+   "title": "Take it with you",
+   "points": [
+    "The bootstrap estimates uncertainty from **one** sample.",
+    "Resample with replacement, recalculate, repeat B times.",
+    "The spread of results is the standard error.",
+    "It cannot fix a sample that does not represent the population."
+   ],
+   "caveat": "Resample at the level of independent units (patient, slide, mouse), not at the level of cells or spots.",
+   "next": "Search terms: *percentile vs BCa bootstrap interval*, *cluster bootstrap*, *block bootstrap spatial data*."
+  }
+ ]
+}

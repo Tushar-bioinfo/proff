@@ -1,0 +1,146 @@
+/* Proff visual kit. BlockFrame chrome (thick borders, hard offset shadows, heavy Inter, Space Grotesk labels)
+   around clean figures. Dark only. Every colour is a token. Authors never edit this file. */
+:root,[data-theme=dark]{   /* default palette "blockframe": the Block Frame pastels (frontend-slides, MIT) on black, with quiet grey frames.
+     Tuned for dark: blue made more saturated so it is not read as text; yellow deepened a touch to separate it from cream.
+     c2 and c5 are both warm and light: never let them carry a contrast alone (add a label, dash, or shape). */
+  --bg:#0b0b0c;--fig:#121214;--surf:#18181b;--surf2:#232327;--line:#5a5a63;--line-dim:#2c2c31;--grid:#232327;
+  --ink:#fffdf5;--muted:#a9a9b2;--dim:#6e6e76;--on:#000000;
+  --c1:#8feaf7;--c2:#f5c030;--c3:#fe90e8;--c4:#99e885;--c5:#ffdc8b;--c6:#b7b4c7;--mix:20%;
+}
+[data-palette=lab][data-theme=dark]{   /* preset "lab": Okabe-Ito hues */
+  --bg:#0e1116;--fig:#12161c;--surf:#171c23;--surf2:#1e242d;--line:#e8ecf2;--line-dim:#343c48;--grid:#222934;
+  --ink:#eef2f7;--muted:#9aa5b5;--dim:#6a7584;--on:#0e1116;
+  --c1:#5cb8f0;--c2:#f0b43c;--c3:#f2694a;--c4:#3ccf9e;--c5:#c98ae6;--c6:#cfdc5a;--mix:22%;
+}
+/* palette "neon" (the original proff look): Proff.page({palette:'neon'}) */
+[data-palette=neon][data-theme=dark]{--bg:#0a0a0b;--fig:#111113;--surf:#161618;--surf2:#1d1d20;--line:#ececee;--line-dim:#3a3a3f;--grid:#26262b;
+  --ink:#f4f4f5;--muted:#a1a1aa;--dim:#6b6b72;--on:#0a0a0b;--c1:#56c2ff;--c2:#ffc531;--c3:#ff6363;--c4:#59d499;--c5:#b98cff;--c6:#ff8f4a}
+/* soft fills are mixed where data-theme is set, so they follow the live palette (a :root-only rule would freeze them to dark) */
+:root,[data-theme]{--f-disp:'Inter',system-ui,-apple-system,sans-serif;--f-mono:'Space Grotesk',ui-monospace,Menlo,monospace;
+  --f1:color-mix(in srgb,var(--c1) var(--mix),var(--fig));--f2:color-mix(in srgb,var(--c2) var(--mix),var(--fig));
+  --f3:color-mix(in srgb,var(--c3) var(--mix),var(--fig));--f4:color-mix(in srgb,var(--c4) var(--mix),var(--fig));
+  --f5:color-mix(in srgb,var(--c5) var(--mix),var(--fig));--f6:color-mix(in srgb,var(--c6) var(--mix),var(--fig));
+  --acc:var(--c1);--stage-w:min(1240px,calc(100vw - 32px))}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-disp);font-size:18px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  padding:28px 16px 64px;transition:background .2s,color .2s}
+b,strong{font-weight:700}
+code,.mono{font-family:var(--f-mono);font-size:.92em}
+a{color:var(--c1)}
+
+/* header: compact so the stage owns the screen */
+.top{max-width:var(--stage-w);margin:0 auto 22px;display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;
+  border-bottom:3px solid var(--line);padding-bottom:16px}
+.top .tx{flex:1;min-width:260px}
+.eyebrow{display:inline-block;font-family:var(--f-mono);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--on);background:var(--acc);border:2px solid var(--line);box-shadow:3px 3px 0 var(--line);padding:3px 10px;margin-bottom:12px}
+h1{font-size:clamp(26px,3.4vw,40px);font-weight:900;text-transform:uppercase;letter-spacing:-.025em;line-height:1}
+.sub{font-family:var(--f-mono);font-size:14px;color:var(--muted);margin-top:8px}.sub::before{content:"// ";color:var(--acc)}
+
+/* the stage card: the figure is the hero */
+.card{position:relative;max-width:var(--stage-w);margin:0 auto 40px;background:var(--surf);border:3px solid var(--line);
+  box-shadow:8px 8px 0 var(--acc);padding:20px 22px 18px}
+.head{display:flex;align-items:baseline;gap:14px;min-height:34px;padding-right:44px;margin-bottom:12px}
+.phase{font:700 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--on);background:var(--acc);border:2px solid var(--line);padding:2px 8px;white-space:nowrap}
+.stitle{font-size:clamp(18px,2vw,24px);font-weight:850;letter-spacing:-.01em;line-height:1.15}
+.fig{position:relative;background:var(--fig);border:2px solid var(--line);overflow:hidden}
+.fig svg,.fig canvas{display:block;width:100%;height:auto;max-height:70vh;margin:0 auto}
+.fig svg text{font-family:var(--f-disp)}
+.fig svg .mono{font-family:var(--f-mono)}
+.ib{position:absolute;top:16px;right:18px;width:32px;height:32px;border:2px solid var(--line);background:var(--acc);color:var(--on);
+  font:900 15px var(--f-mono);cursor:pointer;box-shadow:3px 3px 0 var(--line)}
+.ib[aria-expanded=true]{background:var(--line);color:var(--bg)}
+
+/* figure + step strip: the strip is the figure's bottom edge; chevrons appear on the figure's sides on hover */
+.figwrap{position:relative}
+.strip{position:relative;display:flex;gap:10px;margin-top:6px;height:14px;align-items:flex-start}
+.sg{display:flex;gap:3px;min-width:0}
+.seg{flex:1;min-width:6px;height:4px;padding:0;border:0;background:var(--line-dim);cursor:pointer;position:relative;transition:height .15s}
+.seg::after{content:"";position:absolute;inset:-6px 0}   /* bigger hit area */
+.seg i{display:block;height:100%;width:0;background:var(--acc)}
+.strip:hover .seg{height:8px}
+.seg[aria-selected=true]{box-shadow:0 0 0 1px var(--acc)}
+.seg:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+.tip{position:absolute;bottom:18px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .12s;
+  font:700 11px var(--f-mono);letter-spacing:.04em;color:var(--ink);background:var(--surf2);border:1px solid var(--line-dim);padding:3px 8px}
+.tip.on{opacity:1}
+.gh{position:absolute;top:calc(50% - 40px);width:44px;height:64px;border:0;background:color-mix(in srgb,var(--surf) 70%,transparent);color:var(--ink);
+  font:900 26px var(--f-mono);cursor:pointer;opacity:0;transition:opacity .15s}
+.gh.prev{left:0}.gh.next{right:0}
+.figwrap:hover .gh:not(:disabled),.gh:focus-visible{opacity:.85}
+.gh:disabled{display:none}
+@media (hover:none){.gh:not(:disabled){opacity:.55}}
+
+/* controls: one quiet line; drag the value sideways, or use the thin track that shows on hover */
+.ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 30px;margin:12px 0 0;padding:0 2px}
+.kn{position:relative;display:inline-flex;align-items:baseline;gap:9px;font:700 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-bottom:8px}
+.kv{font:800 17px var(--f-mono);letter-spacing:0;text-transform:none;color:var(--acc);border-bottom:2px dotted var(--acc);cursor:ew-resize;user-select:none;touch-action:none;min-width:2ch}
+.kn input{position:absolute;left:0;right:0;bottom:-6px;width:100%;height:14px;margin:0;opacity:0;accent-color:var(--acc);cursor:pointer;transition:opacity .15s}
+.kn:hover input,.kn.drag input,.kn input:focus-visible{opacity:1}
+.kn.drag .kv{color:var(--ink)}
+.kb{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font:700 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  background:none;border:0;border-bottom:2px dotted var(--line-dim);padding:2px 0 6px;cursor:pointer}
+.kb span{font-size:16px;color:var(--acc);transition:transform .3s}
+.kb:hover{color:var(--ink)}.kb:active span{transform:rotate(-180deg)}
+
+/* info sidebar: 30% of the screen on the right; the page shifts left so nothing is hidden */
+.side{position:fixed;top:0;right:0;z-index:50;height:100vh;width:clamp(360px,32vw,500px);overflow-y:auto;background:var(--surf);
+  border-left:3px solid var(--line);padding:24px 32px 56px;transform:translateX(102%);transition:transform .22s ease;font-size:17px;line-height:1.6}
+.side.open{transform:none}
+.side .lead{font-size:19px;line-height:1.6;color:var(--ink);margin:0 0 24px}
+.side .sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.side .sx{width:32px;height:32px;border:2px solid var(--line);background:var(--surf2);color:var(--ink);font:900 18px var(--f-mono);cursor:pointer}
+.side .st{font-size:23px;font-weight:850;line-height:1.25;margin-bottom:18px}
+.side section{padding:24px 0;border-top:1px solid var(--line-dim)}
+.side h4{font:700 12px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:14px}
+.side ul{padding-left:1.1em}.side li{margin:.7em 0;line-height:1.6}.side p+p{margin-top:.8em}
+/* notation: "symbol : meaning" on one line, the example under it */
+.side .nts{display:grid;grid-template-columns:max-content auto 1fr;column-gap:10px;align-items:baseline}
+.side .nt,.side .nk{display:contents}
+.side .sym{grid-column:1;font-weight:700;color:var(--acc);white-space:nowrap;line-height:1.55}
+.side .col{grid-column:2;color:var(--dim)}
+.side .ne{grid-column:3;color:var(--ink);line-height:1.55}
+.side .eg{grid-column:3;margin:6px 0 22px;font:15px/1.55 var(--f-mono);color:var(--muted)}
+.side .nt:last-child .eg{margin-bottom:4px}
+.side .eg strong{color:var(--ink)}
+.side .wx{font:16px/1.6 var(--f-mono);color:var(--ink);background:var(--surf2);border-left:3px solid var(--acc);padding:12px 16px}
+.side details{margin-top:12px;border-top:2px solid var(--line-dim);padding-top:10px}.side summary{cursor:pointer;font:700 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+@media (min-width:1000px){body.side-on{--stage-w:min(1240px,calc(100vw - clamp(360px,32vw,500px) - 48px));padding-right:calc(clamp(360px,32vw,500px) + 16px)}}
+@media (max-width:1399px){.side{width:340px;padding:22px 26px 48px}body.side-on{--stage-w:calc(100vw - 340px - 48px);padding-right:356px}}   /* laptops: keep the figure big enough that 16-unit labels stay ≥ 12 px */
+@media (max-width:999px){.side{width:min(92vw,460px);box-shadow:-12px 0 0 rgba(0,0,0,.35)}}
+
+/* article layout: short prose between wide figures */
+.prose{max-width:68ch;margin:0 auto 26px;font-size:19px}
+.prose p+p{margin-top:.8em}
+.prose h2{font-size:clamp(22px,2.6vw,30px);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;margin:46px 0 14px;line-height:1.05}
+.prose ul{padding-left:1.2em}.prose li{margin:.25em 0}
+.acc1{--acc:var(--c1)}.acc2{--acc:var(--c2)}.acc3{--acc:var(--c3)}.acc4{--acc:var(--c4)}.acc5{--acc:var(--c5)}.acc6{--acc:var(--c6)}
+
+/* study page blocks */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;max-width:var(--stage-w);margin:0 auto 34px}
+.tile{background:var(--surf);border:3px solid var(--line);box-shadow:6px 6px 0 var(--acc);padding:18px 20px}
+.tile h3{font-size:17px;font-weight:850;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:8px;line-height:1.15}
+.tile p,.tile li{font-size:16px}.tile ul{padding-left:1.1em}
+.tile .tag{font:700 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+.big{font-size:44px;font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--acc)}
+.flip{cursor:pointer}.flip .a{display:none;margin-top:10px;padding-top:10px;border-top:2px dashed var(--line-dim)}.flip.on .a{display:block}
+.flip .hint{font:700 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-top:8px}
+.flip.on .hint{display:none}
+table.cmp{width:100%;max-width:var(--stage-w);margin:0 auto 34px;border-collapse:collapse;background:var(--surf);border:3px solid var(--line);box-shadow:6px 6px 0 var(--acc)}
+table.cmp th,table.cmp td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line-dim);font-size:16px;vertical-align:top}
+table.cmp th{font:700 12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.sec{display:block;max-width:var(--stage-w);margin:40px auto 16px;font:700 13px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--line-dim);padding-bottom:6px}
+
+/* calc engine extras */
+.fig .katex{font-size:1em}
+.fig .katex svg{height:inherit;max-height:none;margin:0}  /* KaTeX draws radicals with inner SVGs; the stage rule above must not resize them */
+.fig foreignObject div{color:var(--ink);font-family:var(--f-disp);line-height:1.2}
+.foot{max-width:var(--stage-w);margin:30px auto 0;font:500 12px var(--f-mono);color:var(--dim)}
+
+@media (max-width:700px){
+  body{padding:18px 12px 48px;font-size:17px}
+  .card{padding:14px 12px;box-shadow:5px 5px 0 var(--acc)}
+  .fig.pan{overflow-x:auto}.fig.pan svg{min-width:720px;max-height:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}

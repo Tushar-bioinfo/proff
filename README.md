@@ -1,45 +1,40 @@
-# Proff v3.2
+# Proff-viz
 
-A first-principles tutor for Claude, Codex, Cursor, Gemini, Muse, claude.ai and ChatGPT.
+A first-principles tutor that ends in finished, checked visuals.
 
-- **L1**: short answer, example, caveat.
-- **L2**: predict first, diagrams, concepts, exam angle.
-- **L3**: full write-up plus an interactive HTML deck: stepped SVG scenes, calculations, simulations, and recall cards.
-- **L3 deck** or **deck only**: build and check the deck; reply with one line, its path.
-- **Team**, on request: orchestrator storyboards; the named implementer writes the spec; one fix round. No nested delegation.
-- Math uses LaTeX: KaTeX online, readable raw source offline. Each math slide defines symbols in a notation card. Diagram cards open with a click or `n`.
-- Mermaid flows are a trial: overview then zoom-ins. Linear `flow` and pictorial SVG remain available.
-- Images only on request. Modes: `quiz me`, `guide me`, `socratic`, `thinker`. STE-80 writing; say `plain` for normal prose.
+- **L1**: short answer, example, caveat. **L2**: predict first, diagrams, concepts, exam angle. **L3**: the full text lesson with ASCII flowcharts and calculation breakdowns. **L4**: visuals.
+- **L4 visuals**: a page by default; ask for a step-by-step calculation (calc), a biology workflow (walk), or a card deck (facts, different angles, transfer to new settings, quiz; `examples/deck-bootstrap.json`). Pages are one self-contained HTML file each:
+  | type | for | exemplar |
+  |---|---|---|
+  | study | facts, abbreviations, angles, flip-card questions, one live figure | `examples/study-fdr` |
+  | explore | sliders that move linked pictures (stats, maths, models) | `examples/explore-ttest` |
+  | story | annotated matplotlib plots, one point per plot | `examples/story-logcounts` |
+  | calc | a small table changing cell by cell (3 genes × 4 samples) | `examples/calc-cpm` |
+  | walk | a process from molecules to the data table | `examples/walk-crispr` |
+- **Budget**: efficient (default, all local) or premium (adds one text-free context image and an independent review).
+- **Checks**: every step and slider extreme in a desktop browser (dark only): text overlaps, lines through labels, off-figure text, tiny text, low contrast, word budgets, plus contact sheets to look at.
+- **Palette** "blockframe" (Block Frame pastels on black, quiet grey frames), shared by pages and decks. The `i` sidebar explains every symbol as `symbol : meaning` with an example from the figure.
+- Quiz and guide modes; STE-80 writing; say `plain` for normal prose.
 
-The model writes JSON; the renderer supplies the theme. Optional math/flow libraries load from cdnjs.
+## Make a page
+```
+cp -R skills/proff/examples/walk-crispr my-topic && rm -rf my-topic/snaps my-topic/page.html
+export PROFF_SCRIPTS=$PWD/skills/proff/scripts
+python3 my-topic/make_data.py
+python3 skills/proff/scripts/build.py my-topic
+python3 skills/proff/scripts/check.py my-topic/page.html
+```
+`check.py` needs Playwright with Chromium. `plot.py` needs matplotlib and numpy. Pages load fonts and (only when used) KaTeX 0.16.11, d3 7.9.0, p5 1.9.4 from public CDNs; decks load KaTeX 0.18.9 and mermaid 11.15.0 when used.
+
+## Skill files
+- `SKILL.md` routing · `levels/` L2, L3, L4 · `viz.md` the page workflow · `outputs/` one file per page type, plus `deck.md`
+- `ref/`: taste (the bar, before/after pictures, self-review), kit (API), design (limits table), tech (which tool draws what), budget, chains (full step chains), assets (licences), image, ideas/
+- `kit/`: stage.js runtime, calc.js, bio.js, proff.css theme · `assets/`: the deck theme · `scripts/`: build, check, plot, calctrace, image, render + snap (decks)
+- `examples/`: the five page exemplars (calc, story and walk with their data scripts) and one card deck
 
 ## Install
 ```
-claude plugin marketplace add Tushar-bioinfo/proff
-claude plugin install proff@proff
+claude plugin marketplace add <path or repo>
+claude plugin install proff-viz@proff-viz
 ```
-Other agents: link or copy `skills/proff` into their skills folder.
-claude.ai: upload `dist/proff-claude.zip`. ChatGPT: upload `dist/proff-chatgpt.zip`, or use `dist/proff-instructions.md` for text-only lessons/outlines.
-Build packages with `tools/build.sh`.
-
-## Example
-```
-python3 skills/proff/scripts/render.py skills/proff/examples/bootstrap.json -o /tmp/bootstrap.html --embed
-python3 skills/proff/scripts/snap.py /tmp/bootstrap.html
-python3 skills/proff/scripts/snap.py /tmp/bootstrap.html --offline --out /tmp/bootstrap-offline
-```
-Snap needs Playwright and Chromium/Chrome. It flags overflow, clipping, notation overlap, invalid math, and small flow text.
-Arrow keys/space walk builds; Down/Up jump slides. Render with `--layout page` for scrolling.
-
-## Skill files
-- `SKILL.md`: routing, writing, sources.
-- `levels/`: L2.md, L3.md, deck.md (spec and checks).
-- `ref/`: svg.md mechanics, ideas/{stats,bio,ml}.md menus, team.md workflow, image.md.
-- `modes/`: quiz.md, guide.md.
-- `scripts/`: render.py, snap.py, image.py, log.py.
-- `assets/`: theme CSS and deck JS.
-
-<!-- Drop Mermaid trial: remove render.py mermaid() and data-need entry; deck.js mermaid block;
-CSS .mmd rules; snap.py mermaid check; deck.md type/rules; L3.md mention; bootstrap Mermaid slide. -->
-
-Theme adapted from [frontend-slides](https://github.com/zarazhangrui/frontend-slides) (MIT, © 2025 Zara Zhang); see `skills/proff/assets/NOTICE`.
+claude.ai: upload `dist/proff-viz-claude.zip`. ChatGPT: `dist/proff-viz-chatgpt.zip`, or `dist/proff-viz-instructions.md` for text only. Build with `tools/build.sh`.

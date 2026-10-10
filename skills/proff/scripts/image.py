@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""Make one lesson image by asking the Codex CLI to use its image tool.
+"""Make one text-free context picture by asking the Codex CLI to use its image tool. Labels are drawn by the kit on top.
 
-Usage: image.py --out img/topic.png --title T --subtitle S --callout1 A --callout2 B --monologue M
-                [--scene "tissue slice"] [--features "cyan DAPI nuclei, ..."] [--model M] [--timeout 600]
+Usage: image.py --out <topic>/img/name.png --subject "what to show" [--model M] [--timeout 600]
 Exit 0 = image saved (prints path and size). Exit 2 = no image tool (codex missing). Exit 1 = it failed.
 Pass --print to only print the filled prompt (for chat apps with their own image tool).
 """
@@ -10,12 +9,9 @@ import argparse, shutil, struct, subprocess, sys, tempfile
 from pathlib import Path
 
 TEMPLATE = (
-    "Visual Scene: Dark teal, indigo, and slate background; {scene} featuring {features}.\n"
-    "Header: Compact white handwritten title '{title}' with subtitle '{subtitle}'.\n"
-    "Callout Notes: '{callout1}', '{callout2}'.\n"
-    "Inner Monologue: '{monologue}'.\n"
-    "Rules: Thin single-stroke white pen lines, polygon boundaries, white arrows, ample negative space. "
-    "STRICT: NO emojis, faces, hearts, or sparkles."
+    "{subject}, clean scientific illustration, flat shading, {ground} background, accents in pastel blue (#8feaf7), "
+    "yellow (#f5c030) and pink (#fe90e8), generous empty space around the subject, centred. "
+    "STRICT: no text, no letters, no numbers, no labels, no watermark, no faces, no emojis."
 )
 
 
@@ -27,24 +23,18 @@ def png_size(f):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True)
-    ap.add_argument("--title", required=True)
-    ap.add_argument("--subtitle", required=True)
-    ap.add_argument("--callout1", required=True)
-    ap.add_argument("--callout2", required=True)
-    ap.add_argument("--monologue", required=True)
-    ap.add_argument("--scene", default="a tissue slice")
-    ap.add_argument("--features", default="cyan DAPI nuclei, mint membranes, pink/gold markers")
+    ap.add_argument("--subject", required=True, help="what to show, e.g. 'adherent cells in a T75 flask, side view'")
     ap.add_argument("--model", help="Codex model; default = your Codex default")
     ap.add_argument("--timeout", type=int, default=600)
     ap.add_argument("--print", action="store_true", help="only print the filled prompt")
     a = ap.parse_args()
-    prompt = TEMPLATE.format(**{k: getattr(a, k) for k in ("scene", "features", "title", "subtitle", "callout1", "callout2", "monologue")})
+    prompt = TEMPLATE.format(subject=a.subject, ground="near-black (#121214)")
     if a.print:
         print(prompt)
         return 0
     codex = shutil.which("codex")
     if not codex:
-        print("no image tool: codex CLI not found. Skip the image; use a flow or svg slide.", file=sys.stderr)
+        print("no image tool: codex CLI not found. Skip the image; draw the scene with the kit.", file=sys.stderr)
         return 2
     out = Path(a.out).resolve()
     out.parent.mkdir(parents=True, exist_ok=True)

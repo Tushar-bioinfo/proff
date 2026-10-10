@@ -17,6 +17,7 @@ ROT = ["r1", "r2", "r3", "r4"]
 GF = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family={}&display=swap" rel="stylesheet">'
 # Accent palettes for the dark theme: p1 primary, p2 highlight, p3 secondary, p4..p6 extra.
 PALETTES = {
+    "blockframe": ["#8feaf7", "#f5c030", "#fe90e8", "#99e885", "#ffdc8b", "#b7b4c7"],   # same pastels as the kit pages
     "raycast": ["#ff6363", "#ffc531", "#56c2ff", "#59d499", "#b98cff", "#ff8f4a"],
     "aurora":  ["#2ee6c5", "#b5f06a", "#a78bfa", "#f472d0", "#7dd3fc", "#ffb38a"],
     "matcha":  ["#8fd6a4", "#d4e78f", "#c7b5ff", "#7fd1c7", "#e8cfa6", "#a7f3d0"],
@@ -291,7 +292,7 @@ class R:
         return f'<div class="hand">{esc(s["hand"])}</div>' if s.get("hand") else ""
 
 
-def render(spec, layout="deck", theme="blockframe-dark", palette="aurora", spec_dir=None, out_dir=None, embed=False):
+def render(spec, layout="deck", theme="blockframe-dark", palette="blockframe", spec_dir=None, out_dir=None, embed=False):
     th = dict(THEMES[theme])
     pal = PALETTES[palette]
     th["T"] = dict(th["T"], c=[pal[2], pal[1], pal[0], pal[3], pal[4], pal[5]])
@@ -343,7 +344,7 @@ if __name__ == "__main__":
     ap.add_argument("-o", "--out")
     ap.add_argument("--layout", choices=["deck", "page"], help="deck = 16:9 slides, page = scrolling lesson (default: spec 'layout' or deck)")
     ap.add_argument("--theme", choices=list(THEMES), help="default: spec 'theme' or blockframe-dark")
-    ap.add_argument("--palette", choices=list(PALETTES), help="default: spec 'palette' or aurora")
+    ap.add_argument("--palette", choices=list(PALETTES), help="default: spec 'palette' or blockframe")
     ap.add_argument("--embed", action="store_true", help="put images inside the HTML (one portable file)")
     a = ap.parse_args()
     spec = load_spec(Path(a.spec).read_text())
@@ -351,6 +352,6 @@ if __name__ == "__main__":
     out.parent.mkdir(parents=True, exist_ok=True)
     layout = a.layout or spec.get("layout", "deck")
     theme = a.theme or spec.get("theme", "blockframe-dark")
-    palette = a.palette or spec.get("palette", "aurora")
+    palette = a.palette or spec.get("palette", "blockframe")
     out.write_text(render(spec, layout, theme, palette, Path(a.spec).resolve().parent, out.parent, a.embed))
     print(out)

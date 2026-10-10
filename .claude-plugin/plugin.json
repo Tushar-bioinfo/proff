@@ -1,8 +1,18 @@
 {
-  "name": "proff",
-  "version": "3.2.0",
-  "description": "First-principles tutor: L1 answers, L2 diagrams, L3 lessons and interactive decks; LaTeX math, Mermaid flows (trial), deck-only and team modes; quiz, guide, and STE-80 writing.",
-  "author": { "name": "Tushar Singh" },
+  "name": "proff-viz",
+  "version": "4.0.0",
+  "description": "First-principles tutor: L1 answers, L2 diagrams, L3 text lessons with ASCII flowcharts and calculation breakdowns, L4 visuals (interactive or static pages, step-by-step calculations, biology workflow walks, or a card deck of facts, angles, transfer and quiz). Built-in layout, contrast and overlap checks; efficient or premium budget.",
+  "author": {
+    "name": "Tushar Singh"
+  },
   "repository": "https://github.com/Tushar-bioinfo/proff",
-  "keywords": ["tutor", "teaching", "learning", "slides", "socratic", "quiz"]
+  "keywords": [
+    "tutor",
+    "teaching",
+    "visualisation",
+    "interactive",
+    "biology",
+    "statistics",
+    "quiz"
+  ]
 }

@@ -1,31 +1,17 @@
-# Image — only when the user asks
+# Image: only when the user asks, or in premium mode for one context picture
 
-**Do not make an image unless the user asks for one** ("image", "illustrate", "draw it as a picture"). By default, diagrams are `svg` slides (`ref/svg.md`). Never offer an image as part of the answer itself; the offer line may mention it.
-
-When asked, make one "mental model" image. Keep image text short: a title, a subtitle, two callouts, one inner-monologue line. Numbers and formulas go on slides.
+Diagrams are kit scenes. An image is for a realistic context picture only (a tissue, a cell culture flask, a sequencer). It must contain **no text, numbers, or labels**: the kit draws those on top with `g.img` + `g.label`.
 
 ## Prompt template
-Fill the brackets. Keep the rest exactly.
-
 ```
-Visual Scene: Dark teal, indigo, and slate background; [tissue slice / network / scene] featuring [cyan DAPI nuclei, mint membranes, pink/gold markers].
-Header: Compact white handwritten title '[TOPIC TITLE]' with subtitle '[Method or Question]'.
-Callout Notes: '[Primary mechanism / baseline]', '[Proposed method / outcome]'.
-Inner Monologue: '[intuitive scientific takeaway in lowercase]'.
-Rules: Thin single-stroke white pen lines, polygon boundaries, white arrows, ample negative space. STRICT: NO emojis, faces, hearts, or sparkles.
+[subject, e.g. "a cross-section of a T75 cell culture flask with adherent cells"], clean scientific illustration,
+flat shading, near-black background (#121214), accents in pastel blue (#8feaf7), yellow (#f5c030) and pink (#fe90e8),
+generous empty space around the subject, centred. STRICT: no text, no letters, no numbers, no labels, no watermark, no faces, no emojis.
 ```
 
-## By environment
-- **Codex (agent):** use your own image generation tool with the filled prompt. Save it as `img/<topic>.png` next to `spec.json`.
-- **Claude Code, Cursor, Gemini, Muse (shell + Codex CLI installed):**
-  ```
-  python3 scripts/image.py --out img/<topic>.png --title "..." --subtitle "..." \
-    --scene "..." --features "..." --callout1 "..." --callout2 "..." --monologue "..."
-  ```
-  It asks Codex to make the image (about 1–2 minutes). Exit code 2 = no image tool; say so.
-- **ChatGPT web:** make the image with the built-in image generator and show it in chat.
-- **claude.ai, or no image tool:** say there is no image tool here. Offer an `svg` slide instead.
-
-To put it in a deck: `{"type": "image", "src": "img/<topic>.png", "caption": "...", "notes": [...]}` and render with `--embed` so the file carries the image.
-
-**Never say an image was made unless the file exists or the image is visible in chat.** Check the text in the image; if a word is wrong, say so or regenerate once.
+## How
+Images are made by Gemini or Codex on the user's subscription. Claude models do not draw them; they ask one of those agents.
+- **Codex**: `scripts/image.py --out <topic>/img/<name>.png --subject "..."` runs the Codex CLI's image tool (exit 2 = Codex not installed).
+- **Gemini, or a Claude model with a delegation tool**: send Gemini the filled prompt (`scripts/image.py ... --print` prints it) and the output path `<topic>/img/<name>.png`.
+- **Gemini or Codex running this skill itself**: use your own image tool with the filled prompt.
+- Then place it: `g.img('<name>.png', x, y, w, h)` and label parts with `g.label`.
