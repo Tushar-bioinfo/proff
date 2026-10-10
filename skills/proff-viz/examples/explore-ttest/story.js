@@ -15,7 +15,7 @@ const fp = p => p < .001 ? 'p < 0.001' : `p = ${p.toFixed(3)}`;
 
 Proff.scene({
   title: 'Signal, noise, and the t statistic', acc: 1, h: 640,
-  // one big panel first; at most 2 side by side: when 't' arrives, 'data' (the oldest) retires
+  // one figure per step: 'bars' replaces 'data' at step 3, 't' replaces 'bars' at step 4
   panels: [{ id: 'data', from: 0 }, { id: 'bars', from: 2 }, { id: 't', from: 3 }],
   controls: [
     { name: 'diff', label: 'true effect', min: 0, max: 3, step: .1, value: 1.2 },
@@ -29,7 +29,7 @@ Proff.scene({
     { cap: 'Each dot is one sample. Thick lines are the group averages.', info: { see: ['One dot per sample', 'Thick line: the group average'], read: ['Drag **spread** and watch the dots scatter'] } },
     { cap: 'The gap between the averages is the **signal**.', info: { see: ['Arrow: the gap between the two averages'] } },
     { cap: '**SE (standard error)**: how much that gap would wobble if you redid the experiment.', info: { see: ['Left bar: the signal', 'Right bar: SE, on the same scale'], read: ['SE = SD × √(2/n): more samples, smaller SE'] } },
-    { cap: '**t = signal ÷ SE.** How many wobbles wide the gap is.', info: { see: ['Vertical line: your t'], read: ['t of 2 or more: the gap is at least twice its wobble'] } },
+    { cap: '**t = signal ÷ SE.** How many wobbles wide the gap is.', info: { see: ['Vertical line: your t', 'Under it: signal ÷ SE from the last step'], read: ['t of 2 or more: the gap is at least twice its wobble'] } },
     { cap: 'With no real effect, t would land on this curve. The shaded tails past your t are the **p-value**.', info: { see: ['Curve: where t lands when nothing is going on', 'Shaded tails: the p-value'], read: ['Fewer samples, heavier tails: the same t is less convincing', 'p is not the chance the effect is real'] } }],
   draw(g, k, t, p, s) {
     const e = experiment(p, s.seed), on = j => k > j ? 1 : k === j ? t : 0;
@@ -59,6 +59,8 @@ Proff.scene({
     g.panel('t', P => {
       const tx = Proff.clamp(e.t, -6.2, 6.2), C = g.axes({ ...P, xd: [-6.5, 6.5], yd: [0, .66], xt: [-6, -3, 0, 3, 6], yt: [], grid: false, xl: 't' });
       g.text(C.x + C.w / 2, C.y + 40, `t = ${Proff.fmt(e.t, 2)}`, { size: 34, anchor: 'middle', weight: 900, fill: 'c2', mono: true });
+      // the bars have left the stage: carry their two numbers onto this figure
+      if (k < 4) g.text(C.x + C.w / 2, C.y + 84, `${Proff.fmt(e.mB - e.mA, 2)} ÷ ${Proff.fmt(e.se, 2)}`, { size: 22, anchor: 'middle', fill: 'muted', mono: true });
       if (k >= 4) g.fade(on(4), g => {
         const f = x => S.tPdf(x, e.df), a = Math.abs(tx);
         if (a < 6.4) { g.area(f, C, a, 6.5, { fill: 'f5' }); g.area(f, C, -6.5, -a, { fill: 'f5' }); }

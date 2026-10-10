@@ -239,10 +239,10 @@
     if (s.paint) s.paint(t);
   }
   // panels: boxes that share the stage; a panel appears at step `from`, and the others make room, animated by t
-  // panels: [{ id, from, to, w, keep }]. At most s.maxPanels (2) side by side: when another arrives, the oldest
-  // panel without keep:true retires (slides left and fades). Boxes animate between steps.
+  // panels: [{ id, from, to, w, keep }]. One figure per step: when the next panel arrives, the one on screen
+  // retires (slides left and fades) and the new one takes the whole stage. Boxes animate between steps.
   function panelsAt(s, k, t) {
-    const spec = s.panels || [], gap = s.panelGap ?? 40, pad = { l: 90, r: 30, t: 70, b: 80, ...(s.panelPad || {}) }, max = s.maxPanels ?? 2;
+    const spec = s.panels || [], gap = s.panelGap ?? 40, pad = { l: 90, r: 30, t: 70, b: 80, ...(s.panelPad || {}) }, max = 1;
     const boxes = kk => { let v = spec.filter(p => (p.from || 0) <= kk && (p.to == null || kk <= p.to));
       while (v.length > max) { const old = v.filter(p => !p.keep).sort((a, b) => (a.from || 0) - (b.from || 0))[0]; if (!old) break; v = v.filter(p => p !== old); }
       const tot = v.reduce((a, p) => a + (p.w || 1), 0) || 1, out = {};
@@ -417,9 +417,9 @@
       for (const b of g.boxes) { const inside = a.x0 >= b.x0 - 1 && a.x1 <= b.x1 + 1 && a.y0 >= b.y0 - 1 && a.y1 <= b.y1 + 1;
         if (!inside && ov(a, b, 2) > 8 && b.solid) { out.push(`${where}: ${short(a.s)} sits across a shape edge`); break; } }
     }
-    // a listed panel that is never on screen (more than maxPanels start together) would vanish silently
+    // a listed panel that is never on screen (two panels start on the same step) would vanish silently
     if (s.k === 0 && s.panels) { const seen = new Set(); s.steps.forEach((_, kk) => Object.keys(panelsAt(s, kk, 1)).forEach(id => seen.add(id)));
-      const lost = s.panels.filter(q => !seen.has(q.id)).map(q => q.id); if (lost.length) out.push(`${where}: panel ${lost.join(', ')} is never on screen: at most ${s.maxPanels ?? 2} panels at once and the oldest retires; give it a later 'from', or its own scene`); }
+      const lost = s.panels.filter(q => !seen.has(q.id)).map(q => q.id); if (lost.length) out.push(`${where}: panel ${lost.join(', ')} is never on screen: one figure per step and the older one retires; give it a later 'from', or its own scene`); }
     // plots fill their panel: a short plot under big headings wastes the stage (titles belong in the head or the sidebar)
     // every notation entry carries an example from the figure: "symbol : meaning", then "e.g. …"
     { const nt = (infoOf(s, s.k) || {}).notation || {}, bare = Object.entries(nt).filter(([, v]) => !(Array.isArray(v) ? v[1] : v && typeof v === 'object' ? v.eg : /\s(e\.g\.|for example|example:)\s/i.test(v))).map(([k]) => k);
@@ -428,7 +428,9 @@
     if (g.texts.some(q => q.tex)) { const inf = infoOf(s, s.k) || {}; if (!inf.notation || !Object.keys(inf.notation).length) out.push(`${where}: formula on the stage but no info.notation; name every symbol, index and operator with an example from the figure`); }
     g.plots.forEach(q => { if (q.h < (s.minPlotH || 300)) out.push(`${where}: plot ${short(q.name)} is ${Math.round(q.h)} units tall (min ${s.minPlotH || 300}); shrink panelPad and the text above or below it, put headings in the scene title or the sidebar`); });
     const big = g.texts.filter(q => q.size > 36 && String(q.s).trim().length > 2)   /* a lone "=" or "×" may be big */; if (big.length) out.push(`${where}: text ${short(big[0].s)} is size ${big[0].size} (max 36: labels 20, the key number 26–34); bigger text squeezes the plots`);
-    g.plots.forEach(q => { if (q.w < (s.minPlotW || 440)) out.push(`${where}: plot ${short(q.name)} is ${Math.round(q.w)} units wide (min ${s.minPlotW || 440}); show at most 2 plots side by side (use panels: the oldest retires), or give it its own step or scene`); });
+    g.plots.forEach(q => { if (q.w < (s.minPlotW || 440)) out.push(`${where}: plot ${short(q.name)} is ${Math.round(q.w)} units wide (min ${s.minPlotW || 440}); one figure per step, drawn across the stage`); });
+    // one figure per step: two plots side by side look crammed; the next figure belongs on the next step
+    if (g.plots.length > 1) out.push(`${where}: ${g.plots.length} plots on one step (${g.plots.map(q => short(q.name)).join(', ')}); show one figure per step and bring the next one in on the next step (panels with a later 'from' do this)`);
     if (g.words > (s.wordBudget || 40)) out.push(`${where}: ${g.words} words on the figure (budget ${s.wordBudget || 40}); move text to caption/info`);
     const iw = P.infoWords(s, s.k); if (iw > 120) out.push(`${where}: info sidebar has ${iw} words (max 120); cut to short points`);
     const cap = (s.steps[s.k] || {}).cap || ''; if (cap.split(/\s+/).length > 28) out.push(`${where}: caption has ${cap.split(/\s+/).length} words (max 28)`);

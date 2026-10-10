@@ -9,7 +9,7 @@ Copy `examples/story-logcounts`. Layout `walk` (one stage, one slider over all s
 
 ## plot.py rules
 - `from plot import fig, save, C`. Colours only from `C.c1..c6, C.ink, C.muted, C.grid` (they become theme variables). A raw hex colour prints a warning.
-- `fig()` is 12 × 6.75 in = the 1200 × 675 stage. Label axes with units. Leave headroom (`ylim` × 1.3) where annotations will go.
+- `fig()` is 12 × 6.75 in = the 1200 × 675 stage, one axes per figure (no `ncols`/`nrows` subplots; a second plot is its own SVG on the next step). Label axes with units. Leave headroom (`ylim` × 1.3) where annotations will go.
 - Keep SVGs small: a few hundred points show a pattern; `save` warns above 300 KB.
 - Integer data on a log axis: bin edges at half-integers, or the low bins show gaps.
 - Quote numbers in captions from `PROFF_DATA.facts`, never typed by hand.

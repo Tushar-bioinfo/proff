@@ -1,10 +1,10 @@
 # explore page: move a parameter, watch everything respond
 
-Copy `examples/explore-ttest`. Layout `article`. One page = 1–3 scenes; each scene = linked panels driven by the same controls.
+Copy `examples/explore-ttest`. Layout `article`. One page = 1–3 scenes; each scene = linked panels driven by the same controls, one on screen per step.
 
 ## Shape of a scene
 - 2–4 **controls** (`{name, label, min, max, step, value}` sliders; `{type:'button', name:'reseed', label:'new samples'}` for new random data; each press adds 1 to `s.seed`, so draw with `Proff.rng(1000 + s.seed)`). Slider for a continuous quantity; button for a discrete switch.
-- 2–3 **panels** that all read the same `p` (params), never more than 2 on screen at once (`panels` retires the oldest; see `ref/kit.md`): e.g. raw data → summary → where it lands on a distribution. One control should move several pictures.
+- 2–3 **panels** that all read the same `p` (params), one per step, never side by side (`panels` swaps them; see `ref/kit.md`): e.g. raw data → summary → where it lands on a distribution. The same control moves every one of them.
 - 3–5 **steps** that add one layer each: data, then the signal, then the noise, then the statistic, then the p-value. The page must still teach with nobody touching it.
 - Numbers on the figure are computed in `draw` from `p` with `Proff.stat` (`normPdf, normCdf, tPdf, binomPmf, poisPmf, nbPmf, gammaPdf, betaPdf, normal, mean, sd`) and `Proff.rng(seed)`. Never hard-code a result. An explore page usually needs no `make_*.py`: simulate inside `draw`. Use a data script only for a fixed real dataset.
 

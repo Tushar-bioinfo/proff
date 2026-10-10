@@ -3,7 +3,7 @@
 ## Limits (one place; ✓ = the audit fails the page)
 | what | limit |
 |---|---|
-| plots side by side | ≤ 2 ✓, each ≥ 440 wide ✓ and ≥ 300 tall ✓ (stage units, of 1200 × 675) |
+| plots on one step | 1 ✓, ≥ 440 wide ✓ and ≥ 300 tall ✓ (stage units, of 1200 × 675) |
 | text size on the stage | labels 20, notes 18, ticks and table headers 16, key number 26–34, max 36 ✓; ≥ 12 px on screen ✓ (also on a 1280 laptop with the sidebar open) |
 | a label | 1–6 words (✓ at > 7) |
 | figure | ≤ 24 labels or 40 words per step ✓ |
@@ -16,8 +16,7 @@
 - One scene = one idea. More than ~24 labels or 40 words on the figure → split the scene.
 - Text on the figure: labels of 1–6 words, size ≥ 18 units (16 for tick labels). Sentences go in the caption (≤ 28 words) or `info`. Both live in the i sidebar; nothing is written under the figure, so the labels on the stage must name everything a reader needs.
 - No text block before the first scene: title, one `sub` line, then the figure.
-- Step 1 of a multi-panel scene shows one big figure; later panels arrive and it makes room (`panels`, see `ref/kit.md`). Never show empty axes waiting for a later step.
-- At most two plots side by side, each ≥ 440 stage units wide (the audit fails narrower ones). A third plot replaces the oldest (`panels` does this), or gets its own step or scene. Never shrink plots to fit more in.
+- One figure per step, across the whole stage. Never two plots side by side: the next figure comes in on the next step and replaces the current one (`panels`, see `ref/kit.md`), or gets its own scene. Never show empty axes waiting for a later step.
 - The `i` sidebar holds notation, what you see, how to read it, and one thing to try: short points, ≤ 120 words per step (the audit counts). Notation rows are `[meaning, example from the figure]`, shown as `symbol : meaning` with the example under it.
 - Captions say what to look at, not what the picture is called. "One gene gets 24,299 reads" beats "Histogram of counts".
 - Define every abbreviation the first time it appears: `**SE** (standard error)`.
@@ -38,7 +37,7 @@
 
 ## Motion and interaction (from interactive-explainer practice)
 - The page must teach with nobody touching it. Steps carry the story; controls let the reader test it.
-- One control should move several pictures. Slider for a continuous quantity; button for a discrete switch or new random data.
+- One control should move the picture on every step, so each new figure answers to the same slider. Slider for a continuous quantity; button for a discrete switch or new random data.
 - Ask for a guess one step before you show the answer.
 - Example before definition: show the numbers, then name the idea.
 - Move something only when the motion is the change (strands parting, a cell dividing, a value sliding). Otherwise fade in.

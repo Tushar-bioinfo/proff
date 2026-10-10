@@ -1,6 +1,6 @@
 {
   "name": "proff-viz",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "First-principles tutor: L1 answers, L2 diagrams, L3 text lessons with ASCII flowcharts and calculation breakdowns, L4 visuals (interactive or static pages, step-by-step calculations, biology workflow walks, or a card deck of facts, angles, transfer and quiz). Built-in layout, contrast and overlap checks; efficient or premium budget.",
   "author": {
     "name": "Tushar Singh"
