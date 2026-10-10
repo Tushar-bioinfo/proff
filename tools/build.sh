@@ -7,9 +7,9 @@ set -e
 cd "$(dirname "$0")/.."
 rm -rf dist && mkdir -p dist
 X="-x *.DS_Store -x */__pycache__/* -x */snaps/* -x */page.html"
-zip -qr dist/proff-viz-claude.zip .claude-plugin/plugin.json skills/proff $X
-(cd skills && zip -qr ../dist/proff-viz-chatgpt.zip proff $X)
-S=skills/proff
+zip -qr dist/proff-viz-claude.zip .claude-plugin/plugin.json skills/proff-viz $X
+(cd skills && zip -qr ../dist/proff-viz-chatgpt.zip proff-viz $X)
+S=skills/proff-viz
 {
   awk 'n>=2; /^---$/{n++}' $S/SKILL.md | sed '/^## Where you are running/,$d'
   echo "## Where you are running"

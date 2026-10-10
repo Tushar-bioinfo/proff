@@ -18,11 +18,11 @@ A first-principles tutor that ends in finished, checked visuals.
 
 ## Make a page
 ```
-cp -R skills/proff/examples/walk-crispr my-topic && rm -rf my-topic/snaps my-topic/page.html
-export PROFF_SCRIPTS=$PWD/skills/proff/scripts
+cp -R skills/proff-viz/examples/walk-crispr my-topic && rm -rf my-topic/snaps my-topic/page.html
+export PROFF_SCRIPTS=$PWD/skills/proff-viz/scripts
 python3 my-topic/make_data.py
-python3 skills/proff/scripts/build.py my-topic
-python3 skills/proff/scripts/check.py my-topic/page.html
+python3 skills/proff-viz/scripts/build.py my-topic
+python3 skills/proff-viz/scripts/check.py my-topic/page.html
 ```
 `check.py` needs Playwright with Chromium. `plot.py` needs matplotlib and numpy. Pages load fonts and (only when used) KaTeX 0.16.11, d3 7.9.0, p5 1.9.4 from public CDNs; decks load KaTeX 0.18.9 and mermaid 11.15.0 when used.
 
@@ -33,8 +33,11 @@ python3 skills/proff/scripts/check.py my-topic/page.html
 - `examples/`: the five page exemplars (calc, story and walk with their data scripts) and one card deck
 
 ## Install
+Claude Code:
 ```
-claude plugin marketplace add <path or repo>
+claude plugin marketplace add Tushar-bioinfo/proff
 claude plugin install proff-viz@proff-viz
 ```
-claude.ai: upload `dist/proff-viz-claude.zip`. ChatGPT: `dist/proff-viz-chatgpt.zip`, or `dist/proff-viz-instructions.md` for text only. Build with `tools/build.sh`.
+Codex, Cursor, Gemini CLI, Antigravity and other Agent Skills harnesses: clone the repo and link `skills/proff-viz` into the harness skills folder (`~/.codex/skills`, `~/.cursor/skills`, `~/.gemini/skills` or `gemini skills link`, `~/.gemini/antigravity/skills`, `~/.agents/skills`). A `git pull` then updates every harness.
+
+claude.ai: upload `dist/proff-viz-claude.zip` (plugin) or `dist/proff-viz-chatgpt.zip` (single skill folder). ChatGPT: `dist/proff-viz-chatgpt.zip`, or `dist/proff-viz-instructions.md` for text only. Build with `tools/build.sh`.
