@@ -89,7 +89,8 @@
       g.path(`M${x2} ${y2}L${x2 - hs * Math.cos(ang - .45)} ${y2 - hs * Math.sin(ang - .45)}L${x2 - hs * Math.cos(ang + .45)} ${y2 - hs * Math.sin(ang + .45)}Z`, { fill: c, stroke: c, sw: 1, op: o.op });
       if (!o.free) { if (b) { seg(x1, y1, mx, my); seg(mx, my, x2, y2); } else seg(x1, y1, x2, y2); } return g; };
     g.text = (x, y, s, o = {}) => {
-      s = String(s); o = { size: 22, ...o }; const lines = s.split('\n'), lh = o.size * 1.22, anchor = o.anchor || 'start';
+      s = String(s); o = { size: 22, ...o }; const sz0 = o.size; if (!o.free) o = { ...o, size: sz0 + P.textBoost };   // the kit draws figure text bigger than written (free text sits in its own box)
+      const lines = s.split('\n'), lh = o.size * 1.22, anchor = o.anchor || 'start';
       const fill = o.fill || 'ink', wmax = Math.max(...lines.map(l => measure(l, o)));
       const y0 = y - (lines.length - 1) * lh / 2;
       lines.forEach((l, i) => {
@@ -105,7 +106,7 @@
       });
       const bx = x - (anchor === 'middle' ? wmax / 2 : anchor === 'end' ? wmax : 0), by = y0 - o.size * .55, bh = (lines.length - 1) * lh + o.size * 1.1;
       const [a, b] = X(bx, by), sc = S();
-      if (!o.free) reg('texts', { x0: a, y0: b, x1: a + wmax * sc, y1: b + bh * sc, s, px: o.size * sc, size: o.size, tick: o.tick });
+      if (!o.free) reg('texts', { x0: a, y0: b, x1: a + wmax * sc, y1: b + bh * sc, s, px: o.size * sc, size: sz0, tick: o.tick });
       if (A() > .05 && !o.free && !o.tick) g.words += s.split(/\s+/).filter(w => /[A-Za-z]{2,}/.test(w)).length;
       return { w: wmax, h: bh, x0: bx, y0: by, x1: bx + wmax, y1: by + bh }; };
     g.label = (x, y, s, o = {}) => {  // text with a leader line to the point it names: o.to=[x,y]
@@ -116,12 +117,12 @@
         g.line(sx, sy, tx, ty, { stroke: o.lc || 'muted', sw: 1.5, free: true }); g.circle(tx, ty, 3, { fill: o.lc || 'muted', stroke: 'none', free: true }); }
       return r; };
     g.tex = (x, y, tex, o = {}) => {  // LaTeX via KaTeX (SVG backend only); box centred at x,y unless o.anchor
-      const size = o.size || 26, w = o.w || Math.max(80, tex.length * size * .42), h = o.h || size * 2.2;
+      const sz0 = o.size || 26, size = sz0 + P.textBoost, w = o.w || Math.max(80, tex.length * size * .42), h = o.h || size * 2.2;
       const x0 = o.anchor === 'start' ? x : o.anchor === 'end' ? x - w : x - w / 2;
-      if (ctx || !window.katex) { g.text(x, y, tex.replace(/\\[a-z]+/g, m => ({ '\\sum': 'Σ', '\\times': '×', '\\cdot': '·', '\\div': '÷', '\\sigma': 'σ', '\\mu': 'μ', '\\log': 'log' }[m] || '')).replace(/[{}]/g, ''), { ...o, size, mono: true }); return g; }
+      if (ctx || !window.katex) { g.text(x, y, tex.replace(/\\[a-z]+/g, m => ({ '\\sum': 'Σ', '\\times': '×', '\\cdot': '·', '\\div': '÷', '\\sigma': 'σ', '\\mu': 'μ', '\\log': 'log' }[m] || '')).replace(/[{}]/g, ''), { ...o, size: sz0, mono: true }); return g; }
       let html; try { html = katex.renderToString(tex, { throwOnError: false }); } catch (e) { html = esc(tex); }
       out.push(`<foreignObject x="${x0}" y="${y - h / 2}" width="${w}" height="${h}"${o.op != null ? ` opacity="${o.op}"` : ''}><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:${size}px;height:100%;display:flex;align-items:center;justify-content:${o.anchor === 'start' ? 'flex-start' : o.anchor === 'end' ? 'flex-end' : 'center'};color:${col(o.fill || 'ink')}">${html}</div></foreignObject>`);
-      const [a, b] = X(x0, y - size * .7); reg('texts', { x0: a, y0: b, x1: a + w * S() * .9, y1: b + size * 1.4 * S(), s: tex, px: size * S(), size, tex: 1 }); return g; };
+      const [a, b] = X(x0, y - size * .7); reg('texts', { x0: a, y0: b, x1: a + w * S() * .9, y1: b + size * 1.4 * S(), s: tex, px: size * S(), size: sz0, tex: 1 }); return g; };
     g.img = (href, x, y, w, h, o = {}) => { if (ctx) { const im = P.images[href]; if (im && im.complete) { ctx.save(); ctx.globalAlpha = A() * (o.op ?? 1); ctx.drawImage(im, x, y, w, h); ctx.restore(); } }
       else out.push(`<image href="${P.assets[href] || href}" x="${x}" y="${y}" width="${w}" height="${h}"${o.op != null ? ` opacity="${o.op}"` : ''} preserveAspectRatio="xMidYMid meet"/>`); return g; };
     g.raw = s => { if (!ctx) out.push(s); return g; };
@@ -173,14 +174,15 @@
     g.matrix = (x, y, data, o = {}) => {  // table of numbers; o: cw, ch, rows, cols, fmt, cell(i,j,v)->{fill,stroke,op,text}, title
       const cw = o.cw || 74, ch = o.ch || 46, R = data.length, Cn = data[0].length, fs = o.size || Math.min(22, ch * .46);
       const pos = (i, j) => ({ x: x + j * cw, y: y + i * ch, w: cw, h: ch, cx: x + j * cw + cw / 2, cy: y + i * ch + ch / 2 });
+      const fit = (v, sz, wt) => { const w = P.measure(v, { size: sz, mono: true, weight: wt }); return w <= cw - 10 ? sz : (sz + P.textBoost) * (cw - 10) / w - P.textBoost; };   // shrink only text that would spill out of its cell
       if (o.title) g.text(x + cw * Cn / 2, y - (o.cols ? fs * 2.6 : fs * 1.3), o.title, { size: fs, anchor: 'middle', weight: 750 });
-      if (o.cols) o.cols.forEach((c, j) => g.text(pos(0, j).cx, y - fs * .9, c, { size: Math.max(16, fs * .85), anchor: 'middle', fill: o.colFill ? o.colFill(j) : 'muted', mono: true }));
+      if (o.cols) o.cols.forEach((c, j) => g.text(pos(0, j).cx, y - fs * .9, c, { size: fit(c, Math.max(16, fs * .85), 500), anchor: 'middle', fill: o.colFill ? o.colFill(j) : 'muted', mono: true }));
       if (o.rows) o.rows.forEach((r, i) => g.text(x - 10, pos(i, 0).cy, r, { size: Math.max(16, fs * .85), anchor: 'end', fill: o.rowFill ? o.rowFill(i) : 'muted', mono: true }));
       for (let i = 0; i < R; i++) for (let j = 0; j < Cn; j++) {
         const p = pos(i, j), st = (o.cell && o.cell(i, j, data[i][j])) || {};
         g.rect(p.x, p.y, cw, ch, { fill: st.fill || 'surf', stroke: st.stroke || 'line-dim', sw: st.sw || 1.5, op: st.op, free: true });
         const v = st.text ?? (data[i][j] == null ? '' : (o.fmt || P.fmt)(data[i][j]));
-        if (v !== '') g.text(p.cx, p.cy, v, { size: fs, anchor: 'middle', mono: true, weight: st.weight || 600, fill: st.color || 'ink', op: st.top, tick: 1 });
+        if (v !== '') g.text(p.cx, p.cy, v, { size: fit(v, fs, st.weight || 600), anchor: 'middle', mono: true, weight: st.weight || 600, fill: st.color || 'ink', op: st.top, tick: 1 });
       }
       if (o.frame !== false) g.rect(x, y, cw * Cn, ch * R, { stroke: 'line', sw: 2.5, free: true });
       box(x, y, cw * Cn, ch * R, false);
@@ -191,7 +193,8 @@
   }
   const nice = (a, b, n) => { const span = b - a, step0 = span / Math.max(1, n), mag = 10 ** Math.floor(Math.log10(step0)), err = step0 / mag;
     const st = (err >= 7.5 ? 10 : err >= 3.5 ? 5 : err >= 1.5 ? 2 : 1) * mag, out = []; for (let v = Math.ceil(a / st) * st; v <= b + st * 1e-9; v += st) out.push(+v.toFixed(10)); return out; };
-  P.nice = nice; P.measure = (s, o = {}) => measure(String(s), { size: 22, ...o }); P.images = {}; P.assets = window.PROFF_ASSETS || {};
+  P.nice = nice; P.textBoost = 2;   /* figure text is drawn this many units bigger than written; limits in ref/design.md are the written sizes */
+  P.measure = (s, o = {}) => { o = { size: 22, ...o }; return measure(String(s), o.free ? o : { ...o, size: o.size + P.textBoost }); }; P.images = {}; P.assets = window.PROFF_ASSETS || {};
 
   // ---------- page API ----------
   P.page = o => Object.assign(P.opts, o);
@@ -433,6 +436,10 @@
     if (g.plots.length > 1) out.push(`${where}: ${g.plots.length} plots on one step (${g.plots.map(q => short(q.name)).join(', ')}); show one figure per step and bring the next one in on the next step (panels with a later 'from' do this)`);
     if (g.words > (s.wordBudget || 40)) out.push(`${where}: ${g.words} words on the figure (budget ${s.wordBudget || 40}); move text to caption/info`);
     const iw = P.infoWords(s, s.k); if (iw > 120) out.push(`${where}: info sidebar has ${iw} words (max 120); cut to short points`);
+    // show, never ask the reader to picture it or to already know it
+    { const d = document.createElement('div'); d.innerHTML = infoHTML(infoOf(s, s.k)); const tx = ((s.steps[s.k] || {}).cap || '') + ' ' + d.textContent;
+      const m = tx.match(/\b(imagine|picture (this|it)|clearly|obviously|of course|(it is|it's) easy to see|as you know|intuitively|trivially)\b/i);
+      if (m) out.push(`${where}: "${m[0]}" asks the reader to picture or already know it; draw it or show the numbers instead`); }
     const cap = (s.steps[s.k] || {}).cap || ''; if (cap.split(/\s+/).length > 28) out.push(`${where}: caption has ${cap.split(/\s+/).length} words (max 28)`);
     { const nl = T.filter(a => !a.tick).length; if (nl > (s.labelBudget || 24)) out.push(`${where}: ${nl} labels on the figure (max ${s.labelBudget || 24}); split the scene`); }
     return [...new Set(out)];

@@ -1,8 +1,14 @@
 /* Proff visual kit. BlockFrame chrome (thick borders, hard offset shadows, heavy Inter, Space Grotesk labels)
    around clean figures. Dark only. Every colour is a token. Authors never edit this file. */
-:root,[data-theme=dark]{   /* default palette "blockframe": the Block Frame pastels (frontend-slides, MIT) on black, with quiet grey frames.
-     Tuned for dark: blue made more saturated so it is not read as text; yellow deepened a touch to separate it from cream.
-     c2 and c5 are both warm and light: never let them carry a contrast alone (add a label, dash, or shape). */
+:root,[data-theme=dark]{   /* default palette "cyan": cyan blue and cyan green carry the figure; amber is the one warm highlight.
+     Hues picked by search for colour-blind separation (CIEDE2000, Machado 2009 deutan/protan): c1-c3, c1-c2, c2-c3 stay >= ~20 for every reader.
+     c1, c4, c5 and c6 are all cool and sit 15-18 apart: never let two of them carry a contrast alone (add a label, dash, or shape). */
+  --bg:#0a0b0d;--fig:#111316;--surf:#171a1d;--surf2:#21252a;--line:#56616b;--line-dim:#2a3036;--grid:#21262b;
+  --ink:#f0fbff;--muted:#a3b1bb;--dim:#6b7882;--on:#000000;
+  --c1:#72c9f5;--c2:#f3a833;--c3:#6bebb6;--c4:#4f91f0;--c5:#c7ebee;--c6:#8f99a4;--mix:20%;
+}
+[data-palette=blockframe][data-theme=dark]{   /* preset "blockframe" (the v4.0 default): Block Frame pastels (frontend-slides, MIT) on black.
+     c2 and c5 are both warm and light: never let them carry a contrast alone. */
   --bg:#0b0b0c;--fig:#121214;--surf:#18181b;--surf2:#232327;--line:#5a5a63;--line-dim:#2c2c31;--grid:#232327;
   --ink:#fffdf5;--muted:#a9a9b2;--dim:#6e6e76;--on:#000000;
   --c1:#8feaf7;--c2:#f5c030;--c3:#fe90e8;--c4:#99e885;--c5:#ffdc8b;--c6:#b7b4c7;--mix:20%;

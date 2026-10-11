@@ -9,8 +9,8 @@ import argparse, shutil, struct, subprocess, sys, tempfile
 from pathlib import Path
 
 TEMPLATE = (
-    "{subject}, clean scientific illustration, flat shading, {ground} background, accents in pastel blue (#8feaf7), "
-    "yellow (#f5c030) and pink (#fe90e8), generous empty space around the subject, centred. "
+    "{subject}, clean scientific illustration, flat shading, {ground} background, accents in cyan blue (#72c9f5), "
+    "cyan green (#6bebb6) and a little amber (#f3a833), generous empty space around the subject, centred. "
     "STRICT: no text, no letters, no numbers, no labels, no watermark, no faces, no emojis."
 )
 
@@ -28,7 +28,7 @@ def main():
     ap.add_argument("--timeout", type=int, default=600)
     ap.add_argument("--print", action="store_true", help="only print the filled prompt")
     a = ap.parse_args()
-    prompt = TEMPLATE.format(subject=a.subject, ground="near-black (#121214)")
+    prompt = TEMPLATE.format(subject=a.subject, ground="near-black (#111316)")
     if a.print:
         print(prompt)
         return 0

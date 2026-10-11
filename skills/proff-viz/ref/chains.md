@@ -29,5 +29,8 @@ RNA extraction → (poly-A selection or rRNA depletion) → fragmentation → re
 ## A hypothesis test (any)
 Question → what is measured, on what unit (watch pseudoreplication) → null and alternative → the statistic and why → its null distribution (show where it comes from, e.g. by simulation) → observed value on that distribution → p-value as a tail area → effect size with interval → assumptions and what breaks them → multiple testing if many tests.
 
+## Maximum likelihood (the ladder; start here for any fitted model)
+One outcome and its probability (one toss, P(H) = θ = 0.7) → independent outcomes multiply (P(H, H, T) = 0.7 × 0.7 × 0.3 = 0.147) → flip the view: data fixed, θ slides, L(θ) = θ²(1 − θ) as a table, then a curve → the peak (θ̂ = 2/3, L = 0.148) → why logs (products of many small numbers underflow; log keeps the peak) → slope of log L = 0 gives θ̂ = heads / tosses → same recipe for a normal mean (θ̂ = sample mean) → curvature at the peak gives the standard error → where it breaks (small n, a peak on the boundary, a wrong model).
+
 ## Training a model (ML)
 Data and labels → split (train / validation / test; group-aware if samples are related) → features and scaling (fit on train only) → model and its parameters → loss → gradient step (show one update on numbers) → epochs and the learning curve → validation for tuning → final test once → metrics with uncertainty → leakage checks and failure cases.

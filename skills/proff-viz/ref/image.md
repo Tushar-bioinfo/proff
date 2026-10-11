@@ -5,7 +5,7 @@ Diagrams are kit scenes. An image is for a realistic context picture only (a tis
 ## Prompt template
 ```
 [subject, e.g. "a cross-section of a T75 cell culture flask with adherent cells"], clean scientific illustration,
-flat shading, near-black background (#121214), accents in pastel blue (#8feaf7), yellow (#f5c030) and pink (#fe90e8),
+flat shading, near-black background (#111316), accents in cyan blue (#72c9f5), cyan green (#6bebb6) and a little amber (#f3a833),
 generous empty space around the subject, centred. STRICT: no text, no letters, no numbers, no labels, no watermark, no faces, no emojis.
 ```
 

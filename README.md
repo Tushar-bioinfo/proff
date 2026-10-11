@@ -13,7 +13,7 @@ A first-principles tutor that ends in finished, checked visuals.
   | walk | a process from molecules to the data table | `examples/walk-crispr` |
 - **Budget**: efficient (default, all local) or premium (adds one text-free context image and an independent review).
 - **Checks**: every step and slider extreme in a desktop browser (dark only): text overlaps, lines through labels, off-figure text, tiny text, low contrast, word budgets, plus contact sheets to look at.
-- **Palette** "blockframe" (Block Frame pastels on black, quiet grey frames), shared by pages and decks. The `i` sidebar explains every symbol as `symbol : meaning` with an example from the figure.
+- **Palette** "cyan" (cyan blue and cyan green with one amber highlight, on near-black), shared by pages and decks; the older pastels stay as `blockframe`. Figure text is drawn 2 units larger than written. The `i` sidebar explains every symbol as `symbol : meaning` with an example from the figure.
 - Quiz and guide modes; STE-80 writing; say `plain` for normal prose.
 
 ## Make a page
@@ -41,3 +41,6 @@ claude plugin install proff-viz@proff-viz
 Codex, Cursor, Gemini CLI, Antigravity and other Agent Skills harnesses: clone the repo and link `skills/proff-viz` into the harness skills folder (`~/.codex/skills`, `~/.cursor/skills`, `~/.gemini/skills` or `gemini skills link`, `~/.gemini/antigravity/skills`, `~/.agents/skills`). A `git pull` then updates every harness.
 
 claude.ai: upload `dist/proff-viz-claude.zip` (plugin) or `dist/proff-viz-chatgpt.zip` (single skill folder). ChatGPT: `dist/proff-viz-chatgpt.zip`, or `dist/proff-viz-instructions.md` for text only. Build with `tools/build.sh`.
+
+## Working on the plugin
+See `AGENTS.md` and `docs/`. Run `tools/check-all.sh` to rebuild and audit every example.

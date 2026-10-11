@@ -24,6 +24,7 @@ Order: title → predict → facts → compare → angles → transfer → quiz 
 - Card text ≤ 30 words; titles ≤ 6 words. At most 4 facts, 4 angles, 3 transfer, 3 quiz cards, 5 takeaways.
 - Each angle or transfer card asks a question the lesson did not answer directly. Answers are 1–2 sentences and name the reason.
 - Numbers must match the page or the L3 write-up.
+- Facts cards follow the ladder, simplest first (`levels/L4.md`, "Show it"); each fact carries its small number.
 
 ## Build and check
 ```bash

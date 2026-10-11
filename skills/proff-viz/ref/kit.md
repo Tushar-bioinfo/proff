@@ -4,11 +4,12 @@
 
 ## Page
 ```js
-Proff.page({ title, sub, eyebrow, layout: 'walk' | 'article', palette: 'lab' | 'neon', foot });
+Proff.page({ title, sub, eyebrow, layout: 'walk' | 'article', palette: 'blockframe' | 'lab' | 'neon', foot });
 ```
 - `walk` (default): one stage, one slider over every step of every scene. For stories and processes.
 - `article`: scrolling page; each scene has its own steps and controls; study blocks allowed between scenes.
-- Default palette "blockframe" (Block Frame pastels on black: blue, yellow, pink, green, cream). `palette` only when the user asks for another.
+- Default palette "cyan" (cyan blue, amber, cyan green, deeper blue, pale aqua, slate on near-black). `palette` only when the user asks for another; `blockframe` is the old pastel set.
+- Figure text is drawn `Proff.textBoost` (default 2) units bigger than the `size` you write, so `size: 20` shows as 22. Text with `free: true` (letters inside their own box) is not boosted. Write the sizes in `ref/design.md`.
 
 ## Scene
 ```js

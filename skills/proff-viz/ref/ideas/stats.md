@@ -7,6 +7,7 @@ Examples, not limits. Invent the visual that makes this idea land, and cover eve
 - Regression → fitted line, residual distances, then an outlier. Compare the fit with and without it.
 - Power → curves against effect size for several sample sizes. Mark the chosen threshold and design point.
 - Multiple testing → null tests and false positives beside adjusted decisions. Show counts and the denominator.
+- Likelihood → the same data under a sliding θ: one bar per observation's probability, their product as one number, then the L(θ) curve with the peak marked. A slider moves θ along the curve.
 - Prior to posterior → shared axes for prior, likelihood, posterior. Mark how evidence changes uncertainty.
 
 ## Plot styling

@@ -81,7 +81,7 @@
       const T = TS[it.t], s = sizeOf(T, cw, ch);
       const p = { t: it.t, x: x + s.lab, y: 0, s, below: it.below, right: it.right, sym: it.sym };
       let w = s.lab + s.w, h = s.h;
-      if (it.right) { const V = TS[it.right], vs = sizeOf(V, cw, ch); p.rx = s.w + 70; w += 70 + vs.w; }
+      if (it.right) { const V = TS[it.right], vs = sizeOf(V, cw, ch); p.rx = s.w + 70 + vs.lab; w += 70 + vs.lab + vs.w; }
       if (it.below) { p.by = s.h + ch * .9; h += ch * 1.9; }
       p.W = w; p.Hh = h; parts.push(p); x += w + gap;
     }
@@ -122,7 +122,7 @@
         drawT(g, V, p.below, x, vy, cw, ch, st, { reads, outCell, isDone, showRead, showOut, phase, noTitle: true });
         g.text(x + p.s.w + 12, vy + ch / 2, V.label, { size: 17, fill: V.color, weight: 650 }); }
       if (p.right) { const V = TS[p.right], vx = x + p.rx;
-        g.text(vx - 35, top + p.s.h / 2, p.sym, { size: 26, anchor: 'middle', weight: 800, fill: V.color });
+        g.text(x + p.s.w + 35, top + p.s.h / 2, p.sym, { size: 26, anchor: 'middle', weight: 800, fill: V.color });
         drawT(g, V, p.right, vx, top, cw, ch, st, { reads, outCell, isDone, showRead, showOut, phase }); }
     }
     // formula bar: the live cell's arithmetic, coloured by table

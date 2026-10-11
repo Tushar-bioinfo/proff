@@ -1,317 +1,314 @@
-// Thorough Visual Guide to Statistical Notation for Beginners.
-// Five interactive visual scenes covering the fundamental notation families,
-// plus reference tables, mental models, and flip quizzes.
+// A Story-Driven Visual Guide to Statistical Notation for Biologists & Researchers.
+// Story: Testing a novel metabolic drug to lower blood glucose in mice.
+// Connects five core notation families across the experimental lifecycle:
+// 1. Raw bench measurements & sample statistics (i, xᵢ, n, ∑, x̄, s, df)
+// 2. Population truths vs sample estimates (N, n, μ, x̄, σ, s, μ̂)
+// 3. Choosing error bars: biological spread vs mean precision (s vs SE = s ÷ √n)
+// 4. Hypothesis testing & statistical proof (H₀, H₁, α, t, p)
+// 5. Dose-response modeling (y, x, β₀, β₁, ŷ, ε, e)
 
 Proff.page({
-  title: 'A Visual Guide to Statistical Notation',
-  sub: 'From simple sums and sample counts to population truths, hypothesis tests, and linear models',
-  eyebrow: 'visual guide',
+  title: 'Statistical Notation: The Lab Story',
+  sub: 'Testing a metabolic drug in mice: from raw bench data to statistical proof',
+  eyebrow: 'visual story',
   layout: 'article'
 });
 
 // ==========================================
-// SECTION 1: THE CORE SPLIT IN NUMBERS
+// PROLOGUE: THE EXPERIMENT
 // ==========================================
-Proff.section('the core split in numbers');
+Proff.section('the experiment: testing a new metabolic drug');
 Proff.tiles([
   {
-    big: 'N vs n',
-    h: 'population vs sample',
-    text: 'N is the full biological population (e.g. 10 million cells); n is what you measure (n = 8).'
+    tag: 'the lab goal',
+    big: '114 mg/dL',
+    h: 'baseline glucose',
+    text: 'You measure fasting blood glucose across lab mice to test if your compound lowers blood sugar.'
   },
   {
-    big: 'μ vs x̄',
-    h: 'truth vs estimate',
-    text: 'μ is the true unseeable mean; x̄ is the average calculated from your finite sample data.'
+    tag: 'the core divide',
+    big: 'Greek vs Latin',
+    h: 'truth vs lab sample',
+    text: 'Greek letters name unseeable biological constants; Latin letters name numbers computed from your data.'
   },
   {
-    big: 'σ vs s',
-    h: 'spread vs wobble',
-    text: 'σ is natural variation; s is sample spread. Standard error SE = s ÷ √n measures wobble of x̄.'
+    tag: 'the cardinal rule',
+    big: 's vs SE',
+    h: 'spread vs precision',
+    text: 'Standard deviation describes mouse diversity; standard error describes how precisely you know the mean.'
   }
 ]);
 
 // ==========================================
-// SCENE 1: BUILDING BLOCKS & BALANCE BEAM
+// SCENE 1: RAW BENCH MEASUREMENTS
 // ==========================================
-Proff.section('visual 1 · building blocks: index, sum, and mean');
+Proff.section('chapter 1 · at the bench: index, sum, and sample mean');
+Proff.prose(
+  'You begin by measuring fasting blood glucose in six control mice. Each tube gets an ID number, and each measurement produces a number on your bench meter. Here is how statistical notation records this raw lab work.'
+);
+
 Proff.scene({
-  title: 'The Balance Beam: Index, Sum, and the Mean',
+  title: 'Bench Data: Mice, Sum, and the Mean',
   acc: 1,
   w: 1200,
   h: 560,
   controls: [
-    { name: 'shift', label: 'offset', min: -1.5, max: 1.5, step: 0.5, value: 0 }
+    { name: 'offset', label: 'glucose shift', min: -10, max: 10, step: 2, value: 0 }
   ],
   steps: [
     {
-      cap: 'The index i numbers each observation xᵢ in your data table, from i = 1 to n = 5.',
+      cap: 'Six mice, indexed i = 1 to 6. Each dot is one fasting glucose reading xᵢ in mg/dL.',
       info: {
-        see: ['Five blocks: individual measurements x₁ through x₅', 'Horizontal beam: the measurement axis'],
-        read: ['Subscript i tells you which individual you are looking at', 'n is the total number of blocks (sample size)']
+        see: ['Six dots: individual mouse blood glucose readings', 'x-axis: mouse replicate ID (i = 1 to 6)', 'y-axis: blood glucose level in mg/dL'],
+        read: ['Subscript i labels which mouse you are observing', 'xᵢ is the numerical measurement for mouse i', 'n = 6 is your sample size (total mice)']
       }
     },
     {
-      cap: 'Capital sigma ∑ adds all values. Dividing sum 25 by n = 5 gives mean x̄ = 5.0 at the fulcrum.',
+      cap: 'Sum ∑ xᵢ adds all readings. Dividing by sample size n = 6 gives sample mean x̄.',
       info: {
-        see: ['Triangle: sample mean x̄ as the fulcrum', 'Left distances balance right distances perfectly'],
-        read: ['∑ is the Greek capital S for Sum', 'Mean x̄ is literally the center of gravity of your data']
+        see: ['Horizontal line: sample mean x̄', 'All readings cluster above and below this average line'],
+        read: ['Capital sigma ∑ means sum: add all measurements', 'Sample mean x̄ is the balance point of your cohort', 'x̄ is computed from data, so it uses Latin letters']
       }
     },
     {
-      cap: 'Degrees of freedom df = n − 1. Once x̄ is fixed, the last value is locked to keep balance.',
+      cap: 'Dashed vertical lines show deviations (xᵢ − x̄). Dividing their squared sum by df = 5 gives s.',
       info: {
-        see: ['Blue blocks: free to vary', 'Pink block: locked value', 'df = 4 free values out of 5'],
-        read: ['You spend 1 degree of freedom estimating the mean', 'Only n − 1 independent pieces of information remain']
+        see: ['Dashed lines: gap from each mouse to the average', 'Pink band: sample standard deviation s (typical spread)'],
+        read: ['Standard deviation s measures mouse-to-mouse diversity', 'Degrees of freedom df = n − 1 = 5 because x̄ is fixed', 'You divide by n − 1 to avoid underestimating true spread']
       }
     }
   ],
   info: {
     notation: {
-      i: ['index numbering each observation', 'i = 1 to 5 here'],
-      'x_i': ['the i-th measurement value', 'x₁ = 2 at the start'],
-      n: ['sample size (total observations)', 'n = 5 blocks on the beam'],
-      '\\sum': ['capital sigma: add all values', '2 + 3 + 5 + 7 + 8 = 25'],
-      '\\bar{x}': ['sample mean: sum divided by n', '25 ÷ 5 = 5.0 at fulcrum'],
-      df: ['degrees of freedom: n − 1', 'df = 4 free blocks']
+      i: ['mouse index (1st, 2nd, ...)', 'i = 1 to 6 on x-axis'],
+      'x_i': ['glucose reading for mouse i', 'x₁ = 98 mg/dL for mouse 1'],
+      n: ['sample size (total mice measured)', 'n = 6 mice in this cohort'],
+      '\\sum': ['capital sigma: sum all values', 'sum of all 6 readings'],
+      '\\bar{x}': ['sample mean: sum divided by n', 'horizontal line at 114 mg/dL'],
+      s: ['sample standard deviation', 's = 12.5 mg/dL spread band'],
+      df: ['degrees of freedom: n − 1', 'df = 5 after estimating x̄']
     },
-    try: 'Drag **offset** to watch the fulcrum x̄ slide while distances stay balanced.'
+    try: 'Drag **glucose shift** to see the raw values and mean line slide together.'
   },
   draw(g, k, t, p) {
-    const raw = [2, 3, 5, 7, 8];
-    const vals = raw.map(v => v + p.shift);
+    const raw = [98, 104, 110, 118, 122, 132];
+    const vals = raw.map(v => v + p.offset);
     const sum = vals.reduce((a, b) => a + b, 0);
     const xbar = sum / vals.length;
+    const devSq = vals.reduce((a, b) => a + Math.pow(b - xbar, 2), 0);
+    const sVal = Math.sqrt(devSq / (vals.length - 1));
 
     const ax = g.axes({
       x: 100, y: 50, w: 1000, h: 420,
-      xd: [0, 10], yd: [-1, 5],
-      xt: [0, 2, 4, 6, 8, 10], yt: [],
-      xl: 'measurement value (x)', yl: '',
-      grid: false
+      xd: [0.5, 6.5], yd: [80, 150],
+      xt: [1, 2, 3, 4, 5, 6], yt: [90, 105, 120, 135],
+      fmtx: v => `M${v}`,
+      xl: 'mouse replicate (i)', yl: 'fasting glucose (mg/dL)',
+      grid: true
     });
 
-    const fy = ax.sy(2.0);
-
-    // Horizontal beam
-    g.line(ax.sx(0.5), fy, ax.sx(9.5), fy, { stroke: 'muted', sw: 5, free: true });
-
-    // Step 0: Draw blocks
+    // Step 0: Draw mouse dots
     vals.forEach((v, idx) => {
-      const cx = ax.sx(v);
-      const isLocked = k >= 2 && idx === vals.length - 1;
-      const cTok = isLocked ? 'c3' : 'c1';
-      g.rect(cx - 20, fy - 40, 40, 40, { fill: cTok.replace('c', 'f'), stroke: cTok, sw: 2.5, r: 4, free: true });
-      g.text(cx, fy - 20, `x${idx + 1}`, { size: 18, anchor: 'middle', weight: 800, fill: 'ink' });
-      g.text(cx, fy - 48, `${v.toFixed(1)}`, { size: 18, anchor: 'middle', weight: 600, mono: true, fill: 'muted' });
+      const cx = ax.sx(idx + 1);
+      const cy = ax.sy(v);
+      g.circle(cx, cy, 8, { fill: 'c2', stroke: 'fig', sw: 2, free: true });
     });
 
-    // Step 1: Fulcrum and mean
+    g.text(ax.x + 20, ax.y + 24, `n = 6 mice (x₁ … x₆)`, { size: 18, anchor: 'start', weight: 800, fill: 'c2' });
+
+    // Step 1: Mean line
     if (k >= 1) {
-      const fx = ax.sx(xbar);
-      g.poly([[fx, fy + 2], [fx - 18, fy + 38], [fx + 18, fy + 38]], { fill: 'c2', stroke: 'none', close: true, free: true });
-      g.text(fx, fy + 60, `x̄ = ${xbar.toFixed(1)} (mean)`, { size: 18, anchor: 'middle', weight: 800, fill: 'c2' });
-      g.text(ax.x + 20, ax.y + 24, `sum = ${sum.toFixed(1)}`, { size: 18, anchor: 'start', weight: 800, fill: 'c1' });
+      g.line(ax.x, ax.sy(xbar), ax.x + ax.w, ax.sy(xbar), { stroke: 'c1', sw: 3.5 });
+      g.text(ax.x + ax.w - 20, ax.y + 24, `mean x̄ = ${xbar.toFixed(1)} mg/dL`, { size: 18, anchor: 'end', weight: 800, fill: 'c1' });
+      g.text(ax.x + 220, ax.y + 24, `sum = ${sum.toFixed(0)}`, { size: 18, anchor: 'start', weight: 700, fill: 'c1' });
     }
 
-    // Step 2: Degrees of freedom
+    // Step 2: Deviations and standard deviation
     if (k >= 2) {
-      g.text(ax.x + ax.w - 20, ax.y + 24, 'df = n − 1 = 4', { size: 20, anchor: 'end', weight: 800, fill: 'c3' });
+      vals.forEach((v, idx) => {
+        const cx = ax.sx(idx + 1);
+        g.line(cx, ax.sy(v), cx, ax.sy(xbar), { stroke: 'c3', sw: 2.5, dash: true });
+      });
+
+      // Spread band
+      const yTop = ax.sy(xbar + sVal), yBot = ax.sy(xbar - sVal);
+      g.rect(ax.x, yTop, ax.w, yBot - yTop, { fill: 'f3', stroke: 'none', op: 0.25, free: true });
+      g.text(ax.x + 20, ax.y + 52, `s = ${sVal.toFixed(1)} mg/dL (df = 5)`, { size: 18, anchor: 'start', weight: 800, fill: 'c3' });
     }
   }
 });
 
 // ==========================================
-// SECTION 2: GREEK VS LATIN REFERENCE TABLE
+// SCENE 2: POPULATION VS SAMPLE
 // ==========================================
-Proff.section('the golden rule: Greek vs Latin vs Hat');
-Proff.compare(
-  ['concept', 'population parameter (Greek)', 'sample statistic (Latin)', 'estimator (Hat)', 'plain meaning'],
-  [
-    ['mean (center)', 'μ (mu)', 'x̄ (x-bar) or m', 'μ̂ (mu-hat)', 'The balance point of the distribution.'],
-    ['variance (spread²)', 'σ² (sigma squared)', 's² (s squared)', 'σ̂²', 'Average squared distance from the mean.'],
-    ['standard deviation', 'σ (sigma)', 's (or SD)', 'σ̂', 'Spread in original units (square root of variance).'],
-    ['proportion (share)', 'p or π (pi)', 'p̂ or p', 'p̂ (p-hat)', 'Fraction of successes or events (0 to 1).'],
-    ['regression slope', 'β (beta)', 'b or β̂', 'β̂ (beta-hat)', 'Change in outcome per unit increase in predictor.'],
-    ['correlation', 'ρ (rho)', 'r', 'ρ̂ (rho-hat)', 'Linear association strength between -1 and +1.']
-  ]
+Proff.section('chapter 2 · the hidden reality: population vs sample');
+Proff.prose(
+  'Your 6 lab mice are not the entire species. In the wider animal colony (the population of size N), true biological glucose follows an unseeable distribution with fixed truth parameters: mean μ and spread σ. Every time you pull a cohort of n mice, your calculated mean x̄ wobbles around nature’s true μ.'
 );
 
-// ==========================================
-// SCENE 2: POPULATION VS SAMPLE SIMULATOR
-// ==========================================
-Proff.section('visual 2 · population truth vs lab sample');
 Proff.scene({
   title: 'Population Truth vs Lab Sample',
   acc: 2,
   w: 1200,
-  h: 620,
-  panels: [
-    { id: 'dist', from: 0 },
-    { id: 'compare', from: 2 }
-  ],
+  h: 560,
   controls: [
-    { name: 'n', label: 'sample size', min: 4, max: 28, step: 1, value: 8 },
-    { name: 'sigma', label: 'spread (σ)', min: 1.2, max: 3.2, step: 0.2, value: 2.0 },
-    { type: 'button', name: 'reseed', label: 'new sample' }
+    { name: 'n', label: 'cohort size (n)', min: 4, max: 28, step: 1, value: 6 },
+    { name: 'sigma', label: 'true spread (σ)', min: 8, max: 20, step: 2, value: 12 },
+    { type: 'button', name: 'reseed', label: 'new cohort' }
   ],
   steps: [
     {
-      cap: 'The population has true mean μ and spread σ. In nature, you cannot observe all N individuals.',
+      cap: 'The colony has true mean μ = 115 mg/dL and true spread σ = 12. You cannot test all N mice.',
       info: {
-        see: ['Curve: true population distribution', 'Dashed line: true center μ', 'Shaded region: 68% of population within ±σ'],
-        read: ['Greek letters name unseen population parameters', 'μ and σ are fixed constants in nature']
+        see: ['Bell curve: true distribution of glucose across all mice', 'Dashed center line: true population mean μ = 115', 'Blue bracket: true biological spread σ = 12'],
+        read: ['Greek letters (μ, σ) represent fixed biological constants', 'You can never measure all N individuals in nature', 'Parameters are true but permanently unseen']
       }
     },
     {
-      cap: 'You measure n samples xᵢ. Their center is sample mean x̄, which estimates the unseeable μ.',
+      cap: 'You measure n mice. Their sample mean x̄ estimates the unseeable population mean μ.',
       info: {
-        see: ['Dots: n individual sample observations xᵢ', 'Solid line: sample mean x̄', 'Gap between x̄ and μ: sampling error'],
-        read: ['Latin letters name numbers computed from data', 'Click **new sample** to see x̄ wobble around μ']
+        see: ['Dots: your n sampled mice along the bottom', 'Yellow line: your calculated sample average x̄', 'Gap between x̄ and μ: random sampling wobble'],
+        read: ['Latin letters (x̄, s) name numbers computed from lab data', 'Click **new cohort** to see how x̄ wobbles around true μ', 'Larger cohorts make x̄ stay closer to μ']
       }
     },
     {
-      cap: 'A hat marks an estimate: μ̂ = x̄ and σ̂ = s. Sample numbers approximate the true constants.',
+      cap: 'A hat marks an estimate: μ̂ = x̄ and σ̂ = s. Sample statistics approximate true nature.',
       info: {
-        see: ['Left: sampling distribution', 'Right: parameter vs estimate bars', 'Sample values hover near truth'],
-        read: ['Putting a hat on a Greek letter turns truth into an estimate', 'More samples make the estimate sharper']
+        see: ['Pink bracket: sample spread s (estimates true σ)', 'Yellow line: sample mean x̄ (estimates true μ)', 'Both estimates sit on the exact same glucose scale'],
+        read: ['A hat (^) indicates a sample-based guess of a true parameter', 'μ̂ means: our lab estimate of nature’s true mean μ', 'As cohort size n grows, μ̂ converges on true μ']
       }
     }
   ],
   info: {
     notation: {
-      N: ['population size (all individuals)', 'unseeable total in nature'],
-      n: ['sample size (number of dots)', '8 observations at the start'],
-      '\\mu': ['population mean (unseen truth)', 'true center at 10.00'],
-      '\\bar{x}': ['sample mean (sample center)', 'yellow line near 10.00'],
-      '\\hat{\\mu}': ['estimator of population mean', 'μ̂ = x̄ = 9.47 here'],
-      '\\sigma': ['population standard deviation', 'true spread at 2.00'],
-      s: ['sample standard deviation', 'calculated spread of dots']
+      N: ['population size (all mice in existence)', 'unseeable total in nature'],
+      n: ['sample size (mice in your cage)', '6 mice in your cohort'],
+      '\\mu': ['true population mean', 'colony truth at 115 mg/dL'],
+      '\\bar{x}': ['sample mean (calculated average)', 'yellow line near 115 mg/dL'],
+      '\\hat{\\mu}': ['estimator of true mean', 'μ̂ = x̄ from your bench data'],
+      '\\sigma': ['true biological standard deviation', 'colony spread at 12 mg/dL'],
+      s: ['sample standard deviation', 'calculated spread of your dots']
     },
-    try: 'Raise **sample size (n)** to 28. Notice how μ̂ = x̄ moves closer to μ = 10.'
+    try: 'Raise **cohort size (n)** to 28. Notice how sample mean x̄ locks onto true μ.'
   },
   draw(g, k, t, p, s) {
-    const mu = 10, sig = p.sigma, n = p.n;
+    const mu = 115, sig = p.sigma, n = p.n;
     const r = Proff.rng(s.seed), zGen = Proff.stat.normal(r);
     const pool = [];
-    for (let i = 0; i < 30; i++) pool.push(mu + zGen() * sig);
+    for (let i = 0; i < 35; i++) pool.push(mu + zGen() * sig);
     const pts = pool.slice(0, n);
     const xbar = Proff.stat.mean(pts);
     const sVal = Proff.stat.sd(pts);
 
-    g.panel('dist', D => {
-      const A = g.axes({
-        ...D,
-        xd: [2, 18], yd: [0, 0.45],
-        xt: [4, 7, 10, 13, 16], yt: [0, 0.1, 0.2, 0.3, 0.4],
-        xl: 'measurement x', yl: 'density',
-        grid: true
-      });
-
-      const pdf = x => Proff.stat.normPdf(x, mu, sig);
-
-      g.area(pdf, A, mu - sig, mu + sig, { fill: 'f1', op: 0.6 });
-      g.curve(pdf, A, 2, 18, { stroke: 'c1', sw: 3 });
-
-      const topY = pdf(mu);
-      g.line(A.sx(mu), A.sy(0), A.sx(mu), A.sy(topY), { stroke: 'c1', sw: 2.5, dash: true });
-      g.text(A.sx(mu), A.y + 24, 'μ = 10', { size: 20, anchor: 'middle', weight: 800, fill: 'c1' });
-
-      if (k >= 1) {
-        const op1 = k === 1 ? t : 1;
-        g.fade(op1, g => {
-          const jit = Proff.rng(19);
-          pts.forEach(v => {
-            const clamped = Proff.clamp(v, 2.3, 17.7);
-            const cy = A.sy(0.035) + (jit() - 0.5) * 20;
-            g.circle(A.sx(clamped), cy, 6.5, { fill: 'c2', stroke: 'fig', sw: 1.5, op: 0.9, free: true });
-          });
-          g.text(A.x + 20, A.y + 24, `${n} sample dots`, { size: 18, anchor: 'start', weight: 700, fill: 'c2' });
-
-          const yTopXbar = pdf(xbar);
-          g.line(A.sx(xbar), A.sy(0), A.sx(xbar), A.sy(yTopXbar), { stroke: 'c2', sw: 3.5 });
-          g.text(A.x + A.w - 20, A.y + 24, `x̄ = ${xbar.toFixed(2)}`, { size: 18, anchor: 'end', weight: 800, fill: 'c2' });
-        });
-      }
+    const ax = g.axes({
+      x: 100, y: 50, w: 1000, h: 420,
+      xd: [70, 160], yd: [0, 0.065],
+      xt: [80, 100, 115, 130, 150], yt: [],
+      xl: 'fasting glucose (mg/dL)', yl: 'population density',
+      grid: true
     });
 
-    g.panel('compare', P => {
-      const B = g.axes({
-        ...P,
-        xd: [0, 2.5], yd: [0, 4.2],
-        xt: [], yt: [0, 1, 2, 3, 4],
-        xl: '', yl: 'spread comparison',
-        grid: true
+    const pdf = x => Proff.stat.normPdf(x, mu, sig);
+
+    // Colony distribution curve
+    g.area(pdf, ax, mu - sig, mu + sig, { fill: 'f1', op: 0.5 });
+    g.curve(pdf, ax, 70, 160, { stroke: 'c1', sw: 3 });
+
+    // Center truth line
+    const topY = pdf(mu);
+    g.line(ax.sx(mu), ax.sy(0), ax.sx(mu), ax.sy(topY), { stroke: 'c1', sw: 2.5, dash: true });
+    g.text(ax.sx(mu), ax.y + 24, 'truth μ = 115', { size: 20, anchor: 'middle', weight: 800, fill: 'c1' });
+    g.text(ax.x + 20, ax.y + 24, 'population (N ≈ 10⁷ mice)', { size: 18, anchor: 'start', weight: 700, fill: 'c1' });
+
+    // True spread bracket
+    const ySig = ax.sy(0.054);
+    const xSig0 = ax.sx(mu - sig), xSig1 = ax.sx(mu + sig);
+    g.line(xSig0, ySig, xSig1, ySig, { stroke: 'c1', sw: 2.5 });
+    g.line(xSig0, ySig - 6, xSig0, ySig + 6, { stroke: 'c1', sw: 2.5 });
+    g.line(xSig1, ySig - 6, xSig1, ySig + 6, { stroke: 'c1', sw: 2.5 });
+    g.text(ax.x + 20, ax.y + 52, `true spread σ = ${sig.toFixed(0)} mg/dL`, { size: 18, anchor: 'start', weight: 700, fill: 'c1' });
+
+    // Step 1: Sample cohort dots & mean
+    if (k >= 1) {
+      const jit = Proff.rng(29);
+      pts.forEach(v => {
+        const clamped = Proff.clamp(v, 72, 158);
+        const cy = ax.sy(0.005) + (jit() - 0.5) * 20;
+        g.circle(ax.sx(clamped), cy, 6.5, { fill: 'c2', stroke: 'fig', sw: 1.5, op: 0.9, free: true });
       });
 
-      const drawBar = (cx, val, colToken, labelText) => {
-        const capped = Math.min(4.1, Math.max(0.05, val));
-        const top = B.sy(capped);
-        const wBar = B.sx(0.6) - B.sx(0);
-        const xLeft = B.sx(cx) - wBar / 2;
-        g.rect(xLeft, top, wBar, B.y + B.h - top, { fill: colToken.replace('c', 'f'), stroke: colToken, sw: 3, free: true });
-        g.text(B.sx(cx), B.y + B.h + 26, labelText, { size: 20, anchor: 'middle', weight: 800, fill: colToken });
-        g.text(B.sx(cx), Math.max(B.y + 16, top - 16), val.toFixed(2), { size: 18, anchor: 'middle', weight: 700, mono: true, fill: colToken });
-      };
+      const yTopXbar = pdf(xbar);
+      g.line(ax.sx(xbar), ax.sy(0), ax.sx(xbar), ax.sy(yTopXbar), { stroke: 'c2', sw: 3.5 });
+      g.text(ax.x + ax.w - 20, ax.y + 24, `sample mean x̄ = ${xbar.toFixed(1)}`, { size: 18, anchor: 'end', weight: 800, fill: 'c2' });
+      g.text(ax.x + ax.w - 20, ax.y + 52, `cohort n = ${n} mice`, { size: 18, anchor: 'end', weight: 700, fill: 'c2' });
+    }
 
-      drawBar(0.75, sig, 'c1', 'σ (truth)');
-      drawBar(1.75, sVal, 'c3', 's (estimate)');
-    });
+    // Step 2: Estimates (hats) and sample spread s
+    if (k >= 2) {
+      const yS = ax.sy(0.046);
+      const xS0 = ax.sx(Math.max(72, xbar - sVal)), xS1 = ax.sx(Math.min(158, xbar + sVal));
+      g.line(xS0, yS, xS1, yS, { stroke: 'c3', sw: 2.5 });
+      g.line(xS0, yS - 6, xS0, yS + 6, { stroke: 'c3', sw: 2.5 });
+      g.line(xS1, yS - 6, xS1, yS + 6, { stroke: 'c3', sw: 2.5 });
+
+      g.text(ax.x + 20, ax.y + 80, `sample spread s = ${sVal.toFixed(1)} mg/dL`, { size: 18, anchor: 'start', weight: 700, fill: 'c3' });
+      g.text(ax.x + ax.w - 20, ax.y + 80, `estimates: μ̂ = ${xbar.toFixed(1)}, σ̂ = ${sVal.toFixed(1)}`, { size: 18, anchor: 'end', weight: 800, fill: 'c3' });
+    }
   }
 });
 
 // ==========================================
 // SCENE 3: SPREAD (s) VS STANDARD ERROR (SE)
 // ==========================================
-Proff.section('visual 3 · the classic trap: spread (s) vs wobble (SE)');
+Proff.section('chapter 3 · the presentation dilemma: SD (s) vs SE (s ÷ √n)');
+Proff.prose(
+  'You are preparing a manuscript figure. A lab colleague asks: "Should our error bars show ± SD or ± SE?" This is where many papers stumble. Standard deviation (s) describes mouse diversity. Standard error (SE = s ÷ √n) describes how precisely you know the mean. Watch what happens when you quadruple the number of mice.'
+);
+
 Proff.scene({
   title: 'Standard Deviation (s) vs Standard Error (SE)',
   acc: 3,
   w: 1200,
   h: 560,
-  panels: [
-    { id: 'dots', from: 0 },
-    { id: 'bars', from: 1 }
-  ],
   controls: [
-    { name: 'n', label: 'sample size', min: 4, max: 36, step: 1, value: 9 },
-    { name: 'sigma', label: 'true spread', min: 1.0, max: 3.0, step: 0.5, value: 2.0 },
-    { type: 'button', name: 'reseed', label: 'new sample' }
+    { name: 'n', label: 'mice (n)', min: 4, max: 36, step: 1, value: 9 },
+    { name: 'sigma', label: 'biology spread', min: 8, max: 20, step: 2, value: 12 },
+    { type: 'button', name: 'reseed', label: 'new cohort' }
   ],
   steps: [
     {
-      cap: 'Standard deviation s measures biological variation among individuals. It does not shrink as n grows.',
+      cap: 'Standard deviation s describes biological variation between mice. It does NOT shrink as n grows.',
       info: {
-        see: ['Dots: individual measurements', 'Bracket: sample spread ±s around x̄'],
-        read: ['s describes real diversity in your biological population', 'More samples give a more reliable s, not a smaller s']
+        see: ['Dots: individual mouse glucose readings', 'Pink bracket: sample spread s = 12.1 mg/dL', 's spans the natural diversity of individual animals'],
+        read: ['s reflects real genetic and physiological diversity', 'Testing more mice gives a more accurate s, not a smaller s', 'Never use SE to describe population variation']
       }
     },
     {
-      cap: 'Standard error SE = s ÷ √n measures how much x̄ wobbles across repeat experiments.',
+      cap: 'Standard error SE = s ÷ √n measures how much the mean x̄ wobbles across repeat studies.',
       info: {
-        see: ['Middle bar: sample spread s', 'Right bar: standard error SE', 'SE is visibly shorter than s'],
-        read: ['SE measures the precision of your mean estimate', 'SE shrinks by the square root of n']
+        see: ['Top bracket: sample spread s (stays wide)', 'Bottom bracket: standard error SE (much narrower)', 'Both centered at sample mean x̄'],
+        read: ['SE measures the uncertainty of your mean estimate', 'SE shrinks because random highs and lows cancel out in x̄', 'SE is for hypothesis testing, not for describing spread']
       }
     },
     {
-      cap: 'Quadrupling n from 9 to 36 cuts SE in half, but leaves biological spread s unchanged.',
+      cap: 'Quadrupling n from 9 to 36 cuts SE in half (√36 = 6 is 2× √9 = 3), while mouse spread s stays constant.',
       info: {
-        see: ['At n = 9: √9 = 3, so SE is s ÷ 3', 'At n = 36: √36 = 6, so SE is s ÷ 6'],
-        read: ['Never use SE to describe population spread', 'SE is only for hypothesis testing and mean precision']
+        see: ['At n = 9: SE is s ÷ 3 = 4.0 mg/dL', 'At n = 36: SE is s ÷ 6 = 2.0 mg/dL (halved)', 's remains steady near 12 mg/dL across all mice'],
+        read: ['More mice sharpen your estimate of the mean', 'More mice do not make the biology more uniform', 'Reporting SE instead of SD to make error bars look tiny is misleading']
       }
     }
   ],
   info: {
     notation: {
-      s: ['sample standard deviation (spread of individuals)', 'middle bar, about 2.00'],
-      SE: ['standard error: wobble of sample mean', 'right bar, s ÷ √n'],
-      '\\sigma': ['true biological standard deviation', 'left bar, 2.00'],
+      s: ['sample standard deviation (mouse spread)', 'top bracket, about 12 mg/dL'],
+      SE: ['standard error: wobble of mean estimate', 'bottom bracket, s ÷ √n'],
+      '\\sigma': ['true biological standard deviation', 'colony spread parameter, 12 mg/dL'],
       '\\sqrt{n}': ['square root of sample size', '√9 = 3 at start; divides s']
     },
-    try: 'Drag **sample size** from 4 to 36. Watch SE plummet while s stays tall.'
+    try: 'Drag **mice (n)** from 4 to 36. Watch SE plummet while s stays rock solid.'
   },
   draw(g, k, t, p, s) {
-    const mu = 10, sig = p.sigma, n = p.n;
+    const mu = 115, sig = p.sigma, n = p.n;
     const r = Proff.rng(s.seed), zGen = Proff.stat.normal(r);
     const pool = [];
     for (let i = 0; i < 40; i++) pool.push(mu + zGen() * sig);
@@ -320,117 +317,118 @@ Proff.scene({
     const sVal = Proff.stat.sd(pts);
     const seVal = sVal / Math.sqrt(n);
 
-    // Panel: data points and spread bracket
-    g.panel('dots', D => {
-      const A = g.axes({
-        ...D,
-        xd: [2, 18], yd: [0, 4],
-        xt: [4, 7, 10, 13, 16], yt: [],
-        xl: 'measurement x', yl: 'sample points',
-        grid: true
-      });
-
-      const jit = Proff.rng(23);
-      pts.forEach(v => {
-        const clamped = Proff.clamp(v, 2.4, 17.6);
-        const cy = A.sy(1.2) + (jit() - 0.5) * 36;
-        g.circle(A.sx(clamped), cy, 6.5, { fill: 'c2', stroke: 'fig', sw: 1.5, op: 0.9, free: true });
-      });
-
-      g.text(A.x + 20, A.y + 24, `${n} sample dots`, { size: 18, anchor: 'start', weight: 700, fill: 'c2' });
-
-      // Bracket for s
-      const yS = A.sy(2.6);
-      const x0 = A.sx(Math.max(2.4, xbar - sVal)), x1 = A.sx(Math.min(17.6, xbar + sVal));
-      g.line(x0, yS, x1, yS, { stroke: 'c3', sw: 3 });
-      g.line(x0, yS - 8, x0, yS + 8, { stroke: 'c3', sw: 3 });
-      g.line(x1, yS - 8, x1, yS + 8, { stroke: 'c3', sw: 3 });
-      g.text(A.x + A.w - 20, A.y + 24, `s = ${sVal.toFixed(2)}`, { size: 18, anchor: 'end', weight: 800, fill: 'c3' });
-
-      // Mean line (stops below the bracket)
-      g.line(A.sx(xbar), A.sy(0.4), A.sx(xbar), A.sy(1.8), { stroke: 'c2', sw: 3.5 });
-      g.text(A.sx(xbar), A.sy(0.2), `x̄ = ${xbar.toFixed(2)}`, { size: 18, anchor: 'middle', weight: 800, fill: 'c2' });
+    const ax = g.axes({
+      x: 100, y: 50, w: 1000, h: 420,
+      xd: [70, 160], yd: [0, 100],
+      xt: [80, 100, 115, 130, 150], yt: [],
+      xl: 'fasting glucose (mg/dL)', yl: '',
+      grid: true
     });
 
-    // Panel: 3 bars comparing sigma, s, and SE
-    g.panel('bars', P => {
-      const B = g.axes({
-        ...P,
-        xd: [0, 3], yd: [0, 4.2],
-        xt: [], yt: [0, 1, 2, 3, 4],
-        xl: '', yl: 'size / error',
-        grid: true
-      });
-
-      const drawBar = (cx, val, colToken, labelText) => {
-        const capped = Math.min(4.1, Math.max(0.05, val));
-        const top = B.sy(capped);
-        const wBar = B.sx(0.56) - B.sx(0);
-        const xLeft = B.sx(cx) - wBar / 2;
-        g.rect(xLeft, top, wBar, B.y + B.h - top, { fill: colToken.replace('c', 'f'), stroke: colToken, sw: 3, free: true });
-        g.text(B.sx(cx), B.y + B.h + 26, labelText, { size: 20, anchor: 'middle', weight: 800, fill: colToken });
-        g.text(B.sx(cx), Math.max(B.y + 16, top - 16), val.toFixed(2), { size: 18, anchor: 'middle', weight: 700, mono: true, fill: colToken });
-      };
-
-      drawBar(0.55, sig, 'c1', 'σ');
-      drawBar(1.50, sVal, 'c3', 's');
-      drawBar(2.45, seVal, 'c4', 'SE');
+    // Step 0: Mouse dots and biological spread s
+    const jit = Proff.rng(31);
+    pts.forEach(v => {
+      const clamped = Proff.clamp(v, 72, 158);
+      const cy = ax.sy(75) + (jit() - 0.5) * 26;
+      g.circle(ax.sx(clamped), cy, 6.5, { fill: 'c2', stroke: 'fig', sw: 1.5, op: 0.9, free: true });
     });
+
+    // Mean marker
+    g.circle(ax.sx(xbar), ax.sy(75), 8, { fill: 'c2', stroke: 'fig', sw: 2, free: true });
+    g.line(ax.sx(xbar), ax.sy(60), ax.sx(xbar), ax.sy(90), { stroke: 'c2', sw: 3 });
+
+    // Shaded biological spread band behind dots
+    const xS0 = ax.sx(Math.max(72, xbar - sVal)), xS1 = ax.sx(Math.min(158, xbar + sVal));
+    g.rect(xS0, ax.sy(90), xS1 - xS0, ax.sy(60) - ax.sy(90), { fill: 'f3', stroke: 'none', op: 0.25, free: true });
+
+    // Spread bracket for s at y = 46
+    const yS = ax.sy(46);
+    g.line(xS0, yS, xS1, yS, { stroke: 'c3', sw: 3.5 });
+    g.line(xS0, yS - 8, xS0, yS + 8, { stroke: 'c3', sw: 3.5 });
+    g.line(xS1, yS - 8, xS1, yS + 8, { stroke: 'c3', sw: 3.5 });
+
+    // Top labels
+    g.text(ax.x + 20, ax.y + 24, `sample cohort: n = ${n} mice`, { size: 18, anchor: 'start', weight: 700, fill: 'c2' });
+    g.text(ax.x + 20, ax.y + 52, `sample mean x̄ = ${xbar.toFixed(1)} mg/dL`, { size: 18, anchor: 'start', weight: 700, fill: 'c2' });
+    g.text(ax.x + ax.w - 20, ax.y + 24, `sample spread s = ${sVal.toFixed(1)} mg/dL`, { size: 18, anchor: 'end', weight: 800, fill: 'c3' });
+    g.text(ax.x + ax.w - 20, ax.y + 52, 'mouse diversity spread (SD)', { size: 18, anchor: 'end', weight: 600, fill: 'c3' });
+
+    // Step 1: Standard error SE bracket and band
+    if (k >= 1) {
+      const xSE0 = ax.sx(Math.max(72, xbar - seVal)), xSE1 = ax.sx(Math.min(158, xbar + seVal));
+
+      // Shaded SE precision band
+      g.rect(xSE0, ax.sy(30), xSE1 - xSE0, ax.sy(10) - ax.sy(30), { fill: 'f4', stroke: 'none', op: 0.35, free: true });
+
+      // SE bracket at y = 20
+      const ySE = ax.sy(20);
+      g.line(xSE0, ySE, xSE1, ySE, { stroke: 'c4', sw: 3.5 });
+      g.line(xSE0, ySE - 8, xSE0, ySE + 8, { stroke: 'c4', sw: 3.5 });
+      g.line(xSE1, ySE - 8, xSE1, ySE + 8, { stroke: 'c4', sw: 3.5 });
+
+      // SE readouts
+      g.text(ax.x + 20, ax.y + 80, `SE = ${seVal.toFixed(1)} mg/dL`, { size: 18, anchor: 'start', weight: 800, fill: 'c4' });
+      g.text(ax.x + ax.w - 20, ax.y + 80, 'mean uncertainty (SE)', { size: 18, anchor: 'end', weight: 600, fill: 'c4' });
+    }
   }
 });
 
 // ==========================================
 // SCENE 4: TESTING, ALPHA, AND P-VALUE
 // ==========================================
-Proff.section('visual 4 · testing decisions: null, alpha, and p-value');
+Proff.section('chapter 4 · proving the drug works: null, alpha, and p-value');
+Proff.prose(
+  'Now you give your metabolic compound to a treated cohort. Their glucose drops by 15 mg/dL compared to controls. Did the drug genuinely work, or did you just happen to pull 6 naturally healthier mice? Here is how hypothesis testing turns this into statistical evidence.'
+);
+
 Proff.scene({
   title: 'Hypothesis Testing: H₀, α, and the p-value',
   acc: 4,
   w: 1200,
   h: 560,
   controls: [
-    { name: 'diff', label: 'observed gap', min: 0, max: 3.5, step: 0.1, value: 1.4 },
-    { name: 'n', label: 'sample size', min: 4, max: 30, step: 1, value: 10 }
+    { name: 'diff', label: 'glucose drop (mg/dL)', min: 0, max: 25, step: 1, value: 14 },
+    { name: 'n', label: 'mice per group', min: 4, max: 30, step: 1, value: 10 }
   ],
   steps: [
     {
-      cap: 'Under null hypothesis H₀, no true difference exists. The bell curve predicts where t lands by luck.',
+      cap: 'Null hypothesis H₀: the drug does nothing. The curve shows where test statistic t lands by luck.',
       info: {
-        see: ['Curve: distribution of t if H₀ is true', 'Center at t = 0: no difference'],
-        read: ['H₀ is the default skepticism in science', 'Most experiments land near 0 under the null']
+        see: ['Curve: probability of seeing any t score if H₀ is true', 'Center at t = 0: exactly zero difference between groups'],
+        read: ['Science assumes skepticism first: H₀ says the drug is inactive', 'Most experiments land near 0 if there is no real biological effect']
       }
     },
     {
-      cap: 'Alpha α = 0.05 is your pre-set threshold. Dashed lines mark the 5% rarest false-alarm tails.',
+      cap: 'Alpha α = 0.05 is your false-alarm threshold. Dashed lines mark the 5% rarest tail extremes.',
       info: {
-        see: ['Dashed vertical lines: critical t cutoffs', 'Shaded outer areas: the 5% rejection zone'],
-        read: ['α is chosen BEFORE collecting data', '0.05 means you accept a 1 in 20 chance of false alarm']
+        see: ['Dashed lines: critical t cutoff (about ±2.1)', 'Shaded outer tails: 5% rejection zone'],
+        read: ['α is chosen BEFORE looking at the data', '0.05 means you accept a 1 in 20 chance of declaring a false hit']
       }
     },
     {
-      cap: 'The t statistic is gap ÷ SE. The shaded tail area beyond your t is the p-value.',
+      cap: 'Signal ÷ SE gives t. The shaded tail area beyond your yellow line is the p-value.',
       info: {
-        see: ['Yellow line: your observed t', 'Tail beyond yellow line: p-value', 'p < 0.05: past the dashed threshold'],
-        read: ['p is the probability of data this extreme under H₀', 'p is NOT the probability that H₀ is true']
+        see: ['Yellow line: your experiment’s t score', 'Shaded tail area: p-value', 'p < 0.05: your result cleared the threshold'],
+        read: ['p is the chance of data this extreme if H₀ were true', 'p is NOT the probability that your drug works', 'Small p means your 15 mg/dL drop is very hard to explain by luck alone']
       }
     }
   ],
   info: {
     notation: {
-      H_0: ['null hypothesis: no true effect exists', 'center of curve at t = 0'],
-      H_1: ['alternative hypothesis: real effect exists', 'claim that difference ≠ 0'],
+      H_0: ['null hypothesis: drug has zero effect', 'center of curve at t = 0'],
+      H_1: ['alternative hypothesis: drug lowers glucose', 'claim that drop ≠ 0'],
       '\\alpha': ['significance threshold (false-positive rate)', '0.05 cutoff, dashed lines'],
       t: ['test statistic: signal ÷ standard error', 'vertical yellow line on curve'],
       p: ['p-value: chance of t this extreme under H₀', 'shaded tail area beyond t'],
-      df: ['degrees of freedom: n − 1', 'shapes the t distribution tails']
+      df: ['degrees of freedom: 2n − 2', 'controls thickness of t tails']
     },
-    try: 'Raise **observed gap** to watch t slide into the tail and p drop below 0.05.'
+    try: 'Raise **glucose drop** to 20 mg/dL. Watch t push into the tail and p plummet below 0.001.'
   },
   draw(g, k, t, p) {
-    const df = p.n - 1;
-    const se = 2.0 / Math.sqrt(p.n);
+    const df = 2 * p.n - 2;
+    const se = 12.0 * Math.sqrt(2 / p.n);
     const tVal = p.diff / se;
-    const crit = 2.05;
+    const crit = 2.10;
 
     const ax = g.axes({
       x: 100, y: 50, w: 1000, h: 420,
@@ -447,7 +445,7 @@ Proff.scene({
 
     // Center null line
     g.line(ax.sx(0), ax.sy(0), ax.sx(0), ax.sy(pdf(0)), { stroke: 'muted', sw: 2, dash: true });
-    g.text(ax.sx(0), ax.y + 24, 'H₀: difference = 0', { size: 18, anchor: 'middle', weight: 700, fill: 'muted' });
+    g.text(ax.sx(0), ax.y + 24, 'H₀: true difference = 0', { size: 18, anchor: 'middle', weight: 700, fill: 'muted' });
 
     // Step 1: Alpha cutoff
     if (k >= 1) {
@@ -464,7 +462,6 @@ Proff.scene({
       const topT = pdf(clampedT);
       g.line(ax.sx(clampedT), ax.sy(0), ax.sx(clampedT), ax.sy(topT), { stroke: 'c2', sw: 3.5 });
 
-      // Approximate two-tailed p-value
       let pTail = 0;
       for (let x = Math.abs(tVal); x < 8; x += 0.05) pTail += pdf(x) * 0.05;
       const pTotal = Math.min(1.0, Math.max(0.0001, 2 * pTail));
@@ -479,61 +476,66 @@ Proff.scene({
 // ==========================================
 // SCENE 5: LINEAR MODELS & REGRESSION
 // ==========================================
-Proff.section('visual 5 · linear models: slope, fit, and residuals');
+Proff.section('chapter 5 · finding the optimal dose: linear regression');
+Proff.prose(
+  'To optimize your therapy, you administer six escalating doses (0, 2, 4, 6, 8, 10 mg/kg) and track glucose reduction. Here is how regression notation (y = β₀ + β₁x + ε) models drug potency and individual biological response.'
+);
+
 Proff.scene({
-  title: 'Linear Regression: Intercept, Slope, and Residuals',
+  title: 'Dose-Response: Slope, Fit, and Residuals',
   acc: 5,
   w: 1200,
   h: 560,
   controls: [
-    { name: 'slope', label: 'slope (β₁)', min: 0.2, max: 1.2, step: 0.1, value: 0.7 },
-    { name: 'noise', label: 'residual spread', min: 0.3, max: 1.5, step: 0.2, value: 0.6 }
+    { name: 'slope', label: 'potency slope (β₁)', min: 1.0, max: 3.5, step: 0.5, value: 2.0 },
+    { name: 'noise', label: 'mouse variability', min: 0.5, max: 2.0, step: 0.5, value: 1.0 }
   ],
   steps: [
     {
-      cap: 'Points (xᵢ, yᵢ) scatter across the grid. The intercept β₀ is where the trend hits x = 0.',
+      cap: 'Each dot is one mouse (dose xᵢ, glucose drop yᵢ). Intercept β₀ is baseline drop with 0 drug.',
       info: {
-        see: ['Dots: paired measurements (xᵢ, yᵢ)', 'Point at x = 0: intercept β₀'],
-        read: ['x is the predictor, y is the outcome', 'β₀ gives the baseline outcome value']
+        see: ['Dots: paired measurements for each mouse', 'Point at dose 0: baseline intercept β₀ = 3.0 mg/dL'],
+        read: ['x is the drug dose (predictor)', 'y is the glucose reduction (outcome)', 'β₀ is the placebo or baseline response']
       }
     },
     {
-      cap: 'Slope β₁ is the effect size: the change in outcome y for each 1-unit increase in predictor x.',
+      cap: 'Slope β₁ is the biological effect size: how many mg/dL glucose drops per 1 mg/kg drug added.',
       info: {
-        see: ['Solid line: fitted trend ŷ', 'Slope triangle: 1 unit across, β₁ units up'],
-        read: ['β₁ is the biological effect size', 'Positive β₁ means y grows as x increases']
+        see: ['Solid line: fitted regression line ŷ', 'Slope triangle: 2 mg/kg dose across gives 2 × β₁ drop'],
+        read: ['β₁ measures the drug’s potency in mg/dL per mg/kg', 'Steeper slope means a stronger, more potent medicine']
       }
     },
     {
-      cap: 'Hat ŷ marks the fitted prediction. Vertical gaps eᵢ = yᵢ − ŷᵢ are residual errors ε.',
+      cap: 'Hat ŷ marks the fitted prediction. Vertical gaps eᵢ = yᵢ − ŷᵢ are residual biological noise ε.',
       info: {
-        see: ['Dashed vertical lines: residuals eᵢ', 'Gap represents noise not captured by the line'],
-        read: ['y = β₀ + β₁x + ε: every point is line plus residual error', 'Regression minimizes sum of squared residuals']
+        see: ['Dashed vertical lines: residuals eᵢ for each mouse', 'eᵢ measures how much each mouse departs from the trend'],
+        read: ['y = β₀ + β₁x + ε: every mouse is line prediction plus residual error', 'Regression finds the line that minimizes the sum of squared residuals']
       }
     }
   ],
   info: {
     notation: {
-      '\\beta_0': ['intercept: expected y when x = 0', 'height where line hits x = 0'],
-      '\\beta_1': ['slope: effect size per unit x', 'steepness of the fitted line'],
-      '\\hat{y}': ['fitted prediction on the line', 'point directly on the line'],
-      '\\epsilon': ['residual error: unexplained noise', 'vertical gap from dot to line'],
+      '\\beta_0': ['intercept: baseline outcome at dose 0', 'height of line at dose 0 mg/kg'],
+      '\\beta_1': ['slope: glucose drop per 1 mg/kg drug', 'steepness of the fitted trend line'],
+      '\\hat{y}': ['fitted prediction on the trend line', 'point directly on the line'],
+      '\\epsilon': ['residual error: biological mouse noise', 'vertical gap from dot to line'],
       e_i: ['observed residual: yᵢ − ŷᵢ', 'length of dashed vertical gap']
     },
-    try: 'Drag **residual spread** to widen the vertical gaps eᵢ between points and the line.'
+    try: 'Drag **potency slope** to make the dose-response line steeper.'
   },
   draw(g, k, t, p) {
-    const b0 = 1.8;
+    const b0 = 3.0;
     const b1 = p.slope;
-    const xPts = [1.2, 2.8, 4.2, 5.8, 7.2, 8.8];
-    const residuals = [-0.4, 0.7, -0.6, 0.8, -0.5, 0.4].map(v => v * p.noise);
-    const pts = xPts.map((x, i) => ({ x, y: b0 + b1 * x + residuals[i], yhat: b0 + b1 * x }));
+    const xDoses = [0.0, 2.0, 4.0, 6.0, 8.0, 10.0];
+    const rawRes = [-1.5, 2.5, -2.0, 3.0, -1.8, 1.5];
+    const residuals = rawRes.map(v => v * p.noise);
+    const pts = xDoses.map((x, i) => ({ x, y: b0 + b1 * x + residuals[i], yhat: b0 + b1 * x }));
 
     const ax = g.axes({
       x: 100, y: 50, w: 1000, h: 420,
-      xd: [0, 10], yd: [0, 14],
-      xt: [0, 2, 4, 6, 8, 10], yt: [0, 3, 6, 9, 12],
-      xl: 'predictor (x)', yl: 'outcome (y)',
+      xd: [0, 10.5], yd: [0, 42],
+      xt: [0, 2, 4, 6, 8, 10], yt: [0, 10, 20, 30, 40],
+      xl: 'drug dose (mg/kg)', yl: 'glucose drop (mg/dL)',
       grid: true
     });
 
@@ -543,7 +545,7 @@ Proff.scene({
     });
 
     g.circle(ax.sx(0), ax.sy(b0), 8, { fill: 'c3', stroke: 'fig', sw: 2, free: true });
-    g.text(ax.sx(0.5), ax.sy(b0 - 1.1), `β₀ (intercept) = ${b0.toFixed(1)}`, { size: 18, anchor: 'start', weight: 800, fill: 'c3' });
+    g.text(ax.sx(0.6), ax.sy(b0) + 24, `β₀ (baseline) = ${b0.toFixed(1)} mg/dL`, { size: 18, anchor: 'start', weight: 800, fill: 'c3' });
 
     // Step 1: Fitted line and slope
     if (k >= 1) {
@@ -554,7 +556,7 @@ Proff.scene({
       const yA = b0 + b1 * xA, yB = b0 + b1 * xB;
       g.line(ax.sx(xA), ax.sy(yA), ax.sx(xB), ax.sy(yA), { stroke: 'c1', sw: 2, dash: true, free: true });
       g.line(ax.sx(xB), ax.sy(yA), ax.sx(xB), ax.sy(yB), { stroke: 'c1', sw: 2, dash: true, free: true });
-      g.text(ax.sx(xB) + 12, (ax.sy(yA) + ax.sy(yB)) / 2, `β₁ = ${b1.toFixed(1)}`, { size: 18, anchor: 'start', weight: 800, fill: 'c1' });
+      g.text(ax.sx(xB) + 12, (ax.sy(yA) + ax.sy(yB)) / 2, `β₁ = ${b1.toFixed(1)} mg/dL per mg/kg`, { size: 18, anchor: 'start', weight: 800, fill: 'c1' });
       g.text(ax.x + 20, ax.y + 24, 'fit: ŷ = β₀ + β₁x', { size: 20, anchor: 'start', weight: 800, fill: 'c1' });
     }
 
@@ -569,79 +571,80 @@ Proff.scene({
 });
 
 // ==========================================
-// SECTION 3: TESTING & DECISIONS TABLE
+// REFERENCE TABLES & CHEAT SHEET
 // ==========================================
-Proff.section('testing, decisions and models');
+Proff.section('reference cheat sheet: greek vs latin vs hat');
 Proff.compare(
-  ['notation', 'spoken name', 'exact role in statistics', 'what to watch out for'],
+  ['concept', 'population parameter (Greek)', 'sample statistic (Latin)', 'estimator (Hat)', 'biological meaning in the trial'],
   [
-    ['H₀', 'null hypothesis', 'Baseline claim: no effect, no difference, or parameter = 0.', 'You never prove H₀ true; you only fail to reject it.'],
-    ['H₁ or H_a', 'alternative hypothesis', 'Claim that a real biological effect or difference exists.', 'Specify direction (one- or two-sided) before tests.'],
-    ['α', 'alpha (significance level)', 'Pre-set false-positive risk threshold (usually 0.05).', 'Chosen BEFORE looking at data; 0.05 means 1 in 20 false calls.'],
-    ['p-value', 'probability value', 'Chance of data as extreme as observed if H₀ holds.', 'p is NOT the probability that H₀ is true or false.'],
-    ['t', 't statistic', 'Signal divided by noise: (x̄ - μ₀) ÷ SE.', 'Counts how many standard errors the sample sits from null.'],
-    ['CI', 'confidence interval', 'Range [x̄ ± t × SE] capturing μ in 95% of repeat runs.', 'The population mean μ is fixed; the interval wobbles.'],
-    ['P(A | B)', 'conditional probability', 'Probability of event A occurring given B happened.', 'P(data | H₀) is p-value; P(H₀ | data) is Bayesian.'],
-    ['X ~ N(μ, σ²)', 'distributed as', 'Random variable X follows a Normal distribution.', 'Second parameter in formulas is variance (σ²), not SD.']
+    ['mean (center)', 'μ (mu = 115 mg/dL)', 'x̄ (sample average)', 'μ̂ = x̄', 'True colony glucose vs your 6 mice.'],
+    ['variance (spread²)', 'σ² (sigma squared)', 's² (sample variance)', 'σ̂²', 'Average squared distance of mice from mean.'],
+    ['standard deviation', 'σ (sigma = 12 mg/dL)', 's (sample SD)', 'σ̂ = s', 'Real mouse-to-mouse biological diversity.'],
+    ['effect size / slope', 'β₁ (true potency)', 'b₁ (regression slope)', 'β̂₁ = b₁', 'Glucose drop per mg/kg drug administered.'],
+    ['baseline / intercept', 'β₀ (true baseline)', 'b₀ (sample intercept)', 'β̂₀ = b₀', 'Fasting glucose with zero drug given.']
   ]
 );
 
-// ==========================================
-// SECTION 4: DO NOT CONFUSE
-// ==========================================
-Proff.section('do not confuse');
+Proff.section('testing decision reference');
+Proff.compare(
+  ['symbol', 'spoken name', 'exact role in the drug trial', 'what to watch out for'],
+  [
+    ['H₀', 'null hypothesis', 'Assumption that your drug does nothing (drop = 0).', 'You never prove H₀ true; you only fail to reject it.'],
+    ['H₁', 'alternative hypothesis', 'Claim that the drug genuinely lowers glucose.', 'Must be specified before examining data.'],
+    ['α', 'alpha (significance level)', 'Your pre-set false-alarm threshold (usually 0.05).', '0.05 means you accept a 1 in 20 risk of false discovery.'],
+    ['p-value', 'probability value', 'Chance of seeing a 15 mg/dL drop if the drug is inactive.', 'p is NOT the probability that your drug is effective.'],
+    ['t', 't statistic', 'Signal divided by noise: glucose drop ÷ SE.', 'Counts how many standard errors the drop sits from 0.'],
+    ['CI', 'confidence interval', 'Range [x̄ ± t × SE] capturing true μ in 95% of repeats.', 'The true population mean μ is fixed; the interval wobbles.']
+  ]
+);
+
+Proff.section('do not confuse: classic lab traps');
 Proff.compare(
   ['notation A', 'notation B', 'crucial distinction', 'why it matters in the lab'],
   [
-    ['SD (s)', 'SE (s ÷ √n)', 'SD is biological spread; SE is estimate uncertainty.', 'Reporting SE makes data look less variable than it is.'],
-    ['p-value', 'α (alpha)', 'p is computed from data; α is pre-chosen threshold.', 'p tells you data extremity; α is your threshold rule.'],
-    ['N', 'n', 'N is full population size; n is your sample size.', 'Degrees of freedom and formulas use n, never N.'],
-    ['β', 'β̂ (beta-hat)', 'β is true unmeasured slope; β̂ is regression estimate.', 'In DESeq2, log2FoldChange is β̂; Wald tests if β = 0.'],
-    ['μ', 'x̄', 'μ is fixed truth in nature; x̄ changes each experiment.', 'You never calculate μ; you only estimate it with x̄.']
+    ['SD (s)', 'SE (s ÷ √n)', 'SD is mouse diversity; SE is mean precision.', 'Reporting SE makes data look less variable than it is.'],
+    ['p-value', 'α (alpha)', 'p is computed from data; α is your pre-set cutoff.', 'p tells you data extremity; α is your threshold decision rule.'],
+    ['N', 'n', 'N is whole colony population; n is cage cohort size.', 'Formulas and degrees of freedom use n, never N.'],
+    ['β₁', 'β̂₁', 'β₁ is true unmeasured drug potency; β̂₁ is estimate.', 'Your regression slope is an estimate with uncertainty.'],
+    ['μ', 'x̄', 'μ is nature’s fixed truth; x̄ changes each experiment.', 'You never calculate μ; you only estimate it with x̄.']
   ]
 );
 
-// ==========================================
-// SECTION 5: THREE ANGLES
-// ==========================================
-Proff.section('three angles');
+Proff.section('three mental models');
 Proff.tiles([
   {
     tag: 'as an alphabet',
-    h: 'Greek = Truth, Latin = Lab',
-    text: 'Think of Greek letters as true constants in nature, and Latin letters as muddy lab measurements.'
+    h: 'Greek = Nature, Latin = Lab',
+    text: 'Think of Greek letters as true biological constants, and Latin letters as muddy bench measurements.'
   },
   {
     tag: 'as a shrinking ruler',
     h: 'Divide by square root of n',
-    text: 'Spread (s) stays constant as you add samples, but uncertainty (SE = s ÷ √n) shrinks. More samples sharpen x̄.'
+    text: 'Biological spread (s) stays steady as you add mice, but uncertainty (SE = s ÷ √n) shrinks. More mice sharpen x̄.'
   },
   {
     tag: 'as a hat',
     h: 'The hat marks an estimate',
-    text: 'Putting a hat on any symbol (θ̂, μ̂, ŷ) means: this is our best mathematical guess at the true value.'
+    text: 'Putting a hat on any Greek letter (μ̂, σ̂, β̂) declares: this is our lab best estimate of nature’s true value.'
   }
 ]);
 
-// ==========================================
-// SECTION 6: TEST YOURSELF
-// ==========================================
 Proff.section('test yourself');
 Proff.quiz([
   {
-    q: 'A paper reports mouse weights as 24.2 ± 1.1 g. Is 1.1 biological variation or mean precision?',
-    a: 'Check the label: if it says **± SD**, it is biological spread (s). If it says **± SE** (or SEM), it is the wobble of the mean (s ÷ √n), which is smaller by √n.'
+    q: 'Your colleague reports mouse glucose as 114 ± 4 mg/dL. How do you know if 4 is biological variation or mean precision?',
+    a: 'Check the error bar label: if it says **± SD**, 4 is biological spread between mice (s). If it says **± SE**, it is the wobble of the average (s ÷ √n), which is smaller by √n.'
   },
   {
-    q: 'Why do we divide by n - 1 instead of n when calculating sample variance s²?',
-    a: 'Because you already used the data once to calculate x̄. Dividing by n - 1 (Bessel correction) removes bias so s² accurately estimates σ².'
+    q: 'Why do we divide by n − 1 instead of n when calculating sample variance s² in 6 mice?',
+    a: 'Because you already used the data once to calculate the mean x̄. Dividing by n − 1 (df = 5, Bessel correction) prevents s² from underestimating true colony variation σ².'
   },
   {
-    q: 'If you quadruple sample size n from 9 to 36, what happens to s and SE?',
-    a: 'Sample spread s stays about the same (it estimates σ). Standard error SE is cut in half because √36 = 6 is twice √9 = 3.'
+    q: 'If you expand your drug trial from 9 mice to 36 mice per group, what happens to s and SE?',
+    a: 'Biological spread s stays roughly the same (~12 mg/dL). But standard error SE is cut in half because √36 = 6 is twice √9 = 3.'
   },
   {
-    q: 'In regression y = β₀ + β₁ x + ε, why does ε (epsilon) appear?',
-    a: 'ε is the random residual error: biological noise or measurement wobble that the linear formula cannot explain.'
+    q: 'In the dose-response model y = β₀ + β₁x + ε, what does ε (epsilon) represent biologically?',
+    a: 'ε is the individual biological variability between mice: genetic background, food intake, and measurement noise not captured by the linear dose trend.'
   }
 ]);

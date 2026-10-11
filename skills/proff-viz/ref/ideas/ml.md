@@ -12,3 +12,6 @@ Examples, not limits. Invent the visual that makes this idea land, and cover eve
 
 ## Plot styling
 Use 4–6 ticks, axis labels at the ends, direct series labels, and units on axes. Compare on equal scales.
+
+## See also
+`ref/ideas/dl-notation.md` for reading deep-learning paper notation.

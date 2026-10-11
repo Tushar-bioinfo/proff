@@ -3,6 +3,8 @@
 Read this before writing `story.js`, and again before every sheet review. The pictures are real failures from earlier test runs, next to the fix.
 
 ## The bar
+- **Show it; never ask the reader to picture it.** If a step needs the reader to imagine a shape, a product of numbers, or a curve, the page must draw it. The audit flags "imagine", "clearly", "obviously", "intuitively" and "as you know" in captions and the sidebar.
+- **Build from the ground.** Early scenes climb the ladder (one toss → joint probability → likelihood curve → its peak) before the full formula appears.
 - **The picture explains; text names.** One idea per step. Caption ≤ 28 words. No paragraph on the stage.
 - **No sentence under the figure.** The caption opens the i sidebar. The stage labels alone must make the step readable.
 - **No text before the first scene.** Title and one `sub` line, then the figure. (Study pages may open with tiles.)
@@ -57,7 +59,7 @@ Fix: labels 20, the one key number 26–34, default `panelPad`. The scene title 
 5. Size marks (dot jitter, average lines, bar widths) in stage units, not data units, so a panel that grows or shrinks still looks right.
 6. Every on-stage number comes from a variable in `draw` or `PROFF_DATA`.
 7. `free: true` only for boxes that hold their own text. Never use it to silence a warning.
-8. Sizes on the stage: labels 20, minor notes 18, tick labels 16, the one key number 26–34, never above 36 (the audit fails it).
+8. Sizes on the stage (as written; the kit draws each 2 bigger): labels 20, minor notes 18, tick labels 16, the one key number 26–34, never above 36 (the audit fails it).
 
 ## Self-review (required before you report)
 Usage is not the constraint; mistakes are. **If you are a fast or low-cost model, run at least two full review rounds even when the first looks clean.**
@@ -69,6 +71,7 @@ Usage is not the constraint; mistakes are. **If you are a fast or low-cost model
 4. Check every step shows one figure across the stage: no plots side by side, no squeezed tick labels.
 5. Read the sidebar sheet (`snaps/sheet-sidebar-*.png`, one panel per step): every symbol, index and operator is named, with an example from the figure; nothing cramped or cut off.
 6. Check that no text block sits above the first scene.
-7. Fix, rebuild, recheck. Stop after 3 rounds on the same defect and report it.
+7. Ladder check: does the page start at a rung the reader can count? List any step that assumes an idea no earlier step showed; add a step for it.
+8. Fix, rebuild, recheck. Stop after 3 rounds on the same defect and report it.
 
 Report line: `check: 0 warnings · sheets viewed N/N · frames listed M`. If you did not list every frame, write `not reviewed`.

@@ -4,7 +4,7 @@
 | what | limit |
 |---|---|
 | plots on one step | 1 ✓, ≥ 440 wide ✓ and ≥ 300 tall ✓ (stage units, of 1200 × 675) |
-| text size on the stage | labels 20, notes 18, ticks and table headers 16, key number 26–34, max 36 ✓; ≥ 12 px on screen ✓ (also on a 1280 laptop with the sidebar open) |
+| text size on the stage (as written; the kit draws each `Proff.textBoost` = 2 bigger, so labels show at 22) | labels 20, notes 18, ticks and table headers 16, key number 26–34, max 36 ✓; ≥ 12 px on screen ✓ (also on a 1280 laptop with the sidebar open) |
 | a label | 1–6 words (✓ at > 7) |
 | figure | ≤ 24 labels or 40 words per step ✓ |
 | caption | ≤ 28 words ✓ |
@@ -21,17 +21,19 @@
 - Captions say what to look at, not what the picture is called. "One gene gets 24,299 reads" beats "Histogram of counts".
 - Define every abbreviation the first time it appears: `**SE** (standard error)`.
 
-## Colour (palette "blockframe" by default: Block Frame pastels on black)
+## Colour (palette "cyan" by default: cyan blue and cyan green on near-black, one warm highlight)
 | token | colour | typical role |
 |---|---|---|
-| c1 | pastel blue | the main subject, guide RNA, control group |
-| c2 | yellow | a highlight, signal, PAM |
-| c3 | pink | the change, a cut, treated group, essential gene |
-| c4 | green | a second series, a reference line |
-| c5 | cream | significance tails, a second warm series |
-| c6 | lavender grey | neutral or background things (no-target control, protein body) |
+| c1 | cyan blue | the main subject, guide RNA, control group |
+| c2 | amber | a highlight, signal, PAM: the only warm colour, so use it sparingly |
+| c3 | cyan green | the change, a cut, treated group, essential gene |
+| c4 | deeper blue | a second series, a reference line |
+| c5 | pale aqua | significance tails, a light second series |
+| c6 | slate | neutral or background things (no-target control, protein body) |
+- Most of a figure should be c1 and c3. c1 against c3, c2 against c1, and c2 against c3 stay apart for red-green colour-blind readers too.
 - Decide identity colours once, at the top of story.js, and keep them on every scene. Same colour = same thing.
-- c2 (yellow) and c5 (cream) are close. Never let them carry a contrast alone: add a label, a dash, or a shape.
+- c1, c4, c5 and c6 are all cool and close to each other. Never let two of them carry a contrast alone: add a label, a dash, or a shape.
+- `palette: 'blockframe'` brings back the v4.0 pastels when the user asks for them.
 - Captions name shapes ("dashed line", "ringed dots"), never colours. Palettes change; shapes do not.
 - Grey (`muted`) = context that does not matter for this step.
 
@@ -44,6 +46,7 @@
 - Fix axes to the full control range. Rescaling per frame hides the change.
 
 ## Content
+- Build from the ground: early scenes show the base rungs on small numbers before the target formula (`levels/L4.md`, "Show it").
 - No half stories. Each scene's title is a claim; its steps prove it. The last scene lands on data or a number the reader can use.
 - Every number is computed (data script, calctrace, or `draw` from params) or quoted from a source opened this session.
 - Say when data is simulated or a sequence is made up.

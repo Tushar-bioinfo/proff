@@ -8,6 +8,7 @@
 
 ## 1. Story source
 The L3 write-up (`levels/L3.md` §1, items 1–6) is the source. If none exists this session, draft items 1–5 privately first.
+**Open with the ladder** (`levels/L4.md`, "Show it"): the first scenes build the base rungs on small numbers before the target appears. A page that opens on the full formula has skipped the ladder.
 Pick the points a reader must **see**. Each becomes one scene (the page type's file sets how many). Every number, term, and step in the write-up that matters must appear somewhere: in a scene, a caption, an info sidebar, or a study tile. Half a mechanism is a failed page.
 
 ## 2. Pick the page type, then open only its file
@@ -51,3 +52,4 @@ Then the L4 offer line (`levels/L4.md`).
 - `ref/chains.md`: full step chains for common topics (CRISPR screen, RNA-seq, tests, ML training).
 - `ref/assets.md`: icon and image sources with licences.
 - `ref/ideas/{stats,bio,ml}.md`: visual idea menus.
+- `ref/ideas/dl-notation.md`: deep-learning paper notation (indices to attention); example `examples/study-dl-notation`.

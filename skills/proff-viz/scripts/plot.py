@@ -33,9 +33,9 @@ for k, name in enumerate(TOKENS):
 C.cycle = [C.c1, C.c2, C.c3, C.c4, C.c5, C.c6]
 
 RC = {
-    "svg.fonttype": "none", "svg.hashsalt": "proff", "font.family": ["Inter", "DejaVu Sans"], "font.size": 18,
-    "axes.titlesize": 20, "axes.titleweight": "bold", "axes.labelsize": 18, "axes.labelweight": "semibold",
-    "xtick.labelsize": 16, "ytick.labelsize": 16, "legend.fontsize": 16, "legend.frameon": False,
+    "svg.fonttype": "none", "svg.hashsalt": "proff", "font.family": ["Inter", "DejaVu Sans"], "font.size": 20,
+    "axes.titlesize": 22, "axes.titleweight": "bold", "axes.labelsize": 20, "axes.labelweight": "semibold", "axes.labelpad": 9,
+    "xtick.labelsize": 18, "ytick.labelsize": 18, "legend.fontsize": 18, "legend.frameon": False,
     "axes.facecolor": "none", "figure.facecolor": "none", "savefig.facecolor": "none", "savefig.transparent": True,
     "axes.edgecolor": C.muted, "axes.labelcolor": C.muted, "text.color": C.ink, "xtick.color": C.muted, "ytick.color": C.muted,
     "axes.grid": True, "grid.color": C.grid, "grid.linewidth": 1, "axes.axisbelow": True,
