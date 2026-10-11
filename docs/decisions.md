@@ -2,7 +2,7 @@
 
 Newest first. Each entry: what, why, where. Read before you reverse something.
 
-## 2026-10-11 (commit 0dd6747 on `viz`, version still 4.0.2)
+## v4.1.0 (2026-10-11)
 - **"Build it from the ground" applies to L4 visuals only.** The rule: never ask the reader to picture it or already know it; climb a ladder of small ideas with real numbers before the target (worked example: maximum likelihood from one toss → joint probability → likelihood → peak → logs → calculus). First written for every level, then narrowed by the user to L4: L1–L3 and guide mode stay as they were. Where: `levels/L4.md` ("Show it"), pointed to from `viz.md`, `ref/design.md`, `ref/taste.md`, `outputs/deck.md`. Reference chain in `ref/chains.md` ("Maximum likelihood"), visual idea in `ref/ideas/stats.md`.
 - **Audit flags "picture it" words** in captions and the sidebar ("imagine", "picture this/it", "clearly", "obviously", "of course", "it is easy to see", "as you know", "intuitively", "trivially"). It is a warning, so it shows in `check-all.sh`. Where: `kit/stage.js`, `Proff.audit`.
 - **Figure text +2** via one setting, `Proff.textBoost = 2`, so agents keep writing the same sizes and the audit limits do not move. Matplotlib +2 to match. Details and the fixes it needed: `docs/design-system.md`.
