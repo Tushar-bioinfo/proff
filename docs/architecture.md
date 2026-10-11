@@ -58,6 +58,6 @@ They are the exemplars agents copy, and also the regression tests.
 | `story-logcounts` | story page with `plot.py` SVGs (`make_plots.py`) |
 | `calc-cpm` | calc page from a `calctrace.py` trace (`make_trace.py`) |
 | `walk-crispr` | walk page with `bio.js` (`make_data.py`) |
-| `study-notation`, `study-dl-notation` | maths notation pages (work in progress, see `docs/backlog.md`) |
+| `study-notation`, `study-dl-notation` | maths notation pages (see `docs/backlog.md`) |
 | `deck-bootstrap.json` | card deck |
 To regenerate an example's data, run its `make_*.py` with `PROFF_SCRIPTS` set (see `docs/testing.md`).
