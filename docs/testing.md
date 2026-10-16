@@ -7,7 +7,7 @@ tools/check-all.sh calc-cpm        # just one example
 ```
 It rebuilds each example into `out/check/<name>/page.html`, audits it in Chromium, and prints one line per example with its warning count. A full run takes about 2 minutes. Exit 1 means at least one example has warnings.
 
-**Baseline (2026-10-11):** every example 0 warnings, except `study-notation` with 2 (known, see `docs/backlog.md`). The deck: 0.
+**Baseline (v5.0.0, 2026-10-16):** every example 0 warnings, except `study-notation` and `study-dl-notation` with 40 each (v5 text sizes; user's work in progress, see `docs/backlog.md`). The deck: 0.
 
 ## What to report
 - The warning count per example, copied from the output. If you did not run it, say "not tested".
@@ -15,7 +15,7 @@ It rebuilds each example into `out/check/<name>/page.html`, audits it in Chromiu
 - Any new warning, with the `WARN` line from `out/check/<name>/check.log`.
 
 ## What the audit catches (and does not)
-Catches: draw and console errors, overlapping labels, lines through labels, text across shape edges or off the figure, text under 12 px, too many words, long captions, horizontal scroll, blank canvases, notation rows without an example, more than one plot per step, plots under 440 × 300 stage units, and caption or sidebar words that ask the reader to picture it ("imagine", "clearly", "obviously", "intuitively", "as you know").
+Catches: draw and console errors, headlines that wrap at 1440 or 1280 px, steps that draw the same figure as the step before, overlapping labels, lines through labels, text across shape edges or off the figure, text under 12 px, too many words, long captions, horizontal scroll, blank canvases, notation rows without an example, more than one plot per step, plots under 440 × 300 stage units, and caption or sidebar words that ask the reader to picture it ("imagine", "clearly", "obviously", "intuitively", "as you know").
 Does not catch: a wrong number, a story that skips a step, a figure that does not teach. Look at the sheets.
 
 ## When you change …
@@ -30,3 +30,5 @@ Does not catch: a wrong number, a story that skips a step, a figure that does no
 
 ## Needs
 Python 3, `matplotlib`, `numpy`, `playwright` with Chromium (`playwright install chromium`). Without Playwright, `check.py` exits 2: say "not checked".
+
+v5 blind test (2026-10-16), topic "population assessment in public health": Gemini 3.8 Flash high built a story page (arc "two ways", crude vs age-standardized rates, 4 matplotlib scenes); Sol 6.1 high built an explore page (arc "follow one unit", count grid → age table → intervals, kit drawings). Both 0 warnings; numbers recomputed and correct. Fixes from it: L4 path note and story-source line, `g.units` colours in `ref/kit.md`, mono and tick-label rules in `outputs/story.md`, `ref/taste.md` item 12.

@@ -6,19 +6,20 @@ A first-principles tutor that ends in finished, checked visuals.
 - **L4 visuals**: a page by default; ask for a step-by-step calculation (calc), a biology workflow (walk), or a card deck (facts, different angles, transfer to new settings, quiz; `examples/deck-bootstrap.json`). Pages are one self-contained HTML file each:
   | type | for | exemplar |
   |---|---|---|
-  | study | facts, abbreviations, angles, flip-card questions, one live figure | `examples/study-fdr` |
-  | explore | sliders that move linked pictures (stats, maths, models) | `examples/explore-ttest` |
-  | story | annotated matplotlib plots, one point per plot | `examples/story-logcounts` |
-  | calc | a small table changing cell by cell (3 genes × 4 samples) | `examples/calc-cpm` |
+  | explore | sliders that move linked pictures (stats, maths, models) | `examples/explore-ttest`, `examples/explore-fdr` |
+  | story | a few figures (plots or kit drawings), one point each | `examples/story-logcounts` |
+  | calc | a small table changing cell by cell | `examples/calc-cpm` |
   | walk | a process from molecules to the data table | `examples/walk-crispr` |
+  | study | only on request: facts, abbreviations, flip-card questions around one live figure | `examples/study-fdr` |
+- **Choices, not one template** (`ref/styles.md`): themes, figure layouts, and story arcs (ladder, puzzle first, follow one unit, two ways, zoom, mistake → fix, dial, decision). Agents pick per question and may move, add, or recolour within the design floor (`ref/design.md`).
 - **Budget**: efficient (default, all local) or premium (adds one text-free context image and an independent review).
-- **Checks**: every step and slider extreme in a desktop browser (dark only): text overlaps, lines through labels, off-figure text, tiny text, low contrast, word budgets, plus contact sheets to look at.
-- **Palette** "cyan" (cyan blue and cyan green with one amber highlight, on near-black), shared by pages and decks; the older pastels stay as `blockframe`. Figure text is drawn 2 units larger than written. The `i` sidebar explains every symbol as `symbol : meaning` with an example from the figure.
+- **Checks**: every step and slider extreme in a desktop browser (dark only): text overlaps, lines through labels, off-figure text, tiny or oversized text, low contrast, word budgets, wrapped headlines, repeated frames, plus contact sheets to look at.
+- **Theme** `mono` by default: ink and greys with one orange accent for what matters now (the answer, the cells being read, the hero number). Decks use the same greys and orange. `lab`, `cyan`, `blockframe` and `neon` stay selectable. Tables use one cell size per page, a graphite ramp, and a slow cell-by-cell fill. The `i` sidebar explains every symbol as `symbol : meaning` with an example from the figure.
 - Quiz and guide modes; STE-80 writing; say `plain` for normal prose.
 
 ## Make a page
 ```
-cp -R skills/proff-viz/examples/walk-crispr my-topic && rm -rf my-topic/snaps my-topic/page.html
+mkdir -p my-topic/data && cp skills/proff-viz/examples/walk-crispr/make_data.py my-topic/   # then write my-topic/story.js
 export PROFF_SCRIPTS=$PWD/skills/proff-viz/scripts
 python3 my-topic/make_data.py
 python3 skills/proff-viz/scripts/build.py my-topic

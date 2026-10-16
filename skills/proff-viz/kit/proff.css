@@ -1,6 +1,20 @@
 /* Proff visual kit. BlockFrame chrome (thick borders, hard offset shadows, heavy Inter, Space Grotesk labels)
    around clean figures. Dark only. Every colour is a token. Authors never edit this file. */
-:root,[data-theme=dark]{   /* default palette "cyan": cyan blue and cyan green carry the figure; amber is the one warm highlight.
+/* v5 mono: one hot accent; meaningful pairs checked by palette-check.py. */
+:root,[data-theme=dark],[data-palette=mono][data-theme=dark]{
+  --bg:#0b0c0e;--fig:#171819;--surf:#171819;--surf2:#242526;--line:#565653;--line-dim:#353634;--grid:#222322;
+  --ink:#f2f2f0;--muted:#b6b4ad;--dim:#85837d;--on:#0b0c0e;
+  --c1:#7fb0ff;--c2:#ff5a36;--c3:#5fdcc4;--c4:#9aabc2;--c5:#8e9d99;--c6:#7c7a76;--mix:20%;
+}
+/* mono chrome orange: a calm tint of the accent's hue for the page title, step strip, read outlines and sidebar.
+   tint #ffb27f: 8.7-11.1:1 on every surface; CIEDE2000 vs accent 20.6 normal / 20.0 protan / 12.9 deutan (never the only cue on the stage: read = outline, answer = solid tile).
+   tint-hi #ffd6b8: sidebar values, 11.4:1+. tint-lo: lines only, no text. */
+/* user (2026-10-15): page title, step strip, DETAILS tag and sidebar headings use the bright accent #ff5a36 (6.3:1 on --bg);
+   the soft tint #ffb27f stays only for the 'being read' cell outlines on the stage (P.shade.tint in stage.js). */
+[data-palette=mono][data-theme=dark]{--tint:#ff5a36;--tint-hi:#ffd6b8;--tint-lo:#6b4631;--acc:var(--tint)}
+/* page title only: the bright accent (same orange as the plot answer), 6.3:1 on --bg; strip, outlines and sidebar keep the tint. */
+[data-palette=mono][data-theme=dark] h1{color:var(--c2)}
+[data-palette=cyan][data-theme=dark]{   /* default palette "cyan": cyan blue and cyan green carry the figure; amber is the one warm highlight.
      Hues picked by search for colour-blind separation (CIEDE2000, Machado 2009 deutan/protan): c1-c3, c1-c2, c2-c3 stay >= ~20 for every reader.
      c1, c4, c5 and c6 are all cool and sit 15-18 apart: never let two of them carry a contrast alone (add a label, dash, or shape). */
   --bg:#0a0b0d;--fig:#111316;--surf:#171a1d;--surf2:#21252a;--line:#56616b;--line-dim:#2a3036;--grid:#21262b;
@@ -22,17 +36,18 @@
 [data-palette=neon][data-theme=dark]{--bg:#0a0a0b;--fig:#111113;--surf:#161618;--surf2:#1d1d20;--line:#ececee;--line-dim:#3a3a3f;--grid:#26262b;
   --ink:#f4f4f5;--muted:#a1a1aa;--dim:#6b6b72;--on:#0a0a0b;--c1:#56c2ff;--c2:#ffc531;--c3:#ff6363;--c4:#59d499;--c5:#b98cff;--c6:#ff8f4a}
 /* soft fills are mixed where data-theme is set, so they follow the live palette (a :root-only rule would freeze them to dark) */
-:root,[data-theme]{--f-disp:'Inter',system-ui,-apple-system,sans-serif;--f-mono:'Space Grotesk',ui-monospace,Menlo,monospace;
+:root,[data-theme]{--f-disp:'Inter',system-ui,-apple-system,sans-serif;--f-mono:ui-monospace,Menlo,monospace;
   --f1:color-mix(in srgb,var(--c1) var(--mix),var(--fig));--f2:color-mix(in srgb,var(--c2) var(--mix),var(--fig));
   --f3:color-mix(in srgb,var(--c3) var(--mix),var(--fig));--f4:color-mix(in srgb,var(--c4) var(--mix),var(--fig));
   --f5:color-mix(in srgb,var(--c5) var(--mix),var(--fig));--f6:color-mix(in srgb,var(--c6) var(--mix),var(--fig));
-  --acc:var(--c1);--stage-w:min(1240px,calc(100vw - 32px))}
+  --acc:var(--muted);--tint:var(--ink);--tint-hi:var(--ink);--tint-lo:var(--line);--stage-w:min(1250px,calc(100vw - 32px))}
 *{box-sizing:border-box;margin:0;padding:0}
 html{background:var(--bg)}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-disp);font-size:18px;line-height:1.55;-webkit-font-smoothing:antialiased;
   padding:28px 16px 64px;transition:background .2s,color .2s}
 b,strong{font-weight:700}
-code,.mono{font-family:var(--f-mono);font-size:.92em}
+code{font-family:var(--f-mono);font-size:.92em}
+.mono{font-family:var(--f-mono)}
 a{color:var(--c1)}
 
 /* header: compact so the stage owns the screen */
@@ -40,21 +55,21 @@ a{color:var(--c1)}
   border-bottom:3px solid var(--line);padding-bottom:16px}
 .top .tx{flex:1;min-width:260px}
 .eyebrow{display:inline-block;font-family:var(--f-mono);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--on);background:var(--acc);border:2px solid var(--line);box-shadow:3px 3px 0 var(--line);padding:3px 10px;margin-bottom:12px}
-h1{font-size:clamp(26px,3.4vw,40px);font-weight:900;text-transform:uppercase;letter-spacing:-.025em;line-height:1}
+  color:var(--ink);background:var(--surf2);border:2px solid var(--line);box-shadow:3px 3px 0 var(--line);padding:3px 10px;margin-bottom:12px}
+h1{color:var(--tint);font-size:clamp(26px,3.4vw,40px);font-weight:900;text-transform:uppercase;letter-spacing:-.025em;line-height:1}
 .sub{font-family:var(--f-mono);font-size:14px;color:var(--muted);margin-top:8px}.sub::before{content:"// ";color:var(--acc)}
 
 /* the stage card: the figure is the hero */
 .card{position:relative;max-width:var(--stage-w);margin:0 auto 40px;background:var(--surf);border:3px solid var(--line);
-  box-shadow:8px 8px 0 var(--acc);padding:20px 22px 18px}
+  box-shadow:8px 8px 0 var(--line-dim);padding:20px 22px 18px}
 .head{display:flex;align-items:baseline;gap:14px;min-height:34px;padding-right:44px;margin-bottom:12px}
-.phase{font:700 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--on);background:var(--acc);border:2px solid var(--line);padding:2px 8px;white-space:nowrap}
-.stitle{font-size:clamp(18px,2vw,24px);font-weight:850;letter-spacing:-.01em;line-height:1.15}
-.fig{position:relative;background:var(--fig);border:2px solid var(--line);overflow:hidden}
-.fig svg,.fig canvas{display:block;width:100%;height:auto;max-height:70vh;margin:0 auto}
+.phase{font:700 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink);background:var(--surf2);border:2px solid var(--line);padding:2px 8px;white-space:nowrap}
+.stitle{font-size:38px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
+.fig{position:relative;background:var(--fig);border:0;overflow:hidden}
+.fig svg,.fig canvas{display:block;width:100%;height:auto;max-height:none;margin:0 auto}
 .fig svg text{font-family:var(--f-disp)}
-.fig svg .mono{font-family:var(--f-mono)}
-.ib{position:absolute;top:16px;right:18px;width:32px;height:32px;border:2px solid var(--line);background:var(--acc);color:var(--on);
+.fig svg .mono{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace}
+.ib{position:absolute;top:16px;right:18px;width:32px;height:32px;border:2px solid var(--line);background:var(--surf2);color:var(--ink);
   font:900 15px var(--f-mono);cursor:pointer;box-shadow:3px 3px 0 var(--line)}
 .ib[aria-expanded=true]{background:var(--line);color:var(--bg)}
 
@@ -62,9 +77,9 @@ h1{font-size:clamp(26px,3.4vw,40px);font-weight:900;text-transform:uppercase;let
 .figwrap{position:relative}
 .strip{position:relative;display:flex;gap:10px;margin-top:6px;height:14px;align-items:flex-start}
 .sg{display:flex;gap:3px;min-width:0}
-.seg{flex:1;min-width:6px;height:4px;padding:0;border:0;background:var(--line-dim);cursor:pointer;position:relative;transition:height .15s}
+.seg{flex:1;min-width:6px;height:6px;padding:0;border:0;background:var(--line-dim);cursor:pointer;position:relative;transition:height .15s}
 .seg::after{content:"";position:absolute;inset:-6px 0}   /* bigger hit area */
-.seg i{display:block;height:100%;width:0;background:var(--acc)}
+.seg i{display:block;height:100%;width:0;background:var(--tint)}
 .strip:hover .seg{height:8px}
 .seg[aria-selected=true]{box-shadow:0 0 0 1px var(--acc)}
 .seg:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
@@ -80,25 +95,28 @@ h1{font-size:clamp(26px,3.4vw,40px);font-weight:900;text-transform:uppercase;let
 
 /* controls: one quiet line; drag the value sideways, or use the thin track that shows on hover */
 .ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 30px;margin:12px 0 0;padding:0 2px}
-.kn{position:relative;display:inline-flex;align-items:baseline;gap:9px;font:700 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-bottom:8px}
-.kv{font:800 17px var(--f-mono);letter-spacing:0;text-transform:none;color:var(--acc);border-bottom:2px dotted var(--acc);cursor:ew-resize;user-select:none;touch-action:none;min-width:2ch}
-.kn input{position:absolute;left:0;right:0;bottom:-6px;width:100%;height:14px;margin:0;opacity:0;accent-color:var(--acc);cursor:pointer;transition:opacity .15s}
+.kn{position:relative;display:inline-flex;align-items:baseline;gap:9px;font:700 15px var(--f-mono);letter-spacing:.02em;text-transform:uppercase;color:var(--muted);padding-bottom:8px}
+.kv{font:700 18px var(--f-mono);letter-spacing:0;text-transform:none;color:var(--ink);border-bottom:2px dotted var(--muted);cursor:ew-resize;user-select:none;touch-action:none;min-width:2ch}
+.kn input{position:absolute;left:0;right:0;bottom:-6px;width:100%;height:14px;margin:0;opacity:0;accent-color:var(--muted);cursor:pointer;transition:opacity .15s}
 .kn:hover input,.kn.drag input,.kn input:focus-visible{opacity:1}
 .kn.drag .kv{color:var(--ink)}
-.kb{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font:700 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+.kb{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font:700 15px var(--f-mono);letter-spacing:.02em;text-transform:uppercase;color:var(--muted);
   background:none;border:0;border-bottom:2px dotted var(--line-dim);padding:2px 0 6px;cursor:pointer}
 .kb span{font-size:16px;color:var(--acc);transition:transform .3s}
 .kb:hover{color:var(--ink)}.kb:active span{transform:rotate(-180deg)}
 
 /* info sidebar: 30% of the screen on the right; the page shifts left so nothing is hidden */
 .side{position:fixed;top:0;right:0;z-index:50;height:100vh;width:clamp(360px,32vw,500px);overflow-y:auto;background:var(--surf);
-  border-left:3px solid var(--line);padding:24px 32px 56px;transform:translateX(102%);transition:transform .22s ease;font-size:17px;line-height:1.6}
+  border-left:3px solid var(--tint-lo);padding:24px 32px 56px;transform:translateX(102%);transition:transform .22s ease;font-size:17px;line-height:1.6}
 .side.open{transform:none}
-.side .lead{font-size:19px;line-height:1.6;color:var(--ink);margin:0 0 24px}
+.side .lead{font-size:19px;line-height:1.6;color:var(--ink);margin:0 0 24px;border-left:3px solid var(--tint);padding:2px 0 2px 14px}
+.side .phase{color:var(--tint);border-color:var(--tint-lo);background:none}
+.side strong{color:var(--tint-hi)}
+.side li::marker{color:var(--tint)}
 .side .sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .side .sx{width:32px;height:32px;border:2px solid var(--line);background:var(--surf2);color:var(--ink);font:900 18px var(--f-mono);cursor:pointer}
 .side .st{font-size:23px;font-weight:850;line-height:1.25;margin-bottom:18px}
-.side section{padding:24px 0;border-top:1px solid var(--line-dim)}
+.side section{padding:24px 0;border-top:1px solid var(--tint-lo)}
 .side h4{font:700 12px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:14px}
 .side ul{padding-left:1.1em}.side li{margin:.7em 0;line-height:1.6}.side p+p{margin-top:.8em}
 /* notation: "symbol : meaning" on one line, the example under it */
@@ -109,10 +127,10 @@ h1{font-size:clamp(26px,3.4vw,40px);font-weight:900;text-transform:uppercase;let
 .side .ne{grid-column:3;color:var(--ink);line-height:1.55}
 .side .eg{grid-column:3;margin:6px 0 22px;font:15px/1.55 var(--f-mono);color:var(--muted)}
 .side .nt:last-child .eg{margin-bottom:4px}
-.side .eg strong{color:var(--ink)}
-.side .wx{font:16px/1.6 var(--f-mono);color:var(--ink);background:var(--surf2);border-left:3px solid var(--acc);padding:12px 16px}
+.side .eg strong{color:var(--tint-hi)}
+.side .wx{font:16px/1.6 var(--f-mono);color:var(--ink);background:color-mix(in srgb,var(--tint) 9%,var(--surf2));border-left:3px solid var(--acc);padding:12px 16px}
 .side details{margin-top:12px;border-top:2px solid var(--line-dim);padding-top:10px}.side summary{cursor:pointer;font:700 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-@media (min-width:1000px){body.side-on{--stage-w:min(1240px,calc(100vw - clamp(360px,32vw,500px) - 48px));padding-right:calc(clamp(360px,32vw,500px) + 16px)}}
+@media (min-width:1000px){body.side-on{--stage-w:min(1250px,calc(100vw - clamp(360px,32vw,500px) - 48px));padding-right:calc(clamp(360px,32vw,500px) + 16px)}}
 @media (max-width:1399px){.side{width:340px;padding:22px 26px 48px}body.side-on{--stage-w:calc(100vw - 340px - 48px);padding-right:356px}}   /* laptops: keep the figure big enough that 16-unit labels stay ≥ 12 px */
 @media (max-width:999px){.side{width:min(92vw,460px);box-shadow:-12px 0 0 rgba(0,0,0,.35)}}
 
@@ -121,7 +139,7 @@ h1{font-size:clamp(26px,3.4vw,40px);font-weight:900;text-transform:uppercase;let
 .prose p+p{margin-top:.8em}
 .prose h2{font-size:clamp(22px,2.6vw,30px);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;margin:46px 0 14px;line-height:1.05}
 .prose ul{padding-left:1.2em}.prose li{margin:.25em 0}
-.acc1{--acc:var(--c1)}.acc2{--acc:var(--c2)}.acc3{--acc:var(--c3)}.acc4{--acc:var(--c4)}.acc5{--acc:var(--c5)}.acc6{--acc:var(--c6)}
+.acc1,.acc2,.acc3,.acc4,.acc5,.acc6{--acc:var(--muted)}
 
 /* study page blocks */
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;max-width:var(--stage-w);margin:0 auto 34px}
@@ -150,3 +168,5 @@ table.cmp th{font:700 12px var(--f-mono);letter-spacing:.08em;text-transform:upp
   .fig.pan{overflow-x:auto}.fig.pan svg{min-width:720px;max-height:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.fig svg text{font-variant-numeric:tabular-nums}

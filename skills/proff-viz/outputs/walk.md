@@ -1,6 +1,6 @@
 # walk page: a process, step by step, from molecules to data
 
-Copy `examples/walk-crispr`. Layout `walk`. 6–10 scenes, 2–4 steps each. Every scene has a `phase` tag (design, cut, library, screen, sequence, analysis) so the reader knows where they are.
+Exemplar `examples/walk-crispr`. Layout `walk`. 6–10 scenes, 2–4 steps each. Every scene has a `phase` tag (design, cut, library, screen, sequence, analysis) so the reader knows where they are.
 
 ## Content: the whole chain, no gaps
 Open `ref/chains.md` and take the chain for the topic. Each link is a scene or a step. The reader must see where the material comes from, what each molecule looks like, where each cut, bind, or copy happens, how cells are grown and selected, how the sample is read, and how that becomes the table they analyse. End on the data table and the first number computed from it.

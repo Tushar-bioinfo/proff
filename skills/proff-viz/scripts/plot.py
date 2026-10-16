@@ -3,7 +3,7 @@
 
     import sys; sys.path.insert(0, "<skill>/scripts"); from plot import fig, save, C
     f, ax = fig()                       # 12 x 6.75 in, matches the 1200 x 675 stage
-    ax.plot(x, y, color=C.c1, lw=3); ax.set_xlabel("dose (µM)")
+    ax.plot(x, y, color=C.c2, lw=3); ax.set_xlabel("dose (µM)")
     save(f, "story/svg/dose.svg")       # then in story.js: g.svgfile('dose', 0, 0, 1200, 675)
 
 Colours: use C.c1..C.c6, C.ink, C.muted, C.grid, C.fig (never raw hex). save() rewrites them to CSS variables,

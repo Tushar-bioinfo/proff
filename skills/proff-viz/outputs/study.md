@@ -1,6 +1,7 @@
 # study page: ideas to read, recall, and test
 
-Copy `examples/study-fdr`. Layout `article` (scrolling page). Text-led, but never text-only: one small live figure is required.
+Build this only when the user asks for a study or revision sheet; otherwise definitions go in the sidebar and quizzes go to quiz mode or a deck.
+Exemplar `examples/study-fdr`. Layout `article` (scrolling page). Text-led, but never text-only: one small live figure is required.
 
 ## Order (skip what does not apply)
 1. `Proff.section('the problem in numbers')` + `Proff.tiles([{big, h, text}])`: 3 numbers that frame the topic. Each `big` is a real, computed or cited number.

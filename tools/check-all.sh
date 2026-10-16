@@ -8,7 +8,7 @@ O=out/check
 mkdir -p "$O"
 export PROFF_SCRIPTS="$PWD/$S/scripts"
 names="$*"
-[ -z "$names" ] && names=$(cd $S/examples && ls -d */ | tr -d /)
+[ -z "$names" ] && names=$(cd $S/examples && for d in */; do printf "%s " "${d%/}"; done)   # a glob, not ls: coloured ls output breaks the names
 bad=0
 for n in $names; do
   mkdir -p "$O/$n"

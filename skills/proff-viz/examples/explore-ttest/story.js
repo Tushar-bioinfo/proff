@@ -14,7 +14,7 @@ function tTail(t, df) { let s = 0; const h = .01; for (let x = t; x < t + 60; x 
 const fp = p => p < .001 ? 'p < 0.001' : `p = ${p.toFixed(3)}`;
 
 Proff.scene({
-  title: 'Signal, noise, and the t statistic', acc: 1, h: 640,
+  title: 'Signal, noise, and the t statistic', acc: 1, h: 640, panelPad: { l: 100, r: 48, t: 64, b: 118 },
   // one figure per step: 'bars' replaces 'data' at step 3, 't' replaces 'bars' at step 4
   panels: [{ id: 'data', from: 0 }, { id: 'bars', from: 2 }, { id: 't', from: 3 }],
   controls: [
@@ -50,23 +50,23 @@ Proff.scene({
     g.panel('bars', P => {
       const B = g.axes({ ...P, xd: [0, 2], yd: [0, 4], xt: [], yt: [0, 1, 2, 3, 4], grid: true, yl: 'size' });
       const bar = (cx, v, c, name, val) => { const top = B.sy(Math.min(4, v)); g.rect(B.sx(cx - .32), top, B.sx(.64) - B.sx(0), B.y + B.h - top, { fill: c.replace('c', 'f'), stroke: c, sw: 3, free: true });
-        g.text(B.sx(cx), B.y + B.h + 26, name, { size: 20, anchor: 'middle', weight: 700, fill: c });
-        g.text(B.sx(cx), Math.max(B.y + 14, top - 20), val, { size: 20, anchor: 'middle', weight: 700, mono: true, fill: c }); };
+        g.text(B.sx(cx), B.y + B.h + 40, name, { size: 20, anchor: 'middle', weight: 700, fill: c });
+        g.text(B.sx(cx), top - 44, val, { size: 20, anchor: 'middle', weight: 700, mono: true, fill: c }); };
       bar(.55, Math.abs(e.mB - e.mA), 'c2', 'signal', Proff.fmt(e.mB - e.mA, 2));
       bar(1.45, e.se, 'c4', 'SE', Proff.fmt(e.se, 2));
     });
     // panel: t on the null curve
     g.panel('t', P => {
       const tx = Proff.clamp(e.t, -6.2, 6.2), C = g.axes({ ...P, xd: [-6.5, 6.5], yd: [0, .66], xt: [-6, -3, 0, 3, 6], yt: [], grid: false, xl: 't' });
-      g.text(C.x + C.w / 2, C.y + 40, `t = ${Proff.fmt(e.t, 2)}`, { size: 34, anchor: 'middle', weight: 900, fill: 'c2', mono: true });
+      g.text(C.x + C.w / 2, C.y + 22, `t = ${Proff.fmt(e.t, 2)}`, { size: 32, anchor: 'middle', weight: 900, fill: 'c2', mono: true });
       // the bars have left the stage: carry their two numbers onto this figure
-      if (k < 4) g.text(C.x + C.w / 2, C.y + 84, `${Proff.fmt(e.mB - e.mA, 2)} ÷ ${Proff.fmt(e.se, 2)}`, { size: 22, anchor: 'middle', fill: 'muted', mono: true });
+      if (k < 4) g.text(C.x + C.w / 2, C.y + 96, `${Proff.fmt(e.mB - e.mA, 2)} ÷ ${Proff.fmt(e.se, 2)}`, { size: 22, anchor: 'middle', fill: 'muted', mono: true });
       if (k >= 4) g.fade(on(4), g => {
         const f = x => S.tPdf(x, e.df), a = Math.abs(tx);
         if (a < 6.4) { g.area(f, C, a, 6.5, { fill: 'f5' }); g.area(f, C, -6.5, -a, { fill: 'f5' }); }
         g.curve(f, C, -6.5, 6.5, { stroke: 'muted', sw: 3 });
-        g.text(C.x + C.w / 2, C.y + 90, fp(e.p), { size: 26, anchor: 'middle', weight: 800, fill: 'c5', mono: true });
-        g.text(C.x + C.w / 2, C.y + 126, `df = ${e.df}`, { size: 18, anchor: 'middle', fill: 'muted', mono: true });
+        g.text(C.x + C.w / 2, C.y + 96, fp(e.p), { size: 26, anchor: 'middle', weight: 800, fill: 'c5', mono: true });
+        g.text(C.x + C.w / 2, C.y + 154, `df = ${e.df}`, { size: 18, anchor: 'middle', fill: 'muted', mono: true });
       });
       g.line(C.sx(tx), C.sy(.44), C.sx(tx), C.y + C.h, { stroke: 'c2', sw: 4, free: true });
       if (Math.abs(e.t) > 6.2) g.text(C.sx(tx) + (e.t > 0 ? -8 : 8), C.sy(.47), e.t > 0 ? 'off scale →' : '← off scale', { size: 16, anchor: e.t > 0 ? 'end' : 'start', fill: 'c2', weight: 700 });
@@ -88,13 +88,13 @@ Proff.scene({
       const ma = a / p.n, mb = b / p.n, va = (a2 - p.n * ma * ma) / (p.n - 1), vb = (b2 - p.n * mb * mb) / (p.n - 1); ts.push((mb - ma) / Math.sqrt((va + vb) / p.n)); }
     const bw = .25, bins = {}; ts.forEach(v => { if (Math.abs(v) < 6) { const b = Math.floor(v / bw); bins[b] = (bins[b] || 0) + 1; } });
     let crit = 1.5; while (2 * tTail(crit, df) > .05) crit += .005;
-    const ax = g.axes({ x: 110, y: 60, w: 980, h: 440, xd: [-6, 6], yd: [0, .45], xt: [-6, -4, -2, 0, 2, 4, 6], yt: [0, .1, .2, .3, .4], yl: 'share of experiments (per unit t)', xl: 't' });
+    const ax = g.axes({ x: 150, y: 72, w: 900, h: 400, xd: [-7.5, 7.5], yd: [0, .45], xt: [-6, -4, -2, 0, 2, 4, 6], yt: [0, .1, .2, .3, .4], yl: 'share of experiments (per unit t)', xl: 't' });
     const out = ts.filter(v => Math.abs(v) > crit).length / ts.length;
     Object.entries(bins).forEach(([b, c]) => { const x0 = +b * bw, h = Math.min(.45, c / ts.length / bw),   /* few runs give spiky bins; keep them inside the axes */ tail = k >= 2 && (x0 >= crit || x0 + bw <= -crit);
       g.rect(ax.sx(x0) + 1, ax.sy(h), ax.sx(bw) - ax.sx(0) - 2, ax.y + ax.h - ax.sy(h), { fill: tail ? 'f5' : 'f1', stroke: tail ? 'c5' : 'c1', sw: 1.5, free: true }); });
     if (k >= 1) g.fade(k === 1 ? t : 1, g => g.curve(x => S.tPdf(x, df), ax, -6, 6, { stroke: 'ink', sw: 3 }));
     if (k >= 2) g.fade(k === 2 ? t : 1, g => { [-crit, crit].forEach(c => g.line(ax.sx(c), ax.y + 40, ax.sx(c), ax.y + ax.h, { stroke: 'c5', sw: 3, dash: true, free: true }));
-      g.text(ax.sx(4.4), ax.y + 40, `${(out * 100).toFixed(1)}% beyond`, { size: 24, anchor: 'middle', weight: 800, fill: 'c5', mono: true });
-      g.text(ax.sx(4.4), ax.y + 74, `±${crit.toFixed(2)} at df ${df}`, { size: 18, anchor: 'middle', fill: 'muted', mono: true }); });
+      g.text(ax.sx(4.2), ax.y + 28, `${(out * 100).toFixed(1)}% beyond`, { size: 22, anchor: 'middle', weight: 800, fill: 'c5', mono: true });
+      g.text(ax.sx(4.2), ax.y + 92, `±${crit.toFixed(2)} at df ${df}`, { size: 18, anchor: 'middle', fill: 'muted', mono: true }); });
   }
 });

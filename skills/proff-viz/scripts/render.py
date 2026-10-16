@@ -24,7 +24,8 @@ PALETTES = {
     "matcha":  ["#8fd6a4", "#d4e78f", "#c7b5ff", "#7fd1c7", "#e8cfa6", "#a7f3d0"],
     "neon":    ["#ff4fd8", "#b6ff3b", "#3cffd0", "#9b7bff", "#ff9f43", "#f0abfc"],
     "pastel":  ["#f9a8d4", "#fdba74", "#c4b5fd", "#99f6e4", "#d9f99d", "#e9d5ff"],
-    "mono":    ["#a78bfa", "#e4e4e7", "#8b8b94", "#c4b5fd", "#d4d4d8", "#6d5bd0"],
+    "mono":    ["#d6d4ce", "#ff5a36", "#b6b4ad", "#ffb27f", "#e8e6e0", "#85837d"],   # the page default (v5): greys + one orange (p2)
+    "violet":  ["#a78bfa", "#e4e4e7", "#8b8b94", "#c4b5fd", "#d4d4d8", "#6d5bd0"],   # the deck "mono" before v5
 }
 
 THEMES = {
@@ -293,7 +294,7 @@ class R:
         return f'<div class="hand">{esc(s["hand"])}</div>' if s.get("hand") else ""
 
 
-def render(spec, layout="deck", theme="blockframe-dark", palette="cyan", spec_dir=None, out_dir=None, embed=False):
+def render(spec, layout="deck", theme="blockframe-dark", palette="mono", spec_dir=None, out_dir=None, embed=False):
     th = dict(THEMES[theme])
     pal = PALETTES[palette]
     th["T"] = dict(th["T"], c=[pal[2], pal[1], pal[0], pal[3], pal[4], pal[5]])
@@ -345,7 +346,7 @@ if __name__ == "__main__":
     ap.add_argument("-o", "--out")
     ap.add_argument("--layout", choices=["deck", "page"], help="deck = 16:9 slides, page = scrolling lesson (default: spec 'layout' or deck)")
     ap.add_argument("--theme", choices=list(THEMES), help="default: spec 'theme' or blockframe-dark")
-    ap.add_argument("--palette", choices=list(PALETTES), help="default: spec 'palette' or cyan")
+    ap.add_argument("--palette", choices=list(PALETTES), help="default: spec 'palette' or mono")
     ap.add_argument("--embed", action="store_true", help="put images inside the HTML (one portable file)")
     a = ap.parse_args()
     spec = load_spec(Path(a.spec).read_text())
@@ -353,6 +354,6 @@ if __name__ == "__main__":
     out.parent.mkdir(parents=True, exist_ok=True)
     layout = a.layout or spec.get("layout", "deck")
     theme = a.theme or spec.get("theme", "blockframe-dark")
-    palette = a.palette or spec.get("palette", "cyan")
+    palette = a.palette or spec.get("palette", "mono")
     out.write_text(render(spec, layout, theme, palette, Path(a.spec).resolve().parent, out.parent, a.embed))
     print(out)

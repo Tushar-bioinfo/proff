@@ -20,7 +20,7 @@ CDN = {  # pinned; checked 2026-10 on cdnjs
     "p5": '<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>',
 }
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-         '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">')
+         '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">')
 
 
 def main():
@@ -61,6 +61,7 @@ def main():
 </body></html>
 """
     out = Path(a.out) if a.out else d / "page.html"
+    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(page)
     kb = len(page.encode()) / 1024
     print(f"build: {out}  {kb:.0f} KB  needs={','.join(needs) or 'none'}  data={list(data)}  svg={list(svgs)}  img={list(assets)}")

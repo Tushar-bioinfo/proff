@@ -27,15 +27,17 @@ Proff.scene({
     const m = 200, r = Proff.rng(5), ps = [];
     for (let i = 0; i < m; i++) { const real = i < p.real; ps.push({ p: real ? Math.pow(r(), 6) * .02 : r(), real }); }
     ps.sort((a, b) => a.p - b.p);
-    const ax = g.axes({ x: 110, y: 40, w: 980, h: 400, xd: [0, 32], yd: [0, .06], xt: [1, 5, 10, 15, 20, 25, 30], yt: [0, .02, .04, .06], fmty: v => v.toFixed(2), xl: 'rank (smallest p first)', yl: 'p-value' });
+    const ax = g.axes({ x: 130, y: 86, w: 700, h: 360, xd: [0, 32], yd: [0, .06], xt: [1, 5, 10, 15, 20, 25, 30], yt: [0, .02, .04, .06], fmty: v => v.toFixed(2), xl: 'rank (smallest p first)' });
+    g.text(ax.x, ax.y - 48, 'p-value', { size: 22, boost: false, anchor: 'start', fill: 'ink', weight: 400 });
     let kk = 0; ps.forEach((d, i) => { if (d.p <= (i + 1) / m * p.q) kk = i + 1; });
     const bonf = ps.filter(d => d.p <= p.q / m).length, show = ps.slice(0, 31);
-    if (k >= 1 && kk) g.rect(ax.sx(.5), ax.y, ax.sx(kk + .5) - ax.sx(.5), ax.h, { fill: 'f4', stroke: 'none', free: true, op: k === 1 ? t : 1 });
-    show.forEach((d, i) => g.circle(ax.sx(i + 1), ax.sy(Math.min(d.p, .06)), 7, { fill: d.real ? 'c2' : 'muted', stroke: k >= 2 && d.p <= p.q / m ? 'c3' : 'none', sw: 3, op: d.p > .06 ? .35 : 1, free: true }));   // off-scale p drawn faint at the top
+    const shadeR = Math.min(ax.x + ax.w, ax.sx(kk + .5));
+    if (k >= 1 && kk) g.rect(ax.sx(.5), ax.y, Math.max(0, shadeR - ax.sx(.5)), ax.h, { fill: 'f4', stroke: 'none', free: true, op: k === 1 ? t : 1 });
+    show.forEach((d, i) => g.circle(ax.sx(i + 1), ax.sy(Math.min(d.p, .06)), 5, { fill: d.real ? 'c2' : 'muted', stroke: k >= 2 && d.p <= p.q / m ? 'c3' : 'none', sw: 3, op: d.p > .06 ? .35 : 1, free: true }));   // off-scale p drawn faint at the top
     if (k >= 1) g.fade(k === 1 ? t : 1, g => { const xe = Math.min(32, .06 * m / p.q); g.line(ax.sx(0), ax.sy(0), ax.sx(xe), ax.sy(xe / m * p.q), { stroke: 'c4', sw: 3 });
-      g.text(ax.sx(4), ax.y + 20, `BH calls ${kk}`, { size: 24, weight: 800, fill: 'c4', mono: true, halo: true }); });
+      g.text(1184, 168, `BH calls ${kk}`, { size: 20, boost: false, anchor: 'end', weight: 800, fill: 'c4' }); });
     if (k >= 2) g.fade(k === 2 ? t : 1, g => { g.line(ax.sx(0), ax.sy(p.q / m), ax.sx(32), ax.sy(p.q / m), { stroke: 'c3', sw: 3, dash: true });
-      g.text(ax.sx(4), ax.y + 56, `Bonferroni calls ${bonf}`, { size: 24, weight: 800, fill: 'c3', mono: true, halo: true }); });
+      g.text(1184, 214, `Bonferroni calls ${bonf}`, { size: 20, boost: false, anchor: 'end', weight: 800, fill: 'c3' }); });
   }
 });
 

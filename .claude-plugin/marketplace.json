@@ -10,7 +10,7 @@
     {
       "name": "proff-viz",
       "source": "./",
-      "description": "Tutor with L3 text lessons and L4 visuals: five checked page types (study, explore, story, calc, walk) plus a card deck."
+      "description": "Tutor with L3 text lessons and L4 visuals: checked explore, story, calc and walk pages (study on request) plus a card deck; themes, layouts and story arcs to choose from."
     }
   ]
 }

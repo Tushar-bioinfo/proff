@@ -1,77 +1,29 @@
-# Taste: what a finished page looks like
+# Taste: real failures, their fixes, and the self-review
 
-Read this before writing `story.js`, and again before every sheet review. The pictures are real failures from earlier test runs, next to the fix.
-
-## The bar
-- **Show it; never ask the reader to picture it.** If a step needs the reader to imagine a shape, a product of numbers, or a curve, the page must draw it. The audit flags "imagine", "clearly", "obviously", "intuitively" and "as you know" in captions and the sidebar.
-- **Build from the ground.** Early scenes climb the ladder (one toss → joint probability → likelihood curve → its peak) before the full formula appears.
-- **The picture explains; text names.** One idea per step. Caption ≤ 28 words. No paragraph on the stage.
-- **No sentence under the figure.** The caption opens the i sidebar. The stage labels alone must make the step readable.
-- **No text before the first scene.** Title and one `sub` line, then the figure. (Study pages may open with tiles.)
-- **One figure per step, across the whole stage.** Never two plots side by side: the next figure arrives on the next step and the old one slides away. Never show empty axes waiting for later steps.
-- **Plots fill their panel**: each ≥ 300 of the 675 stage units tall. Headings go in the scene title or the sidebar, not stacked above the axes. Text is never bigger than 36.
-- **Details go in the i sidebar**, not on the stage: notation, what you see, how to read it, one thing to try. ≤ 120 words per step.
-- **Every label has air.** Nothing touches anything: ≥ 8 px from other text, lines, and shape edges.
-- **Every number on screen is computed**, never hand-typed.
-- **Every symbol in a formula is explained in the sidebar**: each letter, each index (i = a gene, j = a sample), each operator (Σ, log₂, the bar over x̄) in plain words, with one example from the figure ("x for GeneA in S1 = 120"). Calc pages do this from `t.symbols`; on other pages put it in `info.notation`.
+Read this before writing `story.js` and again before reviewing the sheets. Limits and sizes are in `ref/design.md`; this file shows what breaking them looks like. Open a picture only when you are unsure what the defect looks like.
 
 ## Before → after
-
-**1. A label on top of a segment.** Two words drawn in one box become unreadable.
-![label drawn on a read segment](taste/bad-label-on-segment.png)
-Fix: `g.read` already writes the segment text. Name a segment with `g.brace` above or below it, never with a second `g.text` inside.
-
-**2. Text touching an end mark.** "3′" runs into "grabs poly(A)".
-![3 prime touching a note](taste/bad-touching.png)
-Fix: put the note under the strand with `g.label(x, y, s, { to: [x, y] })`, or leave ≥ 12 units of gap after the end mark.
-
-**3. A wrong number in a legend.** "12+ cells" was meant to be "2+ cells" with a count of 1 in front.
-![wrong legend number](taste/bad-legend-number.png)
-Fix: build legend strings from data in one template (`` `${n} with 2+ cells` ``), then read every legend on the sheet as a sentence.
-
-**4. Side notes piled in a corner.** Five loose facts compete with the figure.
-![notes piled at the side](taste/bad-side-notes.png)
-Fix: keep the one number that is the point of the step, placed next to the thing it describes. Move the rest to `info`.
-
-**5. Empty panels on step 1.** The reader sees two blank boxes and an empty histogram.
-![empty reserved panels](taste/bad-empty-panels.png)
-Fix: `panels` (see `ref/kit.md`). Step 1 gets the whole stage:
-![step 1, one big panel](taste/good-big-first-1.png)
-The next plot arrives on a later step and takes the whole stage in turn.
-
-**6. Plots side by side.** Three are tall, thin, and unreadable; even two feel crammed, with half-width axes, tiny ticks, and the eye torn between them.
-![three squeezed panels](taste/bad-three-panels.png)
-![two crammed panels](taste/bad-two-panels.png)
-Fix: **one figure per step.** Tell the story across steps: the bars on one step, then the t curve on the next (the runtime swaps them for `panels`). Carry the key number forward as a label on the new figure (e.g. `t = 3.72`) instead of keeping the old plot. The audit fails any step with more than one plot.
-
-**7. Short plots under giant headings.** Headings at size 42 and readouts at 36 take half the height; the curves are thin strips.
-![short plots, oversized text](taste/bad-short-plots.png)
-Fix: labels 20, the one key number 26–34, default `panelPad`. The scene title already names the idea, so drop the per-panel heading or make it one 20-size label. The audit fails plots under 300 units tall and text above 36.
-
-**8. Labels with leaders, away from the letters.** Each note sits in open space and points at its letter.
-![labels with leader lines](taste/good-leaders.png)
-
-## Authoring rules
-1. Place every label from the thing it names (`ax.sx(v)`, `dna.cx(i)`, `L.data.x`), never from guessed pixels.
-2. A label next to a small shape uses `g.label` with `to`. A span of letters or a segment uses `g.brace`.
-3. At most one new annotation per step. If a step needs two, split it into two steps.
-4. Scenes with several figures use `panels` (one on screen per step) and draw each with `g.panel(id, box => ...)`. Never split the stage by hand.
-5. Size marks (dot jitter, average lines, bar widths) in stage units, not data units, so a panel that grows or shrinks still looks right.
-6. Every on-stage number comes from a variable in `draw` or `PROFF_DATA`.
-7. `free: true` only for boxes that hold their own text. Never use it to silence a warning.
-8. Sizes on the stage (as written; the kit draws each 2 bigger): labels 20, minor notes 18, tick labels 16, the one key number 26–34, never above 36 (the audit fails it).
+1. **A label on top of a segment** ([picture](taste/bad-label-on-segment.png)). Two words in one box are unreadable. `g.read` already writes the segment text; name a segment with `g.brace` above or below it.
+2. **Text touching an end mark** ([picture](taste/bad-touching.png)). "3′" runs into "grabs poly(A)". Use `g.label(x, y, s, { to })` under the strand, or leave ≥ 12 units after the end mark.
+3. **A wrong number in a legend** ([picture](taste/bad-legend-number.png)). "12+ cells" was meant to be "1 with 2+ cells". Build every legend from data in one template (`` `${n} with 2+ cells` ``), then read each one on the sheet as a sentence.
+4. **Side notes piled in a corner** ([picture](taste/bad-side-notes.png)). Five loose facts compete with the figure. Keep the one number that is the point, next to what it describes; move the rest to `info`.
+5. **Empty panels on step 1** ([picture](taste/bad-empty-panels.png) → [fix](taste/good-big-first-1.png)). Use `panels`: step 1 gets the whole stage, the next plot arrives later.
+6. **Plots side by side** ([three](taste/bad-three-panels.png), [two](taste/bad-two-panels.png)). Thin axes, tiny ticks, a torn eye. One figure per step; carry the key number onto the next figure as a label (`t = 3.72`).
+7. **Short plots under giant headings** ([picture](taste/bad-short-plots.png)). The headline already names the idea: drop per-panel headings.
+8. **Good: labels with leaders** ([picture](taste/good-leaders.png)). Each note sits in open space and points at its letter.
+9. **Text clutter.** Tiles, abbreviation tables and quizzes around the stage. Definitions go in the sidebar; quizzes go to quiz mode or a card deck.
+10. **A click that changes nothing.** Two steps with the same figure, only a new headline. Every step adds, moves, or highlights something.
+11. **A claim with no mark.** The headline says "the tail is 5%" but nothing on the figure is orange. Put the accent on the thing the headline claims.
+12. **A small figure beside a big number.** The hero and its labels take the right half; the plot shrinks to a strip at the top left. The figure is the page: give it ≥ 60% of the width and most of the height, and put the hero in its open space.
 
 ## Self-review (required before you report)
 Usage is not the constraint; mistakes are. **If you are a fast or low-cost model, run at least two full review rounds even when the first looks clean.**
-
-1. `check.py` must print `0 warnings` (exit code 0). Any warning means not done.
-2. Open **every** sheet image. For each frame (`s1.1`, `s1.2`, …), write one line in your notes:
-   `frame · every text item you can see · touching or overlapping? · empty area > 1/3 of the stage? · the step reads without its caption?`
+1. `check.py` prints `0 warnings` (exit code 0). Any warning means not done.
+2. Open **every** sheet image. For each frame (`s1.1`, `s1.2`, …) write one line in your notes: `frame · text you see · touching? · empty area > 1/3? · reads without its caption? · accent on the claim?`
 3. Recompute every number on screen from the data or the code.
-4. Check every step shows one figure across the stage: no plots side by side, no squeezed tick labels.
-5. Read the sidebar sheet (`snaps/sheet-sidebar-*.png`, one panel per step): every symbol, index and operator is named, with an example from the figure; nothing cramped or cut off.
-6. Check that no text block sits above the first scene.
-7. Ladder check: does the page start at a rung the reader can count? List any step that assumes an idea no earlier step showed; add a step for it.
-8. Fix, rebuild, recheck. Stop after 3 rounds on the same defect and report it.
+4. Read the sidebar sheet (`snaps/sheet-sidebar-*.png`): every symbol, index and operator named, with an example from the figure; nothing cut off.
+5. Ladder check: list any step that uses an idea no earlier step showed; add a step for it.
+6. Story check: say the arc you chose (`ref/styles.md`) in one line, and whether the last scene lands on a number the reader can use.
+7. Fix, rebuild, recheck. Stop after 3 rounds on the same defect and report it.
 
-Report line: `check: 0 warnings · sheets viewed N/N · frames listed M`. If you did not list every frame, write `not reviewed`.
+Report line: `check: 0 warnings · sheets viewed N/N · frames listed M · arc <name>`. If you did not list every frame, write `not reviewed`.

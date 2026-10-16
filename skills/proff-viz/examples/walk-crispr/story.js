@@ -6,6 +6,12 @@ P_.page({ title: 'A CRISPR knockout screen', sub: 'From 20 letters of DNA to a c
 const on = (k, j, t) => k > j ? 1 : k === j ? t : 0;
 const GENE_COL = { RPL3: 'c3', POLR2A: 'c5', AAVS1: 'c4', NT: 'c6' }, gcol = r => GENE_COL[r.split('_')[0]];
 const BW = 30, X0 = (1200 - D.seq.length * BW) / 2, T = [D.t0, D.t1], PAM = D.pam;
+// End marks sit further from the bases than the kit default, so the letters clear the tiles.
+const strandEnds = (g, d, n) => { const fsE = 14, y1 = d.top + d.bh / 2, y2 = d.bot - d.bh / 2, xR = d.x(n - 1) + d.bw + 18;
+  g.text(d.x(0) - 18, y1, "5'", { size: fsE, anchor: 'end', fill: 'muted', mono: true, free: true });
+  g.text(xR, y1, "3'", { size: fsE, fill: 'muted', mono: true, free: true });
+  if (d.bot - d.top > d.bh + 4) { g.text(d.x(0) - 18, y2, "3'", { size: fsE, anchor: 'end', fill: 'muted', mono: true, free: true });
+    g.text(xR, y2, "5'", { size: fsE, fill: 'muted', mono: true, free: true }); } };
 const hi = [[T[0], T[1], 'c1'], [PAM[0], PAM[1], 'c2']];
 const guideSeq = D.seq.slice(T[0], T[1]);
 
@@ -13,7 +19,8 @@ P_.scene({ title: 'The target: 20 letters in a gene', phase: 'design', acc: 1,
   steps: [{ cap: 'The start of a gene: two DNA strands, paired letter by letter (A with T, C with G).', info: 'The sequence is made up for this page. Real guides are picked by design tools that score on-target cutting and off-target matches.' },
     { cap: 'Pick 20 letters that sit right before **AGG**. That AGG is the **PAM**, the tag Cas9 must find first.', info: { notation: { PAM: ['protospacer adjacent motif: the short tag Cas9 checks first', 'AGG, right after the 20 letters'], NGG: ['any letter, then G, G: the PAM of the common Cas9 (SpCas9)', 'AGG, CGG, TGG and GGG all work'] }, read: ['No PAM right after the target, no cut'] } }],
   draw(g, k, t) {
-    const d = g.dna(X0, 290, { seq: D.seq, bw: BW, hi: k >= 1 ? hi : [], ends: true });
+    const d = g.dna(X0, 290, { seq: D.seq, bw: BW, hi: k >= 1 ? hi : [] });
+    strandEnds(g, d, D.seq.length);
     g.label(d.cx(1), d.bot + 70, 'ATG: the gene starts here', { to: [d.cx(1), d.bot + 4], size: 20, fill: 'muted', weight: 600, anchor: 'start' });
     if (k >= 1) g.fade(t, g => { g.brace(d.x(T[0]), 252, d.x(T[1]), 252, '20-letter target', { stroke: 'c1', fill: 'c1', size: 22 });
       g.label(d.cx(PAM[0] + 1), 480, 'PAM', { to: [d.cx(PAM[0] + 1), d.bot + 6], size: 22, weight: 800, anchor: 'middle', fill: 'c2', lc: 'c2' }); });
@@ -23,7 +30,8 @@ P_.scene({ title: 'The guide RNA carries those letters', phase: 'design', acc: 1
   steps: [{ cap: 'The **sgRNA** (single guide RNA): the same 20 letters, with U in place of T, plus a folded tail.' },
     { cap: 'The **spacer** finds the target. The **scaffold** is the handle Cas9 holds.', info: { see: ['Spacer: 20 letters, written like the top strand', 'Scaffold: the folded handle Cas9 holds'], read: ['The spacer pairs with the bottom strand', 'Every guide in a library shares the scaffold; only the spacer changes'] } }],
   draw(g, k, t) {
-    const d = g.dna(X0, 360, { seq: D.seq, bw: BW, hi, ends: true });
+    const d = g.dna(X0, 360, { seq: D.seq, bw: BW, hi });
+    strandEnds(g, d, D.seq.length);
     const gd = g.guide(d.x(T[0]), 190, { seq: guideSeq, bw: BW });
     if (k >= 1) g.fade(t, g => { g.brace(gd.x(0), 180, gd.x(20), 180, 'spacer', { stroke: 'c1', fill: 'c1', size: 22 });
       g.text(gd.end + 150, 108, 'scaffold', { size: 22, weight: 800, fill: 'c1', anchor: 'middle' }); });
@@ -39,13 +47,14 @@ P_.scene({ title: 'Cas9 opens the DNA and cuts', phase: 'cut', acc: 5,
     const casOp = k <= 2 ? 1 : 1 - t, cx = X0 + (T[0] + 10) * BW;
     const dy = k === 0 ? (1 - t) * -30 : 0;
     const top = y - 120, bot = y + BW * .95 * 2.9 + sep + 40;   // body spans guide, both strands and the bubble
-    if (casOp > .02) g.fade(casOp, g => g.cas9(X0 + 15 * BW, (top + bot) / 2 + dy, { w: 28 * BW, h: bot - top }));
+    if (casOp > .02) g.fade(casOp, g => { const cas = g.cas9(X0 + 15 * BW, (top + bot) / 2 + dy, { w: 28 * BW, h: bot - top, label: false });
+      g.text(cas.left + 8, cas.top - 42, 'Cas9', { size: 24, weight: 900, fill: 'c6' }); });
     const d = g.dna(X0, y, { seq: D.seq, bw: BW, hi, open: [T[0], T[1]], sep, cut: k >= 2 ? D.cut : null, cutShift: cs });
     // the guide settles onto the strand it pairs with
     if (casOp > .02) g.fade(casOp, g => { const low = y + BW * .95 * 1.9 + sep, gy = k === 0 ? y - 90 : P_.lerp(y - 90, low - BW * .95 - 6, k === 1 ? t : 1); g.guide(d.x(T[0]), gy, { seq: guideSeq, bw: BW, scaffold: false }); });
     if (k >= 2) g.fade(k === 2 ? t : 1, g => { const x = (d.x(D.cut - 1) + BW + d.x(D.cut)) / 2;
       [y - 18, y + BW * .95 * 2.9 + sep + 18].forEach((yy, i) => g.poly([[x - 11, yy + (i ? 14 : -14)], [x + 11, yy + (i ? 14 : -14)], [x, yy]], { fill: 'c3', stroke: 'c3', close: true }));
-      g.text(x, y - 56, 'cut', { size: 22, weight: 800, fill: 'c3', anchor: 'middle' }); });
+      g.text(x, y - 78, 'cut', { size: 22, weight: 800, fill: 'c3', anchor: 'middle' }); });
   } });
 
 P_.scene({ title: 'Sloppy repair breaks the gene', phase: 'knockout', acc: 3,
@@ -56,7 +65,7 @@ P_.scene({ title: 'Sloppy repair breaks the gene', phase: 'knockout', acc: 3,
       const d = g.dna(X0, y, { seq, bw: BW, single: true });
       g.text(X0 - 14, y + 14, label, { size: 18, anchor: 'end', fill: 'muted', weight: 700 });
       for (let c = 0; c * 3 + 2 < seq.length; c++) g.rect(d.x(c * 3) + 1, y - 3, BW * 3 - 2, BW * .95 + 6, { stroke: 'line', sw: 2, r: 4, fill: 'none', free: true });
-      if (k >= 1) g.fade(t, g => [...aa.slice(0, (aa.indexOf('*') + 1) || aa.length)].forEach((a, c) => g.text(d.x(c * 3) + BW * 1.5, y + 66, a === '*' ? 'STOP' : a, { size: a === '*' ? 18 : 26, anchor: 'middle', weight: 900, mono: true, fill: a === '*' ? 'c3' : (mark && c * 3 + 3 > D.cut - 1 ? 'c5' : 'ink') })));
+      if (k >= 1) g.fade(t, g => [...aa.slice(0, (aa.indexOf('*') + 1) || aa.length)].forEach((a, c) => g.text(d.x(c * 3) + BW * 1.5, y + 72, a === '*' ? 'STOP' : a, { size: a === '*' ? 18 : 26, anchor: 'middle', weight: 900, mono: true, fill: a === '*' ? 'c3' : (mark && c * 3 + 3 > D.cut - 1 ? 'c5' : 'ink') })));
       return d; };
     row(D.seq, D.aa, 170, 'before');
     const d2 = row(D.mut, D.aa_mut, 400, 'after', true);
@@ -97,7 +106,7 @@ P_.scene({ title: 'Weeks later, some guides drop out', phase: 'screen', acc: 3,
     const bar = (x, S, y) => { let xx = x; ['RPL3', 'POLR2A', 'AAVS1', 'NT'].forEach(gname => { const w = S[gname] * 440; g.rect(xx, y, w, 34, { fill: GENE_COL[gname].replace('c', 'f'), stroke: GENE_COL[gname], sw: 2, free: true });
       if (w > 60) g.text(xx + w / 2, y + 17, `${Math.round(S[gname] * 100)}%`, { size: 16, anchor: 'middle', weight: 700, mono: true, fill: GENE_COL[gname], free: true }); xx += w; }); };
     bar(100, S0, 470); bar(660, k >= 1 ? S21 : S0, 470);
-    [['RPL3', 'c3'], ['POLR2A', 'c5'], ['AAVS1', 'c4'], ['NT (no target)', 'c6']].forEach(([n, c], i) => { g.rect(150 + i * 250, 572, 22, 22, { fill: c.replace('c', 'f'), stroke: c, sw: 2 }); g.text(182 + i * 250, 583, n, { size: 18, weight: 700, fill: c }); });
+    [['RPL3', 'c3'], ['POLR2A', 'c5'], ['AAVS1', 'c4'], ['NT (no target)', 'c6']].forEach(([n, c], i) => { g.rect(130 + i * 260, 572, 22, 22, { fill: c.replace('c', 'f'), stroke: c, sw: 2 }); g.text(168 + i * 260, 583, n, { size: 18, weight: 700, fill: c }); });
   } });
 
 P_.scene({ title: 'Read the guides back', phase: 'sequence', acc: 4,
@@ -118,15 +127,15 @@ P_.scene({ title: 'Read the guides back', phase: 'sequence', acc: 4,
 P_.scene({ title: 'The count matrix', phase: 'analysis', acc: 2,
   steps: [{ cap: 'Count reads for every guide in every sample. Rows are guides, columns are samples.' },
     { cap: 'Scale to the control guides, then take **log₂ fold change**: −3 means 8× fewer cells.', info: { notation: { LFC: ['log₂ fold change, day 21 vs day 0, each scaled to the control guides', '−3: 8× fewer cells by day 21'] }, read: ['−1 = half as many cells, −3 = 8× fewer'], more: 'Scaling to control guides (AAVS1, non-targeting) is MAGeCK’s *control* normalisation. Scaling to all guides also works when most guides are neutral, as in a real genome-wide library.' } },
-    { cap: 'Guides of the same gene agree. Tools like **MAGeCK** turn that agreement into a gene-level score.' }],
+    { cap: 'Guides of the same gene agree. Tools like **MAGeCK** turn that agreement into a gene-level score.', info: { notation: { LFC: ['log₂ fold change, day 21 vs day 0, each scaled to the control guides', '−3: 8× fewer cells by day 21'] } } }],
   draw(g, k, t) {
     const cw = 120, ch = 38, x = 380, y = 110;
     const M = g.matrix(x, y, D.rows.map((r, i) => [D.d0[i], D.d21[i]]), { cw, ch, cols: ['day 0', 'day 21'], rows: D.rows, rowFill: i => gcol(D.rows[i]), size: 21,
       cell: (i, j) => j === 1 && k >= 1 ? { fill: gcol(D.rows[i]).replace('c', 'f') } : {} });
-    if (k >= 1) g.fade(on(k, 1, t), g => { g.text(x + 2 * cw + 30, y + ch * 6, '→', { size: 34, anchor: 'middle', fill: 'muted', weight: 800 });
-      g.matrix(x + 2 * cw + 60, y, D.lfc.map(v => [v]), { cw: 130, ch, cols: ['log₂ FC'], size: 21, fmt: v => (v > 0 ? '+' : '') + v.toFixed(2),
+    if (k >= 1) g.fade(on(k, 1, t), g => { g.text(x + 2 * cw + 48, y + ch * 6, '→', { size: 34, anchor: 'middle', fill: 'muted', weight: 800 });
+      g.matrix(x + 2 * cw + 84, y, D.lfc.map(v => [v]), { cw: 130, ch, cols: ['log₂ FC'], size: 21, fmt: v => (v > 0 ? '+' : '') + v.toFixed(2),
         cell: (i, j, v) => ({ fill: v < -1 ? 'f3' : 'surf', color: v < -1 ? 'c3' : 'ink' }) }); });
-    if (k >= 2) g.fade(on(k, 2, t), g => { const gx = x + 2 * cw + 210, mean = (a, b) => D.lfc.slice(a, b).reduce((s, v) => s + v, 0) / (b - a);
+    if (k >= 2) g.fade(on(k, 2, t), g => { const gx = x + 2 * cw + 234, mean = (a, b) => D.lfc.slice(a, b).reduce((s, v) => s + v, 0) / (b - a);
       [['RPL3', 0, 4], ['POLR2A', 4, 8]].forEach(([n, a, b]) => g.brace(gx, y + a * ch + 4, gx, y + b * ch - 4, `${n} ${mean(a, b).toFixed(1)}`, { stroke: GENE_COL[n], fill: GENE_COL[n], size: 22 }));
       g.brace(gx, y + 8 * ch + 4, gx, y + 12 * ch - 4, 'controls ≈ 0', { stroke: 'c4', fill: 'c4', size: 22 }); });
   } });

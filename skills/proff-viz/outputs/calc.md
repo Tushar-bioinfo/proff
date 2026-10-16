@@ -1,6 +1,6 @@
 # calc page: watch a calculation happen cell by cell
 
-Copy `examples/calc-cpm`. You write the maths once in `make_trace.py` with `scripts/calctrace.py`; the page replays it. `story.js` is two lines.
+Exemplar `examples/calc-cpm`. You write the maths once in `make_trace.py` with `scripts/calctrace.py`; the page replays it. `story.js` is two lines.
 
 ## make_trace.py
 ```python
@@ -15,9 +15,10 @@ t.save(HERE / "data/calc.json")
 Ops: `matrix`, `reduce` (sum, mean, sd, var, max, min, median over rows or cols), `ewise` (+ − × ÷ with a matrix, a row/column vector, or a number; vectors broadcast), `map` (log2, log, log10, log2p1, log1p, exp, exp2, sqrt, square, abs, neg), `matmul` (dot products, row × column), and `dist` (where a statistic falls on its distribution). Open `scripts/calctrace.py` for exact signatures.
 
 ## Rules
-- Tables ≤ 8 × 8, usually 3 genes × 4 samples. Pick numbers that make the point visible (one deep sample, one zero).
+- Tables ≤ 8 × 8. Use the smallest shape that shows the point, and numbers that make it visible (one deep sample, one zero, one outlier).
 - One op per idea. `cap` says what happens to **which** rows/columns/cells in plain words; `info` says why; `tex` gives the formula.
 - Every formula gets explained in the i sidebar, automatically, once you give `i=`/`j=` and `t.symbols(...)`: each symbol with its value in the first cell (x_ij: raw counts of gene i in sample j. GeneA in S1: 120), what i and j stand for, each operator in plain words (Σᵢ: add up over every gene), and a worked example (S1: N = 120 + 30 + 850 = 1,000). A formula with a table that has no symbol fails the check. Your `info` adds the why; do not repeat the notation in it.
 - `expand=k` walks the first k output cells one by one, then fills the rest with "Same rule for every cell."
+- A table shown without a formula (`t.matrix(...)` or `t.show(...)`) can point at cells: `mark=[("X", 0, 1)]` outlines them in accent, `active=("X", 1, 0)` fills one. Use it for the cells the next step will use.
 - Add a `dist` step wherever a statistic is compared with a distribution (a t, a z, a p-value), so the reader sees where the stats enter.
 - `story.js`: `Proff.page({...}); Proff.calc(PROFF_DATA.calc);`. Add `Proff.scene` before or after only for a context picture.

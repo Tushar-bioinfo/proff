@@ -1,56 +1,55 @@
-# Design rules (every page type)
+# Design floor (every page type)
 
-## Limits (one place; ✓ = the audit fails the page)
-| what | limit |
+This file is the one home for limits, sizes, and colour meaning. Looks, layouts, and story arcs to choose from are in `ref/styles.md`.
+
+## Limits (✓ = the audit fails the page)
+| What | Limit |
 |---|---|
-| plots on one step | 1 ✓, ≥ 440 wide ✓ and ≥ 300 tall ✓ (stage units, of 1200 × 675) |
-| text size on the stage (as written; the kit draws each `Proff.textBoost` = 2 bigger, so labels show at 22) | labels 20, notes 18, ticks and table headers 16, key number 26–34, max 36 ✓; ≥ 12 px on screen ✓ (also on a 1280 laptop with the sidebar open) |
-| a label | 1–6 words (✓ at > 7) |
-| figure | ≤ 24 labels or 40 words per step ✓ |
-| caption | ≤ 28 words ✓ |
-| sidebar | ≤ 120 words per step ✓ (examples not counted); every notation row has an example ✓ |
-| a formula | drawn with `g.tex` ✓, every symbol in `info.notation` ✓ |
+| plots per step | 1 ✓; each ≥ 440 wide ✓ and ≥ 300 tall ✓ (stage is 1200 × 675 units) |
+| headline (`steps[i].title` or scene `title`) | a claim, not a topic name ("Most positives are false."); one line at 1440 and 1280 px, sidebar closed ✓; aim for ≤ 7 words |
+| labels on the figure | 1–6 words each (✓ at > 7); ≤ 24 labels or 40 words per step ✓; aim for ≤ 4 notes + 1 hero |
+| caption (`cap`) | ≤ 28 words ✓; it opens the sidebar, nothing is written under the figure |
+| sidebar (`info`) | ≤ 120 words per step ✓ (examples not counted); every notation row has an example ✓ |
+| formula | drawn with `g.tex` or `g.note`; every symbol, index and operator named in `info.notation` ✓ |
+| text on screen | ≥ 12 px ✓, also on a 1280 laptop with the sidebar open |
+| text size | ≤ 36 drawn ✓, except one `g.hero` per step (56–72) |
+| repeated frame | each step changes the figure ✓ |
+| gaps | ≥ 12 stage units between any text and any other text or mark ✓ |
+
+## Drawn sizes (stage units; the kit sets most of them)
+| Role | Size | Call |
+|---|---|---|
+| annotation, the main label | 26 / 600 | `g.note` |
+| short label | 24 (written 20) | `g.text` (draws 4 bigger than written; `boost: false` for the exact size) |
+| minor label | 22 (written 18) | `g.text` |
+| axis title · ticks | 24 · 19 | `g.axes` |
+| table values · headers · title | 20–26 (one size per page) · 20 · 22 | `g.matrix`, `Proff.calc` |
+| formula | 22–30 mono | `Proff.calc` |
+| hero (the one number) | 56–72 / 800, accent | `g.hero` |
 
 ## Stage
-- The figure is the page. 1200 × 675 stage units, scaled to the screen. Use the middle: content should span at least 60% of the width and sit vertically centred. Empty halves are a defect.
-- One scene = one idea. More than ~24 labels or 40 words on the figure → split the scene.
-- Text on the figure: labels of 1–6 words, size ≥ 18 units (16 for tick labels). Sentences go in the caption (≤ 28 words) or `info`. Both live in the i sidebar; nothing is written under the figure, so the labels on the stage must name everything a reader needs.
-- No text block before the first scene: title, one `sub` line, then the figure.
-- One figure per step, across the whole stage. Never two plots side by side: the next figure comes in on the next step and replaces the current one (`panels`, see `ref/kit.md`), or gets its own scene. Never show empty axes waiting for a later step.
-- The `i` sidebar holds notation, what you see, how to read it, and one thing to try: short points, ≤ 120 words per step (the audit counts). Notation rows are `[meaning, example from the figure]`, shown as `symbol : meaning` with the example under it.
-- Captions say what to look at, not what the picture is called. "One gene gets 24,299 reads" beats "Histogram of counts".
-- Define every abbreviation the first time it appears: `**SE** (standard error)`.
+- The figure is the page. Use the middle: content spans ≥ 60% of the width and sits vertically centred. An empty half is a defect.
+- One scene = one idea; one step = one new thing on the figure. If a step needs two new notes, split it.
+- Title and one `sub` line, then the first scene. No text block above it.
+- One figure per step, across the stage. The next figure replaces it on a later step (`panels`, see `ref/kit.md`). Never show empty axes waiting for a later step.
+- Place every label from the thing it names (`ax.sx(v)`, `d.cx(i)`, `m.pos(i, j)`), never from guessed pixels. A label next to a small shape uses a leader (`to: [x, y]`); a span uses `g.brace`.
+- Mark sizes in stage units (points r 7–8, lines 3), not data units.
+- Captions say what to look at: "One gene gets 24,299 reads", not "Histogram of counts". Captions name shapes ("dashed line", "open rings"), never colours.
 
-## Colour (palette "cyan" by default: cyan blue and cyan green on near-black, one warm highlight)
-| token | colour | typical role |
-|---|---|---|
-| c1 | cyan blue | the main subject, guide RNA, control group |
-| c2 | amber | a highlight, signal, PAM: the only warm colour, so use it sparingly |
-| c3 | cyan green | the change, a cut, treated group, essential gene |
-| c4 | deeper blue | a second series, a reference line |
-| c5 | pale aqua | significance tails, a light second series |
-| c6 | slate | neutral or background things (no-target control, protein body) |
-- Most of a figure should be c1 and c3. c1 against c3, c2 against c1, and c2 against c3 stay apart for red-green colour-blind readers too.
-- Decide identity colours once, at the top of story.js, and keep them on every scene. Same colour = same thing.
-- c1, c4, c5 and c6 are all cool and close to each other. Never let two of them carry a contrast alone: add a label, a dash, or a shape.
-- `palette: 'blockframe'` brings back the v4.0 pastels when the user asks for them.
-- Captions name shapes ("dashed line", "ringed dots"), never colours. Palettes change; shapes do not.
-- Grey (`muted`) = context that does not matter for this step.
+## Colour meaning
+- One meaning per colour on a page. Decide identity colours once, at the top of `story.js`.
+- The accent (`c2`) marks what matters **now**: the answer, the cells being read, the hero. Grey (`muted`) is context.
+- Tokens: `c1`–`c6` hues, `f1`–`f6` soft fills of the same hues, `ink muted dim line grid fig surf surf2`. Never a hex colour.
+- Two cool hues never carry a contrast alone: add a dash, a shape, or a label.
 
-## Motion and interaction (from interactive-explainer practice)
-- The page must teach with nobody touching it. Steps carry the story; controls let the reader test it.
-- One control should move the picture on every step, so each new figure answers to the same slider. Slider for a continuous quantity; button for a discrete switch or new random data.
-- Ask for a guess one step before you show the answer.
-- Example before definition: show the numbers, then name the idea.
-- Move something only when the motion is the change (strands parting, a cell dividing, a value sliding). Otherwise fade in.
-- Fix axes to the full control range. Rescaling per frame hides the change.
+## Motion and interaction
+- The page teaches with nobody touching it. Steps carry the story; controls let the reader test it.
+- Ask for a guess one step before the answer. Show the numbers, then name the idea.
+- Move something only when the motion is the change. Otherwise fade in.
+- Fix axes to the full control range; switch between two fixed ranges if one cannot serve every value. Never rescale per frame.
 
 ## Content
-- Build from the ground: early scenes show the base rungs on small numbers before the target formula (`levels/L4.md`, "Show it").
-- No half stories. Each scene's title is a claim; its steps prove it. The last scene lands on data or a number the reader can use.
-- Every number is computed (data script, calctrace, or `draw` from params) or quoted from a source opened this session.
-- Say when data is simulated or a sequence is made up.
-
-## Checking
-- `check.py` must report 0 warnings. Then run the self-review in `ref/taste.md` on every contact sheet: wrong biology, ugly shapes, cramped or empty layouts, and pictures that do not teach are invisible to the audit.
-- Pages are for desktop browsers, dark only. Phones are out of scope.
+- Each headline is a claim; its steps prove it. The last scene lands on data or a number the reader can use.
+- Every number is computed (data script, `calctrace`, or `draw`) or quoted from a source opened this session. Say when data is simulated.
+- Spell out every abbreviation the first time: `**SE** (standard error)`.
+- Pages are for desktop browsers, dark theme only.

@@ -87,18 +87,26 @@ class Trace:
         self.steps.append(kw)
 
     # ---------- data ----------
-    def matrix(self, name, data, rows=None, cols=None, label="", unit="", color=None, cap="", info="", show=True, title=None):
+    def _show_step(self, tensors, cap="", title="", info="", mark=None, active=None):
+        step = dict(op="show", layout=[{"t": X.name} for X in tensors], title=title, cap=cap, info=info, cells=[], expand=0)
+        if mark is not None:
+            step["mark"] = [list(m) for m in mark]   # [tensorName, row, col], drawn in the read state
+        if active is not None:
+            step["active"] = list(active)   # one [tensorName, row, col], drawn solid accent
+        self._step(**step)
+
+    def matrix(self, name, data, rows=None, cols=None, label="", unit="", color=None, cap="", info="", show=True, title=None, mark=None, active=None):
         X = T(self, name, data, rows, cols, label, unit, color)
         if show:
-            self._step(op="show", layout=[{"t": name}], title=title or label or name, cap=cap or f"Start with **{label or name}**.", info=info, cells=[], expand=0)
+            self._show_step([X], cap=cap or f"Start with **{label or name}**.", title=title or label or name, info=info, mark=mark, active=active)
         return X
 
     def vector(self, name, values, labels=None, orient="col", **kw):
         data = [[v] for v in values] if orient == "col" else [list(values)]
         return self.matrix(name, data, rows=labels if orient == "col" else None, cols=labels if orient == "row" else None, **kw)
 
-    def show(self, *tensors, cap="", title="", info=""):
-        self._step(op="show", layout=[{"t": X.name} for X in tensors], title=title, cap=cap, info=info, cells=[], expand=0)
+    def show(self, *tensors, cap="", title="", info="", mark=None, active=None):
+        self._show_step(tensors, cap=cap, title=title, info=info, mark=mark, active=active)
 
     # ---------- operations ----------
     def reduce(self, X, fn, axis="cols", name=None, label="", tex="", cap="", info="", title="", expand=1, color=None):

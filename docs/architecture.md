@@ -22,13 +22,14 @@ An agent reads only the files its level needs. Keep `SKILL.md` short: every line
 | every L4 visual (pages and decks) | `levels/L4.md` |
 | every page | `viz.md`, plus `ref/taste.md` if it is a quality bar |
 | one page type | `outputs/<type>.md` |
-| sizes, limits, colours | `ref/design.md` (and `docs/design-system.md` for the why) |
+| sizes, limits, colour meaning (the fixed floor) | `ref/design.md` (and `docs/design-system.md` for the why) |
+| a look, layout or story arc an agent may choose | `ref/styles.md` (a menu row, never a fixed recipe) |
 | the kit's functions | `ref/kit.md` |
 | something the audit can catch | the audit in `kit/stage.js` (`Proff.audit`), then say so in `ref/taste.md` |
 
 ## The reference files (`skills/proff-viz/ref/`)
 - `taste.md` (+ `taste/*.png`): the quality bar, before/after pictures, and the self-review steps.
-- `kit.md`: the `story.js` API. `design.md`: limits, sizes, the colour roles. `tech.md`: which tool draws what.
+- `kit.md`: the `story.js` API. `design.md`: the fixed floor (limits, drawn sizes, colour meaning). `styles.md`: themes, layouts and story arcs to choose from. `tech.md`: which tool draws what.
 - `chains.md`: full step chains for common topics (t-test, maximum likelihood, model training…).
 - `ideas/{stats,bio,ml,dl-notation}.md`: menus of visual ideas per field.
 - `budget.md`: efficient vs premium. `assets.md`: licences. `image.md`: the image prompt.
@@ -53,8 +54,9 @@ An agent reads only the files its level needs. Keep `SKILL.md` short: every line
 They are the exemplars agents copy, and also the regression tests.
 | Example | Covers |
 |---|---|
-| `study-fdr` | study page: tiles, compare table, flip quiz |
+| `study-fdr` | study page (on request only): tiles, compare table, flip quiz |
 | `explore-ttest` | explore page: sliders driving linked figures |
+| `explore-fdr` | explore page in the v5 look: plot + side column, log axis, off-scale lanes, hero (from `my-notes` testing-20000-genes-at-once) |
 | `story-logcounts` | story page with `plot.py` SVGs (`make_plots.py`) |
 | `calc-cpm` | calc page from a `calctrace.py` trace (`make_trace.py`) |
 | `walk-crispr` | walk page with `bio.js` (`make_data.py`) |
