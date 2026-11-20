@@ -6,8 +6,42 @@ Prints one WARN line per problem (max 12): text off the slide edge, under the na
 clipped, overflowing its own box, outside its diagram, bad LaTeX, or small Mermaid text.
 Then writes sheet.png (all slides) and svg.png (diagrams). Needs playwright + Chromium/Chrome.
 """
-import argparse, re, sys
+import argparse, os, re, sys
 from pathlib import Path
+
+
+def launch_browser(p):
+    """Launch Playwright Chromium, falling back across sandbox args, system Chrome, and Linux Chromium paths."""
+    sandbox_args = ["--no-sandbox", "--disable-dev-shm-usage"]
+    attempts = [
+        {},
+        {"args": sandbox_args},
+        {"channel": "chrome"},
+        {"channel": "chrome", "args": sandbox_args},
+    ]
+    seen = set()
+    for raw in (
+        os.environ.get("CHROME_PATH"),
+        os.environ.get("INKPRESS_CHROME"),
+        os.environ.get("VIZOS_CHROMIUM"),
+        "/usr/bin/google-chrome",
+        "/usr/bin/google-chrome-stable",
+        "/usr/bin/chromium",
+        "/usr/bin/chromium-browser",
+        "/snap/bin/chromium",
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    ):
+        if raw and raw not in seen and Path(raw).exists():
+            seen.add(raw)
+            attempts.append({"executable_path": raw})
+            attempts.append({"executable_path": raw, "args": sandbox_args})
+    errs = []
+    for kw in attempts:
+        try:
+            return p.chromium.launch(**kw)
+        except Exception as e:
+            errs.append(f"{e.__class__.__name__}: {str(e).splitlines()[0]}")
+    raise RuntimeError("no browser found (" + " | ".join(errs) + ")")
 
 # Run on the active slide with every build step shown. Flags content that leaves the safe area,
 # sits under the fixed navigation bar or the level label, is clipped, or (svg text) leaves its diagram.
@@ -90,10 +124,7 @@ def main():
     out = Path(a.out or deck.parent / "snaps").resolve()
     out.mkdir(parents=True, exist_ok=True)
     with sync_playwright() as p:
-        try:
-            br = p.chromium.launch()
-        except Exception:
-            br = p.chromium.launch(channel="chrome")
+        br = launch_browser(p)
         pg = br.new_page(viewport={"width": 1920, "height": 1080})
         if a.offline:
             pg.route(re.compile(r'https://(?:cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)/'), lambda route: route.abort())

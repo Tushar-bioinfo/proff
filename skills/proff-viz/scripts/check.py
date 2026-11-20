@@ -7,8 +7,42 @@ text under 12 px, too many words on a figure, long captions, horizontal page scr
 and (in plot.py SVGs) overlapping text. Writes DIR/sheet-*.png contact sheets (one tile per state) to look at once.
 Exit 0 = clean, 1 = warnings, 2 = could not run. Needs: pip playwright + `playwright install chromium` (or local Chrome).
 """
-import argparse, functools, http.server, json, math, sys, threading
+import argparse, functools, http.server, json, math, os, sys, threading
 from pathlib import Path
+
+
+def launch_browser(p):
+    """Launch Playwright Chromium, falling back across sandbox args, system Chrome, and Linux Chromium paths."""
+    sandbox_args = ["--no-sandbox", "--disable-dev-shm-usage"]
+    attempts = [
+        {},
+        {"args": sandbox_args},
+        {"channel": "chrome"},
+        {"channel": "chrome", "args": sandbox_args},
+    ]
+    seen = set()
+    for raw in (
+        os.environ.get("CHROME_PATH"),
+        os.environ.get("INKPRESS_CHROME"),
+        os.environ.get("VIZOS_CHROMIUM"),
+        "/usr/bin/google-chrome",
+        "/usr/bin/google-chrome-stable",
+        "/usr/bin/chromium",
+        "/usr/bin/chromium-browser",
+        "/snap/bin/chromium",
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    ):
+        if raw and raw not in seen and Path(raw).exists():
+            seen.add(raw)
+            attempts.append({"executable_path": raw})
+            attempts.append({"executable_path": raw, "args": sandbox_args})
+    errs = []
+    for kw in attempts:
+        try:
+            return p.chromium.launch(**kw)
+        except Exception as e:
+            errs.append(f"{e.__class__.__name__}: {str(e).splitlines()[0]}")
+    raise RuntimeError("no browser found (" + " | ".join(errs) + ")")
 
 DOM_TEXT = """(si) => {  // every visible SVG text pair, measured on screen: catches overlaps however the text was drawn
   const s = Proff.scenes[si], fig = s.el.fig, out = [];
@@ -199,12 +233,9 @@ def main():
     url = f"http://127.0.0.1:{server.server_port}/{quote(src.name)}"
     with sync_playwright() as p:
         try:
-            b = p.chromium.launch()
-        except Exception:
-            try:
-                b = p.chromium.launch(channel="chrome")
-            except Exception as e:
-                print(f"check: no browser ({e.__class__.__name__}) -> layout check unknown"); sys.exit(2)
+            b = launch_browser(p)
+        except Exception as e:
+            print(f"check: no browser ({e}) -> layout check unknown"); sys.exit(2)
         runs = [("desktop", 1440, 900, "dark")] if a.quick else [("desktop", 1440, 900, "dark"), ("laptop", 1280, 720, "dark")]
         for name, w, h, theme in runs:
             pg = b.new_page(viewport={"width": w, "height": h}, device_scale_factor=1)
